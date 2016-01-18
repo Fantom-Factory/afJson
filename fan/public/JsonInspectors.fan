@@ -4,7 +4,11 @@ using afConcurrent
 ** (Service) - 
 const mixin JsonInspectors {
 
-	abstract JsonConverterMeta inspect(Type type)
+	@Operator
+	abstract JsonConverterMeta getOrInspect(Type type)
+
+	@Operator
+	abstract Void set(Type type, JsonConverterMeta meta)
 }
 
 internal const class JsonInspectorsImpl : JsonInspectors {
@@ -15,9 +19,13 @@ internal const class JsonInspectorsImpl : JsonInspectors {
 		this.jsonInspectors = jsonInspectors
 	}
 
-	override JsonConverterMeta inspect(Type type) {
+	override JsonConverterMeta getOrInspect(Type type) {
 		metaObjs.getOrAdd(type) { 
 			jsonInspectors.eachWhile { it.inspect(type, this) } ?: Err("Could not find Inspector to process ${type.qname}")
 		}
+	}
+	
+	override Void set(Type type, JsonConverterMeta meta) {
+		metaObjs[type] = meta
 	}
 }

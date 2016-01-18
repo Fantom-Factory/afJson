@@ -13,6 +13,7 @@ facet class JsonProperty {
 	** Defaults to the field type.
 	const Type? implType
 
+	// FIXME converterType
 	** Use to name a custom JSON '<->' Fantom Converter. The type should extend 'JsonConverter'.
 	** 
 	** The converter should have a no-args ctor or, if using IoC, a ctor suitable for autobuild. 

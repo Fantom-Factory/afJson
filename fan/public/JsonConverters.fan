@@ -20,22 +20,20 @@ const mixin JsonConverters {
 		JsonConvertersImpl(JsonInspectorsImpl(inspectors))
 	}
 
-	abstract Obj? toJson(Type fantomType, Obj? fantomObj)
+	abstract Obj? toJson(Type fantomType, Obj? fantomObj, JsonConverterMeta? meta := null)
 	
-	abstract Obj? toFantom(Type fantomType, Obj? jsonObj)	
+	abstract Obj? toFantom(Type fantomType, Obj? jsonObj, JsonConverterMeta? meta := null)	
 }
 
 internal const class JsonConvertersImpl : JsonConverters {
 	private const JsonInspectors	inspectors
 	
-
-	
-	new makeIoc(JsonInspectors inspectors) {
+	new make(JsonInspectors inspectors) {
 		this.inspectors	= inspectors
 	}
 	
-	override Obj? toJson(Type fantomType, Obj? fantomObj) {
-		meta := inspectors.inspect(fantomType)
+	override Obj? toJson(Type fantomType, Obj? fantomObj, JsonConverterMeta? meta := null) {
+		meta = meta ?: inspectors.getOrInspect(fantomType)
 		ctx  := JsonConverterCtxImpl {
 			it.metaStack	= JsonConverterMeta[meta]
 			it.fantomStack	= Obj?[,]
@@ -43,8 +41,8 @@ internal const class JsonConvertersImpl : JsonConverters {
 		return meta.converter.toJson(ctx, fantomObj)
 	}
 	
-	override Obj? toFantom(Type fantomType, Obj? jsonObj) {
-		meta := inspectors.inspect(fantomType)
+	override Obj? toFantom(Type fantomType, Obj? jsonObj, JsonConverterMeta? meta := null) {
+		meta = meta ?: inspectors.getOrInspect(fantomType)
 		ctx  := JsonConverterCtxImpl {
 			it.metaStack	= JsonConverterMeta[meta]
 			it.jsonStack	= Obj?[,]
