@@ -35,7 +35,13 @@ const class JsonConverterMeta {
 	** Optional stash of data for use by custom converters.
 	const Obj?		stash
 	
-	** Standard it-block ctor.
+	** Standard it-block ctor for setting 'const' fields.
+	** 
+	**   syntax: fantom
+	**   meta := JsonConverterMeta {
+	**       it.type      = MyType#
+	**       it.converter = MyTypeConverter()
+	**   }
 	new make(|This| f) { f(this) }
 	
 	// Singleton instance.
