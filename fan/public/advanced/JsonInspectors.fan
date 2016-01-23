@@ -7,17 +7,13 @@ const mixin JsonInspectors {
 	static new makeDefault() {
 		JsonInspectorsImpl([
 			LiteralInspector(),
-			NamedInspector(Type#, TypeConverter()),
-			NamedInspector(Slot#, SlotConverter()),
-			NamedInspector(Method#, SlotConverter()),
-			NamedInspector(Field#, SlotConverter()),
+			NamedInspector(List#,	ListConverter()),
+//			NamedInspector(Map#, 	MapConverter()),
+			NamedInspector(Type#,	TypeConverter()),
+			NamedInspector(Slot#,	SlotConverter()),
+			NamedInspector(Method#,	SlotConverter()),
+			NamedInspector(Field#,	SlotConverter()),
 			SerializableInspector(),
-//			SimpleInspector(Date#, DateConverter()),
-//			SimpleInspector(Enum#, EnumConverter()),
-//			SimpleInspector(List#, ListConverter()),
-//			SimpleInspector(Map#, MapConverter()),
-//			SimpleInspector(Slot#, SlotConverter()),
-//			SimpleInspector(Type#, TypeConverter()),
 			ObjInspector()
 		])
 	}

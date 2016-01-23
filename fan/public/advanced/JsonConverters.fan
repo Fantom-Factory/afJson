@@ -27,6 +27,7 @@ internal const class JsonConvertersImpl : JsonConverters {
 	override Obj? toJson(Obj? fantomObj, Type? fantomType := null, JsonConverterMeta? meta := null) {
 		meta = meta ?: inspectors.getOrInspect(fantomType ?: fantomObj.typeof)
 		ctx  := JsonConverterCtxImpl {
+			it.inspectors	= this.inspectors
 			it.metaStack	= JsonConverterMeta[meta]
 			it.fantomStack	= Obj?[,]
 		}
@@ -36,6 +37,7 @@ internal const class JsonConvertersImpl : JsonConverters {
 	override Obj? toFantom(Obj? jsonObj, Type fantomType, JsonConverterMeta? meta := null) {
 		meta = meta ?: inspectors.getOrInspect(fantomType)
 		ctx  := JsonConverterCtxImpl {
+			it.inspectors	= this.inspectors
 			it.metaStack	= JsonConverterMeta[meta]
 			it.jsonStack	= Obj?[,]
 		}

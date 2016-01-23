@@ -13,6 +13,8 @@ mixin JsonConverterCtx {
 	** Only available when converting *from* JSON.  
 	abstract Obj?[]?				jsonStack()
 	
+	abstract JsonConverterMeta inspect(Type type)
+
 	** Returns the current 'JsonConverterMeta' being converted.
 	** Convenience for:
 	** 
@@ -22,6 +24,7 @@ mixin JsonConverterCtx {
 	JsonConverterMeta meta() {
 		metaStack.last
 	}
+	
 	
 	** For use by converters to convert embedded objects. 
 	** The given arguments are pushed on to their corresponding stacks so the conversion that follows may be performed in the proper context.
@@ -51,9 +54,14 @@ mixin JsonConverterCtx {
 }
 
 internal class JsonConverterCtxImpl : JsonConverterCtx {
+			 JsonInspectors			inspectors
 	override JsonConverterMeta[]	metaStack
 	override Obj?[]?				fantomStack
 	override Obj?[]?				jsonStack
 	
 	new make(|This| f) { f(this) }
+	
+	override JsonConverterMeta inspect(Type type) {
+		inspectors.getOrInspect(type)
+	}
 }
