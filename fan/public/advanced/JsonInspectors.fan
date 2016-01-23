@@ -1,7 +1,8 @@
 using afConcurrent
 
-//@NoDoc	// Advanced use only!
+// We need JsonInspectors if only to have an IoC service to contribute Inspectors too!
 ** (Service) - 
+@NoDoc	// Advanced use only!
 const mixin JsonInspectors {
 
 	static new makeDefault() {
@@ -18,32 +19,32 @@ const mixin JsonInspectors {
 		])
 	}
 
-	static new make(JsonInspector[] inspectors) {
+	static new make(JsonTypeInspector[] inspectors) {
 		JsonInspectorsImpl(inspectors)
 	}
 	
 	@Operator
-	abstract JsonConverterMeta getOrInspect(Type type)
+	abstract JsonTypeMeta getOrInspect(Type type)
 
 	@Operator
-	abstract Void set(Type type, JsonConverterMeta meta)
+	abstract Void set(Type type, JsonTypeMeta meta)
 }
 
 internal const class JsonInspectorsImpl : JsonInspectors {
-	private const AtomicMap			metaObjs	:= AtomicMap { it.keyType=Type#; it.valType=JsonConverterMeta# }
-	private const JsonInspector[] 	jsonInspectors
+	private const AtomicMap				metaObjs	:= AtomicMap { it.keyType=Type#; it.valType=JsonTypeMeta# }
+	private const JsonTypeInspector[] 	inspectors
 	
-	new make(JsonInspector[] jsonInspectors) {
-		this.jsonInspectors = jsonInspectors
+	new make(JsonTypeInspector[] inspectors) {
+		this.inspectors = inspectors
 	}
 
-	override JsonConverterMeta getOrInspect(Type type) {
+	override JsonTypeMeta getOrInspect(Type type) {
 		metaObjs.getOrAdd(type) { 
-			jsonInspectors.eachWhile { it.inspect(type, this) } ?: Err("Could not find Inspector to process ${type.qname}")
+			inspectors.eachWhile { it.inspect(type, this) } ?: Err("Could not find Inspector to process ${type.qname}")
 		}
 	}
 	
-	override Void set(Type type, JsonConverterMeta meta) {
+	override Void set(Type type, JsonTypeMeta meta) {
 		metaObjs[type] = meta
 	}
 }

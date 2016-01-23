@@ -1,41 +1,54 @@
 
+** (Service) - 
 ** A one-stop shop for all your JSON needs!
-const class Json {
+const mixin Json {
 	
-	private const JsonInspectors	inspectors
-	private const JsonConverters	converters
-	
-	new make() {
-		converters = JsonConverters()
-		inspectors = JsonInspectors()
+	static new make() {
+		JsonImpl(JsonInspectors())
 	}
 	
-	private new makeWithIoc(JsonConverters converters, JsonInspectors inspectors) {
-		this.converters = converters
+	** If 'fantomType' is 'null' it defaults to 'fantomObj.typeof()'. 
+	abstract Obj? toJson(Obj? fantomObj, Type? fantomType := null, JsonTypeMeta? meta := null)
+	
+	abstract Obj? toFantom(Obj? jsonObj, Type fantomType, JsonTypeMeta? meta := null)
+
+	abstract JsonTypeMeta getOrInspectTypeMeta(Type type)
+
+	abstract Void setTypeMeta(Type type, JsonTypeMeta meta)
+}
+
+internal const class JsonImpl : Json {	
+	private const JsonInspectors	inspectors
+	
+	new makeWithIoc(JsonInspectors inspectors) {
 		this.inspectors = inspectors
 	}
 	
-	** Convenience for:
-	** 
-	**   syntax: fantom
-	**   JsonConverters().toJson(...)
-	Obj? toJson(Obj? fantomObj, Type? fantomType := null, JsonConverterMeta? meta := null) {
-		converters.toJson(fantomObj, fantomType ?: fantomObj.typeof, meta)
+	override Obj? toJson(Obj? fantomObj, Type? fantomType := null, JsonTypeMeta? meta := null) {
+		meta = meta ?: inspectors.getOrInspect(fantomType ?: fantomObj.typeof)
+		ctx  := JsonConverterCtxImpl {
+			it.inspectors	= this.inspectors
+			it.metaStack	= JsonTypeMeta[meta]
+			it.fantomStack	= Obj?[,]
+		}
+		return meta.converter.toJson(ctx, fantomObj)
 	}
 	
-	** Convenience for:
-	** 
-	**   syntax: fantom
-	**   JsonConverters().toFantom(...)
-	Obj? toFantom(Obj? jsonObj, Type fantomType, JsonConverterMeta? meta := null) {
-		converters.toFantom(jsonObj, fantomType, meta)
+	override Obj? toFantom(Obj? jsonObj, Type fantomType, JsonTypeMeta? meta := null) {
+		meta = meta ?: inspectors.getOrInspect(fantomType)
+		ctx  := JsonConverterCtxImpl {
+			it.inspectors	= this.inspectors
+			it.metaStack	= JsonTypeMeta[meta]
+			it.jsonStack	= Obj?[,]
+		}
+		return meta.converter.toFantom(ctx, jsonObj)
 	}
 
-	JsonConverterMeta getOrInspectTypeMeta(Type type) {
+	override JsonTypeMeta getOrInspectTypeMeta(Type type) {
 		inspectors.getOrInspect(type)
 	}
 
-	Void setTypeMeta(Type type, JsonConverterMeta meta) {
+	override Void setTypeMeta(Type type, JsonTypeMeta meta) {
 		inspectors.set(type, meta)
 	}
 }

@@ -1,8 +1,8 @@
 
-internal const class ObjInspector : JsonInspector {
+internal const class ObjInspector : JsonTypeInspector {
 
-	override JsonConverterMeta? inspect(Type objType, JsonInspectors inspectors) {
-		map := Field:JsonConverterMeta[:] { it.ordered=true }
+	override JsonTypeMeta? inspect(Type objType, JsonInspectors inspectors) {
+		map := Field:JsonTypeMeta[:] { it.ordered=true }
 
 		objType.fields.findAll { it.hasFacet(JsonProperty#) }.each |field| {
 			prop := (JsonProperty) field.facet(JsonProperty#)
@@ -11,7 +11,7 @@ internal const class ObjInspector : JsonInspector {
 
 			type := prop.implType ?: field.type
 			meta := inspectors.getOrInspect(type)
-			map[field] = JsonConverterMeta {
+			map[field] = JsonTypeMeta {
 				it.type		 	= meta.type
 				it.converter 	= meta.converter
 				it.properties 	= meta.properties
@@ -20,7 +20,7 @@ internal const class ObjInspector : JsonInspector {
 			}
 		}
 
-		return JsonConverterMeta {
+		return JsonTypeMeta {
 			it.type		 	= objType
 			it.converter 	= ObjConverter()
 			it.properties 	= map

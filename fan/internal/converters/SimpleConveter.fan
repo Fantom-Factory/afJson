@@ -1,7 +1,7 @@
 
 internal const class SimpleConveter : JsonConverter {
 
-	private const Method	fromStr
+	private const Method fromStr
 	
 	new make(Type type) {
 		this.fromStr = type.method("fromStr", true)

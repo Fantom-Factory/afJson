@@ -1,12 +1,12 @@
 
-internal const class SerializableInspector : JsonInspector {
+internal const class SerializableInspector : JsonTypeInspector {
 	
-	override JsonConverterMeta? inspect(Type type, JsonInspectors inspectors) {
+	override JsonTypeMeta? inspect(Type type, JsonInspectors inspectors) {
 		serializable := (Serializable?) type.facet(Serializable#, false)
 		if (serializable == null || serializable.simple.not)
 			return null
 
-		return JsonConverterMeta {
+		return JsonTypeMeta {
 			it.type			= type
 			it.converter	= SimpleConveter(type)
 		}

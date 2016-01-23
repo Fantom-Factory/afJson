@@ -1,6 +1,6 @@
 
 ** Lists need to be defined as specific, non-generic, types, e.g. Int[]
-** Otherwise we don't know how to convert
+** Otherwise we don't know how to convert!
 internal const class ListConverter : JsonConverter {
 
 	override Obj? toJson(JsonConverterCtx ctx, Obj? fantomObj) {
