@@ -1,6 +1,5 @@
 
-// FIXME rename to JsonTypeMeta
-const class JsonConverterMeta {
+const class JsonTypeMeta {
 
 	** The fantom 'Type' being converted. 
 	const Type		type
@@ -12,15 +11,11 @@ const class JsonConverterMeta {
 	** Use when this field references a mixin or a superclass. 
 	** 
 	** Taken from '@JsonProperty.implType' and defaults to the field type if not available.
-	** 
-	** Used / set by `JsonObjConverter`.
 	const Type? 	implType
 
 	** The property name used when this value is stored in a JSON object.
 	** 
 	** Taken from '@JsonProperty.propertyName' and defaults to the field name if not available.
-	** 
-	** Used / set by `JsonObjConverter`.
 	const Str? 		propertyName
 
 	// NOTE: there is no jsonType as this is wholly determined by the converter.
@@ -28,9 +23,7 @@ const class JsonConverterMeta {
 	
 	** If this type models a JSON object, then this is the meta for the containing properties.
 	** Returns empty list if there are no properties.
-	** 
-	** Used / set by `JsonObjConverter`.
-	const Field:JsonConverterMeta	properties	:= emptyMap
+	const Field:JsonTypeMeta	properties	:= emptyMap
 	
 	** Optional stash of data for use by custom converters.
 	const Obj?		stash
@@ -38,12 +31,12 @@ const class JsonConverterMeta {
 	** Standard it-block ctor for setting 'const' fields.
 	** 
 	**   syntax: fantom
-	**   meta := JsonConverterMeta {
+	**   meta := JsonTypeMeta {
 	**       it.type      = MyType#
 	**       it.converter = MyTypeConverter()
 	**   }
 	new make(|This| f) { f(this) }
 	
 	// Singleton instance.
-	private static const Field:JsonConverterMeta emptyMap := Field:JsonConverterMeta[:]
+	private static const Field:JsonTypeMeta emptyMap := Field:JsonTypeMeta[:]
 }

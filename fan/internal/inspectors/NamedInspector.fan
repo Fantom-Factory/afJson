@@ -1,5 +1,5 @@
 
-internal const class NamedInspector : JsonInspector {
+internal const class NamedInspector : JsonTypeInspector {
 	private const Type type
 	private const JsonConverter	converter
 
@@ -8,10 +8,10 @@ internal const class NamedInspector : JsonInspector {
 		this.converter	= converter
 	}
 	
-	override JsonConverterMeta? inspect(Type type, JsonInspectors inspectors) {
+	override JsonTypeMeta? inspect(Type type, JsonInspectors inspectors) {
 		return this.type != type && this.type.name != type.name
 			? null
-			: JsonConverterMeta {
+			: JsonTypeMeta {
 				it.type			= this.type
 				it.converter	= this.converter
 			}

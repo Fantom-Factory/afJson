@@ -1,34 +1,34 @@
 
 mixin JsonConverterCtx {
 
-	abstract JsonConverterMeta[]	metaStack()
+	abstract JsonTypeMeta[]	metaStack()
 	
 	** A stack of Fantom objects that represent the contextual parents of converted objects.
 	** 
 	** Only available when converting *from* Fantom.  
-	abstract Obj?[]?				fantomStack()
+	abstract Obj?[]?		fantomStack()
 	
 	** A stack of JSON objects that represent the contextual parents of converted objects.
 	** 
 	** Only available when converting *from* JSON.  
-	abstract Obj?[]?				jsonStack()
+	abstract Obj?[]?		jsonStack()
 	
-	abstract JsonConverterMeta inspect(Type type)
+	abstract JsonTypeMeta	inspect(Type type)
 
-	** Returns the current 'JsonConverterMeta' being converted.
+	** Returns the current 'JsonTypeMeta' being converted.
 	** Convenience for:
 	** 
 	**   syntax: fantom
 	**   metaStack.last()
 	** 
-	JsonConverterMeta meta() {
+	JsonTypeMeta meta() {
 		metaStack.last
 	}
 	
 	
 	** For use by converters to convert embedded objects. 
 	** The given arguments are pushed on to their corresponding stacks so the conversion that follows may be performed in the proper context.
-	Obj? toJson(JsonConverterMeta meta, Obj? fantomObj) {
+	Obj? toJson(JsonTypeMeta meta, Obj? fantomObj) {
 		metaStack.push(meta)
 		fantomStack.push(fantomObj)
 		try {
@@ -41,7 +41,7 @@ mixin JsonConverterCtx {
 	
 	** For use by converters to convert embedded objects. 
 	** The given arguments are pushed on to their corresponding stacks so the conversion that follows may be performed in the proper context.
-	Obj? toFantom(JsonConverterMeta meta, Obj? jsonObj) {
+	Obj? toFantom(JsonTypeMeta meta, Obj? jsonObj) {
 		metaStack.push(meta)
 		jsonStack.push(jsonObj)
 		try {
@@ -54,14 +54,14 @@ mixin JsonConverterCtx {
 }
 
 internal class JsonConverterCtxImpl : JsonConverterCtx {
-			 JsonInspectors			inspectors
-	override JsonConverterMeta[]	metaStack
-	override Obj?[]?				fantomStack
-	override Obj?[]?				jsonStack
+			 JsonInspectors	inspectors
+	override JsonTypeMeta[]	metaStack
+	override Obj?[]?		fantomStack
+	override Obj?[]?		jsonStack
 	
 	new make(|This| f) { f(this) }
 	
-	override JsonConverterMeta inspect(Type type) {
+	override JsonTypeMeta inspect(Type type) {
 		inspectors.getOrInspect(type)
 	}
 }

@@ -1,15 +1,26 @@
 
-** An enum of the 6 JSON types.
+** An enum of JSON types.
 ** 
 ** @see `http://www.json.org/`
 enum class JsonType {
 
-	ARRAY	(List#),
-	BOOL	(Bool#),
-	NULL	(null),
-	NUMBER	(Num#),
-	OBJECT	(Map#),
-	STRING	(Str#);
+	** A JSON array.
+	array	(List#),
+	
+	** A JSON boolean.
+	boolean	(Bool#),
+
+	** A JSON null.
+	nul		(null),
+	
+	** A JSON number.
+	number	(Num#),
+	
+	** A JSON object.
+	object	(Map#),
+	
+	** A JSON string.
+	string	(Str#);
 	
 	** The Fantom 'Type' (if any) this JSON type maps to.
 	const Type? type
@@ -23,18 +34,14 @@ enum class JsonType {
 	static new fromType(Type? fantomType, Bool checked := true) {
 		type := fantomType?.toNonNullable
 			
-		// switch on final / native types
-		switch (type) {
-			case Bool#:	return BOOL
-			case Num#:	return NUMBER
-			case Str#:	return STRING
-			case null:	return NULL
+		switch (type?.name) {
+			case null:		return nul
+			case "Bool":	return boolean
+			case "List":	return array
+			case "Map":		return object
+			case "Num":		return number
+			case "Str":		return string
 		}
-
-		// can't switch on parameterised types
-		if (fantomType.name == "List")	return ARRAY
-		// a controversial decision - we check individual key types, not the map key type
-		if (fantomType.name == "Map")	return OBJECT	
 
 		return null ?: (checked ? throw ArgErr(ErrMsgs.jsonType_unknownType(type)) : null)
 	}
@@ -49,6 +56,6 @@ enum class JsonType {
 	**   JsonType.isLiteral(Str:Obj?#) // --> false
 	static Bool isLiteral(Type? type) {
 		jsonType := JsonType.fromType(type, false)
-		return jsonType != null && jsonType != JsonType.ARRAY && jsonType != JsonType.OBJECT
+		return jsonType != null && jsonType != JsonType.array && jsonType != JsonType.object
 	}
 }
