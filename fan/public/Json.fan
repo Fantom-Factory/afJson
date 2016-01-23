@@ -4,7 +4,7 @@
 const mixin Json {
 	
 	static new make() {
-		JsonImpl(JsonInspectors())
+		JsonImpl(JsonTypeInspectors())
 	}
 	
 	** If 'fantomType' is 'null' it defaults to 'fantomObj.typeof()'. 
@@ -18,9 +18,9 @@ const mixin Json {
 }
 
 internal const class JsonImpl : Json {	
-	private const JsonInspectors	inspectors
+	private const JsonTypeInspectors	inspectors
 	
-	new makeWithIoc(JsonInspectors inspectors) {
+	new makeWithIoc(JsonTypeInspectors inspectors) {
 		this.inspectors = inspectors
 	}
 	

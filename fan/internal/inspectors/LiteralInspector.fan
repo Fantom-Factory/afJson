@@ -1,12 +1,16 @@
 
 internal const class LiteralInspector : JsonTypeInspector {
 
-	override JsonTypeMeta? inspect(Type type, JsonInspectors inspectors) {
+	const JsonConverter converter	:= LiteralConverter()
+
+	new make(|This|? in := null) { in?.call(this) }
+	
+	override JsonTypeMeta? inspect(Type type, JsonTypeInspectors inspectors) {
 		return JsonType.isLiteral(type).not
 			? null
 			: JsonTypeMeta {
 				it.type			= type
-				it.converter	= LiteralConverter()
+				it.converter	= this.converter
 			}
 	}
 }
