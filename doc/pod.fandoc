@@ -12,23 +12,29 @@ When Json is added as a dependency to an IoC enabled application, such as [BedSh
 
 The above makes use of the non-invasive module feature of IoC 3.
 
+It is useful if your converted Fantom objects are built by IoC. That way they may contain services and perform operations on themselves, such as persisting to a database. To enable this, create an 'IocObjConverter' class that extends from Json's '@NoDoc ObjConverter' class:
 
+pre>
 using afIoc
 using afJson
 
 const class IocObjConverter : ObjConverter {
-	@Inject const |->Scope| scope
+    @Inject const |->Scope| scope
 
-	new make(|This|in) { in(this) }
+    new make(|This|in) { in(this) }
 
-	override Obj? createEntity(Type type, Field:Obj? fieldVals) {
-		scope().build(type, null, fieldVals)
-	}
+    override Obj? createEntity(Type type, Field:Obj? fieldVals) {
+        scope().build(type, null, fieldVals)
+    }
 }
+<pre
 
+Contribute this with the following:
 
-	@Contribute { serviceType=JsonTypeInspectors# }
-	Void contributeJsonTypeInspectors(Configuration config) {
-		config.overrideValue("afJson.obj", ObjInspector { it.converter = config.build(IocObjConverter#) })
-	}
+pre>
+@Contribute { serviceType=JsonTypeInspectors# }
+Void contributeJsonTypeInspectors(Configuration config) {
+    config.overrideValue("afJson.obj", ObjInspector { it.converter = config.build(IocObjConverter#) })
+}
+<pre
 
