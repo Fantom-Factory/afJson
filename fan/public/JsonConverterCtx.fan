@@ -40,11 +40,11 @@ mixin JsonConverterCtx {
 	** The given arguments are pushed on to their corresponding stacks so the conversion that follows may be performed in the proper context.
 	Obj? toFantom(JsonConverterMeta meta, Obj? jsonObj) {
 		metaStack.push(meta)
-		fantomStack.push(jsonObj)
+		jsonStack.push(jsonObj)
 		try {
-			return meta.converter.toJson(this, jsonObj)
+			return meta.converter.toFantom(this, jsonObj)
 		} finally {
-			fantomStack.pop
+			jsonStack.pop
 			metaStack.pop
 		}		
 	}

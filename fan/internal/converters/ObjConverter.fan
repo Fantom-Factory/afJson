@@ -47,7 +47,9 @@ const class ObjConverter : JsonConverter {
 			return fval
 		}
 		
-		return createEntity(ctx.meta.type, fieldVals)
+		try return createEntity(ctx.meta.type, fieldVals)
+		catch (Err err)
+			throw Err("Could not create instance of ${ctx.meta.type} with: ${fieldVals}", err)
 	}
 	
 	** A hook to create Entity instance.

@@ -1,5 +1,5 @@
 
-** A list of JSON types.
+** An enum of the 6 JSON types.
 ** 
 ** @see `http://www.json.org/`
 enum class JsonType {
@@ -18,8 +18,8 @@ enum class JsonType {
 		this.type = type
 	}
 
-	** Determines a JSON type from the type of the given object.
-	** Throws an 'ArgErr' if invalid.
+	** Determines a JSON type for the given Fantom type.
+	** Throws 'ArgErr' if unknown.
 	static new fromType(Type? fantomType, Bool checked := true) {
 		type := fantomType?.toNonNullable
 			

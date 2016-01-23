@@ -17,11 +17,9 @@ class Build : BuildPod {
 			// ---- Core ------------------------
 			"afBeanUtils  1.0.8  - 1.0",
 			"afConcurrent 1.0.12 - 1.0",
-
-			"afBson 1.0"
 		]
 
-		srcDirs = [`fan/`, `fan/internal/`, `fan/internal/converters/`, `fan/internal/inspectors/`, `fan/public/`, `test/`]
+		srcDirs = [`fan/`, `fan/internal/`, `fan/internal/converters/`, `fan/internal/inspectors/`, `fan/public/`, `fan/public/advanced/`, `test/`]
 		resDirs = [,]
 
 		docApi = true

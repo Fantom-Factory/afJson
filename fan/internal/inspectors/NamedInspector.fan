@@ -1,5 +1,5 @@
 
-internal const class SimpleInspector : JsonInspector {
+internal const class NamedInspector : JsonInspector {
 	private const Type type
 	private const JsonConverter	converter
 
