@@ -1,3 +1,4 @@
+using afBeanUtils
 
 internal const mixin ErrMsgs {
 
@@ -5,8 +6,12 @@ internal const mixin ErrMsgs {
 		"Unknown JSON type '${type.signature}'"
 	}
 
+	static Str objInspect_implTypeDoesNotFit(Type implType, Field field) {
+		"implType ${implType.qname} on field ${field.qname} does not fit field type of ${field.type.qname}"
+	}
+
 	static Str objConv_noConverter(Type fantomType, Obj jsonObj) {
-		stripSys("Could not find a Converter to ${fantomType.qname} from '${jsonObj.typeof.qname} - ${jsonObj}'")
+		stripSys("Could not find a Converter to ${fantomType.qname} from ${jsonObj.typeof.qname}: ${jsonObj}")
 	}
 
 	static Str objConv_propertyNotFound(Field field, Str:Obj? jsonMap) {
@@ -21,6 +26,10 @@ internal const mixin ErrMsgs {
 //		stripSys("JSON object property '${propName}' of type '${propType.signature}' does not fit field ${field.qname} of type '${field.type.signature}' : ${document}")
 //	}
 	
+	static Str mapConverter_cannotCoerceKey(Type keyType) {
+		stripSys("Unsupported Map key type ${keyType.qname}, cannot coerce from Str#. See ${TypeCoercer#.qname} for details.")
+	}
+
 	static Str stripSys(Str str) {
 		str.replace("sys::", "")
 	}

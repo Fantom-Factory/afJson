@@ -6,18 +6,19 @@ internal class TestJsonConversion : JsonTest {
 	Void testConversion() {
 		entity := T_Entity01() {
 			
-			// Mongo literals			
+			// JSON literals			
 			float 		= 69.0f
 			str 		= "string"
 			doc			= ["wot":"ever"]
 			list		= ["wot","ever"]
 			bool		= true
-			dateTime	= now
 			nul			= null
-			regex		= "2 problems".toRegex
 			int 		= 999
+			map			= [3:T_Entity01_Enum.ever]
 			
 			// Fantom literals
+			regex		= "2 problems".toRegex
+			dateTime	= now
 			date		= Date.today
 			enumm		= T_Entity01_Enum.wot
 			uri			= `http://uri`
@@ -26,7 +27,6 @@ internal class TestJsonConversion : JsonTest {
 			type		= TestJsonConversion#
 			slot		= TestJsonConversion#testConversion
 			range		= (2..<4)
-			map			= [3:T_Entity01_Enum.ever]
 			
 			// Moar Fantom classes
 			field		= TestJsonConversion#now
@@ -45,19 +45,20 @@ internal class TestJsonConversion : JsonTest {
 		fanObj := json.toJson(entity, T_Entity01#)
 		entity = json.toFantom(fanObj, T_Entity01#)
 		
-		// Mongo types
+		// JSON types
 		verifyEq(entity.float, 		69f)
 		verifyEq(entity.str, 		"string")
 		verifyEq(entity.doc["wot"],	"ever")
 		verifyEq(entity.list[0], 	"wot")
 		verifyEq(entity.list[1], 	"ever")
 		verifyEq(entity.bool, 		true)
-		verifyEq(entity.dateTime,	now)
 		verifyEq(entity.nul, 		null)
-		verifyEq(entity.regex, 		"2 problems".toRegex)
 		verifyEq(entity.int,		999)
+		verifyEq(entity.map[3],		T_Entity01_Enum.ever)
 		
 		// Fantom types
+		verifyEq(entity.regex, 		"2 problems".toRegex)
+		verifyEq(entity.dateTime,	now)
 		verifyEq(entity.date, 		Date.today)	
 		verifyEq(entity.enumm,		T_Entity01_Enum.wot)
 		verifyEq(entity.uri,		`http://uri/`)
@@ -66,7 +67,6 @@ internal class TestJsonConversion : JsonTest {
 		verifyEq(entity.type,		TestJsonConversion#)
 		verifyEq(entity.slot,		TestJsonConversion#testConversion)
 		verifyEq(entity.range,		2..<4)
-		verifyEq(entity.map[3],		T_Entity01_Enum.ever)
 
 		// Moar Fantom classes
 		verifyEq(entity.field,		TestJsonConversion#now)
@@ -79,7 +79,6 @@ internal class TestJsonConversion : JsonTest {
 		verifyEq(entity.unit,		Unit("pH"))
 		verifyEq(entity.uuid,		Uuid("03f0e2bb-8f1a-c800-e1f8-00623f7473c4"))
 		verifyEq(entity.version,	Version([6, 9, 6, 9]))
-
 	}
 }
 
@@ -91,12 +90,13 @@ internal class T_Entity01 {
 	@JsonProperty	Str:Str?	doc
 	@JsonProperty	Str?[]		list
 	@JsonProperty	Bool?		bool
-	@JsonProperty	DateTime?	dateTime
 	@JsonProperty	Obj?		nul
-	@JsonProperty	Regex		regex
 	@JsonProperty	Int?		int
+	@JsonProperty	Int:T_Entity01_Enum?	map
 	
 	// Fantom literals
+	@JsonProperty	Regex		regex
+	@JsonProperty	DateTime?	dateTime
 	@JsonProperty	Date		date
 	@JsonProperty	T_Entity01_Enum	enumm
 	@JsonProperty	Uri			uri
@@ -105,7 +105,6 @@ internal class T_Entity01 {
 	@JsonProperty	Type		type
 	@JsonProperty	Slot		slot
 	@JsonProperty	Range		range
-	@JsonProperty	Int:T_Entity01_Enum?	map
 	
 	// Moar Fantom Classes
 	@JsonProperty	Field?		field

@@ -6,6 +6,9 @@ internal const class ObjInspector : JsonInspector {
 
 		objType.fields.findAll { it.hasFacet(JsonProperty#) }.each |field| {
 			prop := (JsonProperty) field.facet(JsonProperty#)
+			if (prop.implType != null && prop.implType.fits(field.type).not)
+				throw Err(ErrMsgs.objInspect_implTypeDoesNotFit(prop.implType, field))
+
 			type := prop.implType ?: field.type
 			meta := inspectors.getOrInspect(type)
 			map[field] = JsonConverterMeta {

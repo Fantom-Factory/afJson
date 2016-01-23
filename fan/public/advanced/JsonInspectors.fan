@@ -7,8 +7,8 @@ const mixin JsonInspectors {
 	static new makeDefault() {
 		JsonInspectorsImpl([
 			LiteralInspector(),
+			NamedInspector(Map#, 	MapConverter()),
 			NamedInspector(List#,	ListConverter()),
-//			NamedInspector(Map#, 	MapConverter()),
 			NamedInspector(Type#,	TypeConverter()),
 			NamedInspector(Slot#,	SlotConverter()),
 			NamedInspector(Method#,	SlotConverter()),

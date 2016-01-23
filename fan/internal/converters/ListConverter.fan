@@ -1,4 +1,6 @@
 
+** Lists need to be defined as specific, non-generic, types, e.g. Int[]
+** Otherwise we don't know how to convert
 internal const class ListConverter : JsonConverter {
 
 	override Obj? toJson(JsonConverterCtx ctx, Obj? fantomObj) {
@@ -7,9 +9,9 @@ internal const class ListConverter : JsonConverter {
 		fanList	 := (List) fantomObj
 		listType := fanList.typeof
 		
-		// if the whole list is a valid JSON document, then return it as is
+		// if the list only contains JSON literals that require no conversion, then return it as is
 		if (!listType.isGeneric)
-			if (JsonType.isLiteral(listType) || fanList.all { JsonType.isLiteral(it?.typeof) })
+			if (requiresNoConversion(ctx, listType) || fanList.all { requiresNoConversion(ctx, it?.typeof) })
 				return fantomObj
 		
 		return fanList.map {
@@ -20,21 +22,27 @@ internal const class ListConverter : JsonConverter {
 	override Obj? toFantom(JsonConverterCtx ctx, Obj? jsonObj) {
 		if (jsonObj == null) return null
 
-		fanValType	:= ctx.meta.type.params["V"] ?: Obj?#
+		fanValType	:= (ctx.meta.implType ?: ctx.meta.type).params["V"] ?: Obj?#
 		jsonList	:= (List) jsonObj
 		jsonListType:= jsonList.typeof
 		jsonValType	:= jsonListType.params["V"] ?: Obj?#
 	
-		// if the whole list is a valid JSON document, then return it as is
-		if (jsonValType.fits(fanValType))
+		// if the list requires no conversion, then return it as is
+		if (jsonValType.fits(fanValType) && requiresNoConversion(ctx, fanValType))
 			return jsonList
 		
-		fanList		:= List(fanValType, jsonList.size)
-		if (JsonType.isLiteral(fanValType))
+		// the given JSON list may have been Obj?[], hence wouldn't have fit fanValType
+		fanList	:= List(fanValType, jsonList.size)
+		if (requiresNoConversion(ctx, fanValType))
 			fanList.addAll(jsonList)
 		else
 			fanList.addAll(jsonList.map { ctx.toFantom(ctx.inspect(fanValType), it) })
 
 		return fanList
+	}
+	
+	** For JSON literal checks, ensure the default converter has not been overridden 
+	private static Bool requiresNoConversion(JsonConverterCtx ctx, Type? type) {
+		type == null || ctx.inspect(type).converter is LiteralConverter
 	}
 }
