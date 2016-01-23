@@ -1,7 +1,13 @@
+using afBeanUtils
 
-internal const class ObjInspector : JsonTypeInspector {
+@NoDoc	// Advanced use only!
+const class ObjInspector : JsonTypeInspector {
 
-	override JsonTypeMeta? inspect(Type objType, JsonInspectors inspectors) {
+	const JsonConverter converter	:= ObjConverter()
+	
+	new make(|This|? in := null) { in?.call(this) }
+	
+	override JsonTypeMeta? inspect(Type objType, JsonTypeInspectors inspectors) {
 		map := Field:JsonTypeMeta[:] { it.ordered=true }
 
 		objType.fields.findAll { it.hasFacet(JsonProperty#) }.each |field| {
@@ -10,20 +16,38 @@ internal const class ObjInspector : JsonTypeInspector {
 				throw Err(ErrMsgs.objInspect_implTypeDoesNotFit(prop.implType, field))
 
 			type := prop.implType ?: field.type
-			meta := inspectors.getOrInspect(type)
-			map[field] = JsonTypeMeta {
-				it.type		 	= meta.type
-				it.converter 	= meta.converter
-				it.properties 	= meta.properties
-				it.implType	 	= prop.implType 	?: field.type
-				it.propertyName	= prop.propertyName	?: field.name
+			
+			if (prop.converterType != null) {
+				map[field] = JsonTypeMeta {
+					it.type		 	= type
+					it.converter 	= createConverter(prop.converterType)
+					it.implType	 	= prop.implType 	?: field.type
+					it.propertyName	= prop.propertyName	?: field.name
+				}
+			} else {			
+				meta := inspectors.getOrInspect(type)
+				map[field] = JsonTypeMeta {
+					it.type		 	= meta.type
+					it.converter 	= meta.converter
+					it.properties 	= meta.properties
+					it.implType	 	= prop.implType 	?: field.type
+					it.propertyName	= prop.propertyName	?: field.name
+				}
 			}
 		}
 
 		return JsonTypeMeta {
 			it.type		 	= objType
-			it.converter 	= ObjConverter()
+			it.converter 	= this.converter
 			it.properties 	= map
 		}
+	}
+	
+	** Creates a 'JsonConverter' instance using [BeanFactory]`afBeanUtils::BeanFactory`.
+	** Called when '@Property.converterType' is not null.
+	** 
+	** Override if you prefer your converters to be autobuilt by IoC.
+	virtual Obj? createConverter(Type type) {
+		BeanFactory(type).create
 	}
 }

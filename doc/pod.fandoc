@@ -1,0 +1,34 @@
+Overview [#overview]
+********************
+Json is a Fantom to JSON object mapping library.
+
+
+IoC
+***
+When Json is added as a dependency to an IoC enabled application, such as [BedSheet]`pod:afBedSheet` or [Reflux]`pod:afReflux`, then the following services are automatically made available to IoC:
+
+ - `Json`
+ - `JsonTypeInspectors` - takes contributions of 'Str:JsonTypeInspector'
+
+The above makes use of the non-invasive module feature of IoC 3.
+
+
+using afIoc
+using afJson
+
+const class IocObjConverter : ObjConverter {
+	@Inject const |->Scope| scope
+
+	new make(|This|in) { in(this) }
+
+	override Obj? createEntity(Type type, Field:Obj? fieldVals) {
+		scope().build(type, null, fieldVals)
+	}
+}
+
+
+	@Contribute { serviceType=JsonTypeInspectors# }
+	Void contributeJsonTypeInspectors(Configuration config) {
+		config.overrideValue("afJson.obj", ObjInspector { it.converter = config.build(IocObjConverter#) })
+	}
+

@@ -3,10 +3,10 @@ using afConcurrent
 // We need JsonInspectors if only to have an IoC service to contribute Inspectors too!
 ** (Service) - 
 @NoDoc	// Advanced use only!
-const mixin JsonInspectors {
+const mixin JsonTypeInspectors {
 
-	static new makeDefault() {
-		JsonInspectorsImpl([
+	static new make(JsonTypeInspector[]? inspectors := null) {
+		JsonTypeInspectorsImpl(inspectors ?: [
 			LiteralInspector(),
 			NamedInspector(Map#, 	MapConverter()),
 			NamedInspector(List#,	ListConverter()),
@@ -18,10 +18,6 @@ const mixin JsonInspectors {
 			ObjInspector()
 		])
 	}
-
-	static new make(JsonTypeInspector[] inspectors) {
-		JsonInspectorsImpl(inspectors)
-	}
 	
 	@Operator
 	abstract JsonTypeMeta getOrInspect(Type type)
@@ -30,7 +26,7 @@ const mixin JsonInspectors {
 	abstract Void set(Type type, JsonTypeMeta meta)
 }
 
-internal const class JsonInspectorsImpl : JsonInspectors {
+internal const class JsonTypeInspectorsImpl : JsonTypeInspectors {
 	private const AtomicMap				metaObjs	:= AtomicMap { it.keyType=Type#; it.valType=JsonTypeMeta# }
 	private const JsonTypeInspector[] 	inspectors
 	

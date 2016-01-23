@@ -54,7 +54,7 @@ mixin JsonConverterCtx {
 }
 
 internal class JsonConverterCtxImpl : JsonConverterCtx {
-			 JsonInspectors	inspectors
+		JsonTypeInspectors	inspectors
 	override JsonTypeMeta[]	metaStack
 	override Obj?[]?		fantomStack
 	override Obj?[]?		jsonStack

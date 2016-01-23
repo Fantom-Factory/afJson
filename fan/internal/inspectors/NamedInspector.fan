@@ -1,5 +1,7 @@
 
-internal const class NamedInspector : JsonTypeInspector {
+// FIXME this is a crap name! JsonMetaFactory?
+@NoDoc
+const class NamedInspector : JsonTypeInspector {
 	private const Type type
 	private const JsonConverter	converter
 
@@ -8,7 +10,7 @@ internal const class NamedInspector : JsonTypeInspector {
 		this.converter	= converter
 	}
 	
-	override JsonTypeMeta? inspect(Type type, JsonInspectors inspectors) {
+	override JsonTypeMeta? inspect(Type type, JsonTypeInspectors inspectors) {
 		return this.type != type && this.type.name != type.name
 			? null
 			: JsonTypeMeta {

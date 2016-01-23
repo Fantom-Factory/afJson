@@ -4,11 +4,14 @@ class Build : BuildPod {
 
 	new make() {
 		podName = "afJson"
-		summary = "My Awesome Json Project"
+		summary = "A JSON to Fantom object mapping library."
 		version = Version("0.0.1")
 
 		meta = [
-			"proj.name" : "Json"
+			"proj.name"		: "Json",
+			"afIoc.module"	: "afJson::JsonModule",
+			"repo.tags"		: "web",
+			"repo.public"	: "false"
 		]
 
 		depends = [

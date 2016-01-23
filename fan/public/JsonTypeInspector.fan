@@ -7,7 +7,7 @@ const mixin JsonTypeInspector {
 	** 'inspectors' is passed so inspection may recurse into embedded objects.
 	** 
 	** Implementations should return 'null' if they are not responsible for converting the given type.
-	abstract JsonTypeMeta? inspect(Type type, JsonInspectors inspectors)
+	abstract JsonTypeMeta? inspect(Type type, JsonTypeInspectors inspectors)
 	
 }
 
