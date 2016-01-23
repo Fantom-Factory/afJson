@@ -47,18 +47,21 @@ const class ObjConverter : JsonConverter {
 			return fval
 		}
 		
-		try return createEntity(ctx.meta.type, fieldVals)
+		try return createEntity(ctx.meta.implType ?: ctx.meta.type, fieldVals)
 		catch (Err err)
 			throw Err("Could not create instance of ${ctx.meta.type} with: ${fieldVals}", err)
 	}
 	
-	** A hook to create Entity instance.
-	** An overridable hook that uses IoC to autobuild an Entity instance.
+	** Creates an Entity instance using [BeanFactory]`afBeanUtils::BeanFactory`.
+	** 
+	** Override if you prefer your entities to be autobuilt by IoC.
 	virtual Obj? createEntity(Type type, Field:Obj? fieldVals) {
 		BeanFactory(type, null, fieldVals).create
 	}
 	
-	** Creates an empty *ordered* map. Override if you prefer your JSON maps to be unordered or case-insensitive.
+	** Creates an empty *ordered* JSON map.
+	** 
+	** Override if you prefer your JSON maps unordered or case-insensitive.
 	virtual Str:Obj? createJsonObj() {
 		Str:Obj?[:] { it.ordered = true }
 	}
