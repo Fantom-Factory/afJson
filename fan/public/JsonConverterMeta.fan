@@ -1,4 +1,5 @@
 
+// FIXME rename to JsonTypeMeta
 const class JsonConverterMeta {
 
 	** The fantom 'Type' being converted. 
@@ -7,7 +8,7 @@ const class JsonConverterMeta {
 	** The converter used to convert this object. 
 	const JsonConverter converter
 
-	** The implementation 'Type' to use when instantiating this object. 
+	** The Fantom implementation 'Type' to use when instantiating this object. 
 	** Use when this field references a mixin or a superclass. 
 	** 
 	** Taken from '@JsonProperty.implType' and defaults to the field type if not available.
@@ -15,10 +16,9 @@ const class JsonConverterMeta {
 	** Used / set by `JsonObjConverter`.
 	const Type? 	implType
 
-	** Should this value be saved in a JSON object, this is the property name it is stored under.
-	** The name of the JSON object property this field maps to. 
+	** The property name used when this value is stored in a JSON object.
 	** 
-	** Taken from '@JsonProperty.propertyName' and defaults to field name if not available.
+	** Taken from '@JsonProperty.propertyName' and defaults to the field name if not available.
 	** 
 	** Used / set by `JsonObjConverter`.
 	const Str? 		propertyName
