@@ -14,7 +14,7 @@ const class NamedInspector : JsonTypeInspector {
 		return this.type != type && this.type.name != type.name
 			? null
 			: JsonTypeMeta {
-				it.type			= this.type
+				it.type			= type
 				it.converter	= this.converter
 			}
 	}

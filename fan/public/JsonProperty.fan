@@ -12,8 +12,14 @@ facet class JsonProperty {
 	** 
 	** Defaults to the field type.
 	const Type? implType
+	
+	** Dictates whether or not 'null' values are persisted in JSON objects.
+	** 
+	** If 'null' then the decision is deferred to the 'ObjConverter' implementation, which is 'false' by default.
+	** 
+	** Note that the 'null' check is performed on the JSON value *after* any conversion. 
+	const Bool? storeNullValues
 
-	// FIXME converterType
 	** Use to name a custom JSON '<->' Fantom Converter. The type should extend 'JsonConverter'.
 	** 
 	** The converter should have a no-args ctor or, if using IoC, a ctor suitable for autobuild. 

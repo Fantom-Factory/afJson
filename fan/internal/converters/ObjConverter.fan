@@ -4,6 +4,18 @@ using afBeanUtils::BeanFactory
 @NoDoc
 const class ObjConverter : JsonConverter {
 	
+	** If 'false' then 
+	const Bool	storeNullValues
+
+	** Creates a new 'ObjConverter' with the given 'null' strategy.
+	** 
+	** If 'storeNullFields' is 'true' then converted 'null' values are returned in the resultant JSON.
+	** If 'false' (the default) then the key / value pair is omitted.
+	new make(Bool storeNullValues := false, |This|? in := null) {
+		this.storeNullValues = storeNullValues
+		in?.call(this) 
+	}
+	
 	override Obj? toJson(JsonConverterCtx ctx, Obj? fantomObj) {
 		if (fantomObj == null) return null
 
@@ -12,6 +24,10 @@ const class ObjConverter : JsonConverter {
 			fval := field.get(fantomObj)
 			jval := ctx.toJson(meta, fval)
 			
+			if (jval == null && (meta.storeNullValues ?: storeNullValues).not)
+				// bug out if we're not storing null values
+				return
+
 			// use add, rather than set, so an Err is thrown should we accidently try to add the 
 			// same name twice (from using the Property@name facet)
 			jsonMap.add(meta.propertyName, jval)
