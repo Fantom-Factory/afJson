@@ -19,21 +19,24 @@ const class ObjInspector : JsonTypeInspector {
 			
 			if (prop.converterType != null) {
 				map[field] = JsonTypeMeta {
-					it.type		 	= type
-					it.field	 	= field
-					it.converter 	= createConverter(prop.converterType)
-					it.implType	 	= prop.implType 	?: field.type
-					it.propertyName	= prop.propertyName	?: field.name
+					it.type		 		= type
+					it.field	 		= field
+					it.implType	 		= prop.implType 	?: field.type
+					it.propertyName		= prop.propertyName	?: field.name
+					it.storeNullValues	= prop.storeNullValues
+					it.converter 		= createConverter(prop.converterType)
 				}
 			} else {			
 				meta := inspectors.getOrInspect(type)
 				map[field] = JsonTypeMeta {
-					it.type		 	= meta.type
-					it.field	 	= field
-					it.converter 	= meta.converter
-					it.properties 	= meta.properties
-					it.implType	 	= prop.implType 	?: field.type
-					it.propertyName	= prop.propertyName	?: field.name
+					it.type		 		= type
+					it.field	 		= field
+					it.implType	 		= prop.implType 	?: field.type
+					it.propertyName		= prop.propertyName	?: field.name
+					it.storeNullValues	= prop.storeNullValues
+					it.converter 		= meta.converter
+					it.properties 		= meta.properties
+					it.stash			= meta.stash
 				}
 			}
 		}
