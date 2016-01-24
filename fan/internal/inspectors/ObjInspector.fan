@@ -20,6 +20,7 @@ const class ObjInspector : JsonTypeInspector {
 			if (prop.converterType != null) {
 				map[field] = JsonTypeMeta {
 					it.type		 	= type
+					it.field	 	= field
 					it.converter 	= createConverter(prop.converterType)
 					it.implType	 	= prop.implType 	?: field.type
 					it.propertyName	= prop.propertyName	?: field.name
@@ -28,6 +29,7 @@ const class ObjInspector : JsonTypeInspector {
 				meta := inspectors.getOrInspect(type)
 				map[field] = JsonTypeMeta {
 					it.type		 	= meta.type
+					it.field	 	= field
 					it.converter 	= meta.converter
 					it.properties 	= meta.properties
 					it.implType	 	= prop.implType 	?: field.type

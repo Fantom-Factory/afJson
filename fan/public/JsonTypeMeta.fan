@@ -18,6 +18,9 @@ const class JsonTypeMeta {
 	** Taken from '@JsonProperty.propertyName' and defaults to the field name if not available.
 	const Str? 		propertyName
 
+	** The field, if any, this meta corresponds to.
+	const Field?	field
+
 	// NOTE: there is no jsonType as this is wholly determined by the converter.
 	// Having a jsonType would only make sense if we had ONE converter that handled everything. 
 	
