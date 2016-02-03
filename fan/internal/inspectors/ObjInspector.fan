@@ -5,9 +5,14 @@ using afBeanUtils
 @NoDoc	// Advanced use only!
 const class ObjInspector : JsonTypeInspector {
 
-	const JsonConverter converter	:= ObjConverter()
+	** Defaults to an instance of 'ObjConverter'.
+	const JsonConverter? objConverter
 	
-	new make(|This|? in := null) { in?.call(this) }
+	new make(|This|? in := null) {
+		in?.call(this)
+		if (objConverter == null)
+			objConverter = ObjConverter()
+	}
 	
 	override JsonTypeMeta? inspect(Type objType, JsonTypeInspectors inspectors) {
 		map := Field:JsonTypeMeta[:] { it.ordered=true }
@@ -45,17 +50,26 @@ const class ObjInspector : JsonTypeInspector {
 
 		return JsonTypeMeta {
 			it.type		 	= objType
-			it.converter 	= this.converter
+			it.converter 	= createObjConverter
 			it.properties 	= map
 		}
 	}
 	
-	** Creates a 'JsonConverter' instance using [BeanFactory]`afBeanUtils::BeanFactory`.
-	** Called when '@Property.converterType' is not null.
+	** Hook to create 'JsonConverter' instances. 
+	** Used to instantiate types defined by '@Property.converterType'.
 	** 
-	** Override if you prefer your converters to be autobuilt by IoC.
+	** By default instances are created with [BeanFactory]`afBeanUtils::BeanFactory`.
+	** 
+	** Override if you prefer converters to be autobuilt by IoC.
 	virtual Obj? createConverter(Type type) {
 		BeanFactory(type).create
+	}
+
+	** Hook to create 'JsonConverter' instances for Objects.
+	** 
+	** By default this just returns 'objConverter'.
+	virtual Obj? createObjConverter() {
+		objConverter
 	}
 
 	** Hook to alter the given 'implType'.
