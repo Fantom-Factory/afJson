@@ -49,4 +49,8 @@ const class JsonTypeMeta {
 	
 	// Singleton instance.
 	private static const Field:JsonTypeMeta emptyMap := Field:JsonTypeMeta[:]
+	
+	override Str toStr() {
+		field?.qname ?: type.qname
+	}
 }
