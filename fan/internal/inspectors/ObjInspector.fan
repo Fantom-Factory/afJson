@@ -1,5 +1,7 @@
 using afBeanUtils
 
+** The main inspector for Objects. 
+** Creates a nested ZZZZ blah by inspecting fields annotated with the '@JsonProperty' facet.
 @NoDoc	// Advanced use only!
 const class ObjInspector : JsonTypeInspector {
 
@@ -21,8 +23,8 @@ const class ObjInspector : JsonTypeInspector {
 				map[field] = JsonTypeMeta {
 					it.type		 		= type
 					it.field	 		= field
-					it.implType	 		= prop.implType 	?: field.type
-					it.propertyName		= prop.propertyName	?: field.name
+					it.implType	 		= getImplType(field, prop.implType ?: field.type)
+					it.propertyName		= getPropertyName(field, prop.propertyName ?: field.name)
 					it.storeNullValues	= prop.storeNullValues
 					it.converter 		= createConverter(prop.converterType)
 				}
@@ -31,8 +33,8 @@ const class ObjInspector : JsonTypeInspector {
 				map[field] = JsonTypeMeta {
 					it.type		 		= type
 					it.field	 		= field
-					it.implType	 		= prop.implType 	?: field.type
-					it.propertyName		= prop.propertyName	?: field.name
+					it.implType	 		= getImplType(field, prop.implType ?: field.type)
+					it.propertyName		= getPropertyName(field, prop.propertyName ?: field.name)
 					it.storeNullValues	= prop.storeNullValues
 					it.converter 		= meta.converter
 					it.properties 		= meta.properties
@@ -55,4 +57,14 @@ const class ObjInspector : JsonTypeInspector {
 	virtual Obj? createConverter(Type type) {
 		BeanFactory(type).create
 	}
+
+	** Hook to alter the given 'implType'.
+	** 
+	** Returns 'implType' by default.
+	virtual Type getImplType(Field field, Type implType) { implType }
+
+	** Hook to alter the given 'propertyName'.
+	** 
+	** Returns 'propertyName' by default.
+	virtual Str getPropertyName(Field field, Str propertyName) { propertyName }
 }
