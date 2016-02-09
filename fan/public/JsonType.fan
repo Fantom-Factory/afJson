@@ -35,12 +35,15 @@ enum class JsonType {
 		type := fantomType?.toNonNullable
 			
 		switch (type?.name) {
-			case null:		return nul
-			case "Bool":	return boolean
-			case "List":	return array
-			case "Map":		return object
-			case "Num":		return number
-			case "Str":		return string
+			case null:			return nul
+			case "Bool":		return boolean
+			case "Decimal":		return number
+			case "Float":		return number
+			case "Int":			return number
+			case "List":		return array
+			case "Map":			return object
+			case "Str":			return string
+			case "Num":			return number
 		}
 
 		return null ?: (checked ? throw ArgErr(ErrMsgs.jsonType_unknownType(type)) : null)

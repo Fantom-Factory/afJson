@@ -18,7 +18,7 @@ internal const class SimpleConveter : JsonConverter {
 		try {
 			return fromStr.call(jsonObj)
 		} catch (Err err) {
-			throw Err("Could not call ${fromStr.qname}() with: ${jsonObj}", err)
+			throw Err("Could not call ${fromStr.qname}() with: ${jsonObj.typeof.qname} ${jsonObj}", err)
 		}
 	}
 }
