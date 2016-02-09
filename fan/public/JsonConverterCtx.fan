@@ -13,6 +13,7 @@ mixin JsonConverterCtx {
 	** Only available when converting *from* JSON.  
 	abstract Obj?[]?		jsonStack()
 	
+	** Allows embedded types to be inspected and converted.
 	abstract JsonTypeMeta	inspect(Type type)
 
 	** Returns the current 'JsonTypeMeta' being converted.
