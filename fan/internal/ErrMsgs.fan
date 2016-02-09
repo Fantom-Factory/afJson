@@ -15,7 +15,7 @@ internal const mixin ErrMsgs {
 	}
 
 	static Str objConv_propertyNotFound(Field field, Str:Obj? jsonMap) {
-		stripSys("JSON object does not contain a property for field ${field.qname} : ${jsonMap}")
+		stripSys("Could not set field '${field.qname}' because I couldn't find a matching JSON property in : ${jsonMap}")
 	}
 
 	static Str objConv_propertyIsNull(Str propName, Field field, Str:Obj? jsonMap) {
