@@ -1,4 +1,4 @@
-using afConcurrent
+using afConcurrent::AtomicMap
 
 // We need JsonInspectors if only to have an IoC service to contribute Inspectors too!
 ** (Service) - 
