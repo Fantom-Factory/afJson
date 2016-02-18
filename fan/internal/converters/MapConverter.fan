@@ -27,8 +27,10 @@ const class MapConverter : JsonConverter {
 		fanMap.each |fVal, fKey| {
 			// Map keys are special and have to be converted <=> Str
 			// As *anything* can be converter toStr(), let's check up front that we can convert it back to Fantom again!
-			if (!typeCoercer.canCoerce(Str#, fKey.typeof))
-				throw Err(ErrMsgs.mapConverter_cannotCoerceKey(fKey.typeof))
+			
+			// Actually, lets not - too much processing overhead for little value 
+//			if (!typeCoercer.canCoerce(Str#, fKey.typeof))
+//				throw Err(ErrMsgs.mapConverter_cannotCoerceKey(fKey.typeof))
 			
 			// converters are for converting JSON values, hence we've chosen to use simple coercion for map keys 
 			mKey := typeCoercer.coerce(fKey, Str#)

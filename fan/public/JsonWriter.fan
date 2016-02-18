@@ -1,11 +1,21 @@
 
 ** (Service) - 
+** Writes Fantom objects to Javascript Object Notation (JSON).
 const class JsonWriter {
 
-	** Convenience for `writeJsonObj` to an in-memory string.
-	Str writeJsonObjToStr(Obj? obj) {
+	// FIXME prittyPrint
+//	Str prettyPrintJsonObj(Obj? obj) {
+//		
+//	}
+//
+//	Str prettyPrintJsonStr(Str json) {
+//		prettyPrintJsonObj(JsonReader().readJsonObj(json.in))
+//	}
+	
+	** Convenience for serialising the given Fantom object to JSON.
+	Str writeObjToJson(Obj? obj) {
 		buf := StrBuf()
-		writeJsonObj(obj, buf.out)
+		writeObj(obj, buf.out)
 		return buf.toStr
 	}
 
@@ -17,7 +27,7 @@ const class JsonWriter {
 	**	 - Str
 	**	 - Str:Obj?
 	**	 - Obj?[]
-	This writeJsonObj(Obj? obj, OutStream out) {
+	This writeObj(Obj? obj, OutStream out) {
 		obj = convertVal(obj)
 			 if (obj is Str)	_writeJsonStr	(out, obj)
 		else if (obj is Num)	_writeJsonNum	(out, obj)
@@ -29,7 +39,7 @@ const class JsonWriter {
 		return this
 	}
 
-	** A simple hook to convert values *before* they are written.
+	** A simple hook to alter values *before* they are written.
 	** 
 	** By default this just returns the given value.  
 	virtual Obj? convertVal(Obj? val) { val }
@@ -53,7 +63,7 @@ const class JsonWriter {
 		notFirst := false
 		array.each |item| {
 			if (notFirst) out.writeChar(JsonToken.comma)
-			writeJsonObj(item, out)
+			writeObj(item, out)
 			notFirst = true
 		}
 		out.writeChar(JsonToken.arrayEnd)
@@ -96,6 +106,6 @@ const class JsonWriter {
 	private Void _writeJsonPair(OutStream out, Str key, Obj? val) {
 		_writeJsonStr(out, key)
 		out.writeChar(JsonToken.colon)
-		writeJsonObj(val, out)
+		writeObj(val, out)
 	}
 }
