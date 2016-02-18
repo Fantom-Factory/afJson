@@ -7,6 +7,8 @@ const class ObjConverter : JsonConverter {
 	** If 'false' then 
 	const Bool	storeNullValues
 
+	const Bool	allowSurplusJson	:= true
+
 	** Creates a new 'ObjConverter' with the given 'null' strategy.
 	** 
 	** If 'storeNullFields' is 'true' then converted 'null' values are returned in the resultant JSON.
@@ -16,6 +18,7 @@ const class ObjConverter : JsonConverter {
 		in?.call(this) 
 	}
 	
+	@NoDoc
 	override Obj? toJson(JsonConverterCtx ctx, Obj? fantomObj) {
 		if (fantomObj == null) return null
 
@@ -35,6 +38,7 @@ const class ObjConverter : JsonConverter {
 		return jsonMap
 	}
 
+	@NoDoc
 	override Obj? toFantom(JsonConverterCtx ctx, Obj? jsonObj) {
 		if (jsonObj == null) return null
 
@@ -42,10 +46,11 @@ const class ObjConverter : JsonConverter {
 		if (jsonObj.typeof.name != "Map")
 			throw Err(ErrMsgs.objConv_noConverter(ctx.meta.type, jsonObj))
 
-		jsonMap := (Str:Obj) jsonObj
-		fieldVals := ctx.meta.properties.map |meta, field -> Obj?| {
-			jval := jsonMap[meta.propertyName]
-			fval := ctx.toFantom(meta, jval)
+		jsonMap		:= ((Str:Obj?) jsonObj).dup.rw
+		jsonDup		:= jsonMap.dup.rw
+		fieldVals	:= ctx.meta.properties.map |meta, field -> Obj?| {
+			jval	:= jsonDup.remove(meta.propertyName)
+			fval	:= ctx.toFantom(meta, jval)
 			
 			if (fval == null && !field.type.isNullable) {
 				// a value *is* required so decide which Err msg to throw 
@@ -63,9 +68,18 @@ const class ObjConverter : JsonConverter {
 			return fval
 		}
 		
+		if (jsonDup.size > 0)
+			surplusJson(ctx, jsonDup)
+		
 		try return createEntity(ctx.meta.implType ?: ctx.meta.type, fieldVals)
 		catch (Err err)
 			throw Err("Could not create instance of ${ctx.meta.type} with: ${fieldVals}", err)
+	}
+	
+	** Hook for dealing with surplus JSON.
+	virtual Void surplusJson(JsonConverterCtx ctx, Str:Obj? jsonMap) {
+		if ((ctx.meta.allowSurplusJson ?: allowSurplusJson).not)
+			throw Err("The following JSON keys were not mapped to ${ctx.meta.implType ?: ctx.meta.type} - $jsonMap.keys")		
 	}
 	
 	** Creates an Entity instance using [BeanFactory]`afBeanUtils::BeanFactory`.

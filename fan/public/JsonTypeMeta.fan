@@ -35,6 +35,12 @@ const class JsonTypeMeta {
 	** Returns empty list if there are no properties.
 	const Field:JsonTypeMeta	properties	:= emptyMap
 	
+	** If this type models a JSON object, this value dictates whether or not surplus JSON values 
+	** are allowed when converting it to Fantom.  
+	** 
+	** If 'null' then the decision is deferred to the 'ObjConverter' implementation, which is 'true' by default.
+	const Bool? allowSurplusJson
+	
 	** Optional stash of data for use by custom converters.
 	const Obj?		stash
 	

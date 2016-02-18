@@ -51,7 +51,7 @@ const class JsonWriter {
 		notFirst := false
 		map.each |val, key| {
 			if (key isnot Str) throw Err("JSON map key is not Str type: $key [$key.typeof]")
-			if (notFirst) out.writeChar(JsonToken.comma).writeChar('\n')
+			if (notFirst) out.writeChar(JsonToken.comma)
 			_writeJsonPair(out, key, val)
 			notFirst = true
 		}
