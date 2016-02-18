@@ -12,6 +12,14 @@ const class JsonModule {
 				[
 					"id"	: JsonTypeInspectors#.qname,
 					"type"	: JsonTypeInspectors#,
+				],
+				[
+					"id"	: JsonReader#.qname,
+					"type"	: JsonReader#,
+				],
+				[
+					"id"	: JsonWriter#.qname,
+					"type"	: JsonWriter#,
 				]
 			],
 

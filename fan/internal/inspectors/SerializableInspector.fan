@@ -1,4 +1,4 @@
-using afConcurrent
+using afConcurrent::AtomicMap
 
 internal const class SerializableInspector : JsonTypeInspector {
 	private const AtomicMap	converters	:= AtomicMap { it.keyType=Type#; it.valType=SimpleConveter# }
