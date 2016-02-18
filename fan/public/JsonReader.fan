@@ -1,10 +1,11 @@
 
 ** (Service) - 
+** Reads Fantom objects from Javascript Object Notation (JSON).
 const class JsonReader {
 
 	// FIXME what if the JSON is a whole number like '69' not '69.0' and we want to map it to a float? 
 	
-	** Reads a JSON object from the given stream and returns one of the following:
+	** Reads an object from the given JSON stream and returns one of the following:
 	**	 - 'null'
 	**	 - 'Bool'
 	**	 - 'Int'
@@ -14,7 +15,7 @@ const class JsonReader {
 	**	 - 'Obj?[]'
 	**
 	** Use [Str.in]`sys::Str.in` to read from an in-memory string.
-	Obj? readJsonObj(InStream in, Bool closeStream := true) {
+	Obj? readObj(InStream in, Bool closeStream := true) {
 		ctx := JsonReadCtx(in)
 		try {
 			ctx.consume
@@ -26,21 +27,21 @@ const class JsonReader {
 				in.close
 	}
 
-	** Reads a JSON list from the given stream.
+	** Reads a 'List' from the given stream.
 	** 
 	** Convenience for '(Obj?[]?) readJsonObj(...)'
-	Obj?[]? readJsonList(InStream in, Bool closeStream := true) {
-		readJsonObj(in, closeStream)
+	Obj?[]? readList(InStream in, Bool closeStream := true) {
+		readObj(in, closeStream)
 	}
 
-	** Reads a JSON list from the given stream.
+	** Reads a 'Map' from the given stream.
 	** 
 	** Convenience for '([Str:Obj?]?) readJsonObj(...)'
-	[Str:Obj?]? readJsonMap(InStream in, Bool closeStream := true) {
-		readJsonObj(in, closeStream)
+	[Str:Obj?]? readMap(InStream in, Bool closeStream := true) {
+		readObj(in, closeStream)
 	}
 
-	** A simple hook to convert values *after* they have been read.
+	** A simple hook to alter values *after* they have been read.
 	** 
 	** By default this just returns the given value.  
 	virtual Obj? convertVal(Obj? val) { val }
