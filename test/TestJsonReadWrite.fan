@@ -98,24 +98,8 @@ internal class TestJsonReadWrite : JsonTest {
 		verifyWrite(["key":"val"], Str<|{"key":"val"}|>)
 		verifyWrite(["key":"val\\\"ue"], Str<|{"key":"val\\\"ue"}|>)
 
-
-		// simples
-		verifyWrite(5min, Str<|"5min"|>)
-		verifyWrite(`/some/uri/`, Str<|"/some/uri/"|>)
-		verifyWrite(Time("23:45:01"), Str<|"23:45:01"|>)
-		verifyWrite(Date("2009-12-21"), Str<|"2009-12-21"|>)
-		verifyWrite(Month.dec, Str<|"dec"|>)
-		verifyWrite(Version("3.4"), Str<|"3.4"|>)
-
-		// serializable
-		verifyWrite(T_SerialA(),
-			Str<|{"b":true,
-			     "i":7,
-			     "f":5.0,
-			     "s":"string\n",
-			     "ints":[1,2,3]}|>)
-
 		// errors
+		verifyErr(IOErr#) { verifyWrite(5min, "") }
 		verifyErr(IOErr#) { verifyWrite(Buf(), "") }
 		verifyErr(IOErr#) { verifyWrite(Str#.pod, "") }
 	}
@@ -179,14 +163,4 @@ internal class TestJsonReadWrite : JsonTest {
 		obj = jsonReader.readJsonObj(buf.flip.in)
 		f()
 	}
-}
-
-@Serializable
-internal class T_SerialA {
-	Bool b := true
-	Int i := 7
-	Float f := 5f
-	Str s := "string\n"
-	@Transient Int noGo := 99
-	Int[] ints	:= [1, 2, 3]
 }

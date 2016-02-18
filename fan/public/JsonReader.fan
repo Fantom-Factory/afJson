@@ -4,17 +4,16 @@ const class JsonReader {
 
 	// FIXME what if the JSON is a whole number like '69' not '69.0' and we want to map it to a float? 
 	
-	** Read a JSON object from this stream and return one
-	** of the follow types:
-	**	 - null
-	**	 - Bool
-	**	 - Int
-	**	 - Float
-	**	 - Str
-	**	 - Str:Obj?
-	**	 - Obj?[]
+	** Reads a JSON object from the given stream and returns one of the following:
+	**	 - 'null'
+	**	 - 'Bool'
+	**	 - 'Int'
+	**	 - 'Float'
+	**	 - 'Str'
+	**	 - 'Str:Obj?'
+	**	 - 'Obj?[]'
 	**
-	** See [Str.in]`sys::Str.in` to read from an in-memory string.
+	** Use [Str.in]`sys::Str.in` to read from an in-memory string.
 	Obj? readJsonObj(InStream in, Bool closeStream := true) {
 		ctx := JsonReadCtx(in)
 		try {
@@ -27,6 +26,51 @@ const class JsonReader {
 				in.close
 	}
 
+	** Reads a JSON list from the given stream.
+	** 
+	** Convenience for '(Obj?[]?) readJsonObj(...)'
+	Obj?[]? readJsonList(InStream in, Bool closeStream := true) {
+		readJsonObj(in, closeStream)
+	}
+
+	** Reads a JSON list from the given stream.
+	** 
+	** Convenience for '([Str:Obj?]?) readJsonObj(...)'
+	[Str:Obj?]? readJsonMap(InStream in, Bool closeStream := true) {
+		readJsonObj(in, closeStream)
+	}
+
+	** A simple hook to convert values *after* they have been read.
+	** 
+	** By default this just returns the given value.  
+	virtual Obj? convertVal(Obj? val) { val }
+
+
+	
+	// ---- private methods -----------------------------------------------------------------------
+	
+	private Obj? _parseVal(JsonReadCtx ctx) {
+			 if (ctx.cur == JsonToken.quote)		return convertVal(_parseStr(ctx))
+		else if (ctx.cur.isDigit || ctx.cur == '-')	return convertVal(_parseNum(ctx))
+		else if (ctx.cur == JsonToken.objectStart)	return convertVal(_parseObj(ctx))
+		else if (ctx.cur == JsonToken.arrayStart)	return convertVal(_parseArray(ctx))
+		else if (ctx.cur == 't') {
+			"true".size.times |->| { ctx.consume }
+			return convertVal(true)
+		}
+		else if (ctx.cur == 'f') {
+			"false".size.times |->| { ctx.consume }
+			return convertVal(false)
+		}
+		else if (ctx.cur == 'n') {
+			"null".size.times |->| { ctx.consume }
+			return convertVal(null)
+		}
+
+		if (ctx.cur < 0) throw ctx.err("Unexpected end of stream")
+		throw ctx.err("Unexpected token " + ctx.cur)
+	}
+
 	private Str:Obj? _parseObj(JsonReadCtx ctx) {
 		pairs := Str:Obj?[:] { ordered = true }
 
@@ -37,10 +81,6 @@ const class JsonReader {
 		while (true) {
 			ctx.skipWhitespace
 			if (ctx.maybe(JsonToken.objectEnd)) return pairs
-
-			// FIXIT would like pair to be a 2-tuple
-			// OR a map with atom/symbol keys!
-			// FIXIT what about empty object?
 			_parsePair(ctx, pairs)
 			if (!ctx.maybe(JsonToken.comma)) break
 		}
@@ -63,28 +103,6 @@ const class JsonReader {
 		ctx.skipWhitespace
 
 		obj[key] = val
-	}
-
-	private Obj? _parseVal(JsonReadCtx ctx) {
-			 if (ctx.cur == JsonToken.quote)			return _parseStr(ctx)
-		else if (ctx.cur.isDigit || ctx.cur == '-')	return _parseNum(ctx)
-		else if (ctx.cur == JsonToken.objectStart)		return _parseObj(ctx)
-		else if (ctx.cur == JsonToken.arrayStart)		return _parseArray(ctx)
-		else if (ctx.cur == 't') {
-			"true".size.times |->| { ctx.consume }
-			return true
-		}
-		else if (ctx.cur == 'f') {
-			"false".size.times |->| { ctx.consume }
-			return false
-		}
-		else if (ctx.cur == 'n') {
-			"null".size.times |->| { ctx.consume }
-			return null
-		}
-
-		if (ctx.cur < 0) throw ctx.err("Unexpected end of stream")
-		throw ctx.err("Unexpected token " + ctx.cur)
 	}
 
 	private Obj _parseNum(JsonReadCtx ctx) {
@@ -166,8 +184,6 @@ const class JsonReader {
 		ctx.expect(JsonToken.arrayEnd)
 		return array
 	}
-
-//	private Err _err(Str msg) { ParseErr(msg) }
 }
 
 ** JsonToken represents the tokens in JSON.

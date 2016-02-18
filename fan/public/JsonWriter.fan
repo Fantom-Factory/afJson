@@ -17,43 +17,24 @@ const class JsonWriter {
 	**	 - Str
 	**	 - Str:Obj?
 	**	 - Obj?[]
-	**	 - [simple]`docLang::Serialization#simple` (written as JSON string)
-	**	 - [serializable]`docLang::Serialization#serializable` (written as JSON object)
 	This writeJsonObj(Obj? obj, OutStream out) {
+		obj = convertVal(obj)
 			 if (obj is Str)	_writeJsonStr	(out, obj)
 		else if (obj is Num)	_writeJsonNum	(out, obj)
 		else if (obj is Bool)	_writeJsonBool	(out, obj)
 		else if (obj is Map)	_writeJsonMap	(out, obj)
 		else if (obj is List)	_writeJsonList	(out, obj)
 		else if (obj == null)	_writeJsonNull	(out)
-		else 					_writeJsonObj	(out, obj)
+		else throw IOErr("Unknown JSON object: ${obj.typeof} - ${obj}")
 		return this
 	}
 
-	private Void _writeJsonObj(OutStream out, Obj obj) {
-		type := Type.of(obj)
-
-		// if a simple, write it as a string
-		ser := type.facet(Serializable#, false) as Serializable
-		if (ser == null) throw IOErr("Object type not serializable: $type")
-
-		if (ser.simple) {
-			_writeJsonStr(out, obj.toStr)
-			return
-		}
-
-		// FIXME delete this - it's a poor man's Obj Mapping
-		// serialize as JSON object
-		out.writeChar(JsonToken.objectStart)
-		first := true
-		type.fields.each |f, i| {
-			if (f.isStatic || f.hasFacet(Transient#) == true) return
-			if (first) first = false
-			else out.writeChar(JsonToken.comma).writeChar('\n')
-			_writeJsonPair(out, f.name, f.get(obj))
-		}
-		out.writeChar(JsonToken.objectEnd)
-	}
+	** A simple hook to convert values *before* they are written.
+	** 
+	** By default this just returns the given value.  
+	virtual Obj? convertVal(Obj? val) { val }
+	
+	// ---- private methods -----------------------------------------------------------------------
 
 	private Void _writeJsonMap(OutStream out, Map map) {
 		out.writeChar(JsonToken.objectStart)
