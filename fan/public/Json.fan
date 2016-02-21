@@ -40,7 +40,7 @@ internal const class JsonImpl : Json {
 	}
 
 	override Obj? readEntity(Str? json, Type fantomType) {
-		jsonObj	:= jsonReader.readObj(json?.in)
+		jsonObj	:= jsonReader.readObj(json)
 		entity	:= inspectors.toFantom(jsonObj, fantomType)
 		return entity
 	}

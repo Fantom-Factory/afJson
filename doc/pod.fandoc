@@ -1,11 +1,85 @@
-Overview [#overview]
-********************
+Overview
+********
 Json is a Fantom to Javascript Object Notation (JSON) mapping library.
+
+Features:
+
+ - Converts nested / embedded objects
+ - Runs on Javascript platforms
+ - IoC enabled
+ - Very customisable
 
 
 
 Quick Start
 ***********
+1. Create a text file called 'Example.fan'
+
+    syntax: fantom
+    using afJson
+
+    class Example {
+        Void main() {
+            jsonService := Json()
+
+            // write some JSON...
+            json := """{
+                           "name"  : "Emma",
+                           "sex"   : "female",
+                           "likes" : ["Cakes","Adventure"],
+                           "car"   : {
+                               "name"  : "Golf",
+                               "brand" : "VW"
+                           },
+                           "score" : 9
+                       }"""
+
+            // ...and WHAM! A fully inflated domain object!
+            friend := (Friend) jsonService.readEntity(json, Friend#)
+
+            echo(friend.name)     // --> Emma
+            echo(friend.car.name) // --> Golf
+
+            friend.score = 11
+            friend.car   = null
+
+            // we can event convert the other way!
+            moarJson := jsonService.writeEntity(friend)
+
+            echo(moarJson)
+            // --> {"name":"Emma","sex":"female","score":11,"likes":["Cakes","Adventure"]}
+        }
+    }
+
+
+    class Friend {
+        @JsonProperty Str    name
+        @JsonProperty Sex    sex
+        @JsonProperty Int    score
+        @JsonProperty Str[]  likes
+        @JsonProperty Car?   car    // embedded objects!
+
+        new make(|This| f) { f(this) }
+    }
+
+    class Car {
+        @JsonProperty Str    name
+        @JsonProperty Str    brand
+
+        new make(|This| f) { f(this) }
+    }
+
+    enum class Sex {
+        male, female;
+    }
+
+3. Run 'Example.fan' as a Fantom script from the command line:
+    C:\> fan Example.fan
+
+    Emma
+    Golf
+    {"name":"Emma","sex":"female","score":11,"likes":["Cakes","Adventure"]}
+
 
 
 Terminology
@@ -28,32 +102,155 @@ All conversion of Entities to and from JSON goes through an intermediary 'JsonOb
 
 Usage
 *****
-Some default behaviour:
+Any Fantom object may be converted to and from JSON. Just make sure that all fields to be converted are annotated with the '@JsonProperty' facet.
 
- - Every field on an entity to be converted must be annotated with the '@JsonProperty' facet.
+Supported Types
+===============
+The [JSON Spec]`http://www.json.org/` only defines types for 'Bool', 'List', 'Null', 'Number', 'Object', and 'String'. As such, this library provides the following mappings:
 
- - When converting *to JSON*, 'null' values are persisted.
+pre>
+table:
+ Fantom              JSON
+--------------      --------
+ sys::Bool     <-->  Bool
+ sys::Decimal  <-->  Number
+ sys::Enum     <-->  String
+ sys::Field    <-->  String
+ sys::Float    <-->  Number
+ sys::Int      <-->  Number
+ sys::List     <-->  List
+ sys::Map      <-->  Object
+ sys::Method   <-->  String
+      null     <-->  Null
+ sys::Obj      <-->  Object
+ sys::Slot     <-->  String
+ sys::Str      <-->  String
+ sys::Type     <-->  String
+<pre
 
- - When converting *to Fantom*, all 'non-null' fields *must* have a corresponding JSON value.
+Plus any 'Type' annotated with '@Serializable { simple = true }' is converted to and from a 'Str'. Combined that accounts for all Fantom literals and core types.
 
+
+
+Const vs Non-Const
+==================
+This library can instantiate any Fantom object, both 'const' and 'non-const'. But if the type is 'const', or if it has 'non-null' fields, then it *must* have an it-block ctor like the one below. That is the only way fields can be set during construction.
+
+pre>
+syntax: fantom
+const class User {
+
+    @JsonProperty
+    const Str name
+
+    // the it-block ctor
+    new make(|This| f) {
+        f(this)
+    }
+}
+<pre
+
+
+
+Null vs Non-Null
+================
+Nullable fields are optional, that is, they do not require a JSON value.
+
+pre>
+syntax: fantom
+class User {
+    @JsonProperty
+    Str? name  // name is optional because it is nullable
+
+    new make(|This| f) { f(this) }
+}
+
+json := "{}"
+user := Json().readEntity(json, User#) as User
+
+echo(user.name)  // --> null
+<pre
+
+Similarly, when converting an entity to JSON, 'null' values are not written out:
+
+pre>
+syntax: fantom
+class User {
+    @JsonProperty
+    Str? name
+
+    new make(|This| f) { f(this) }
+}
+
+user := User { name = null }
+json := Json().writeEntity(user)
+
+echo(json)  // --> {}
+<pre
+
+If you want 'null' values to be written, then set 'storeNullValues = true' on the desired field:
+
+pre>
+syntax: fantom
+class User {
+    @JsonProperty { storeNullValues = true }
+    Str? name
+
+    new make(|This| f) { f(this) }
+}
+
+user := User { name = null }
+json := Json().writeEntity(user)
+
+echo(json)  // --> {"name":null}
+<pre
+
+
+
+Property Names
+==============
+Sometimes you want the JSON name to be different to the field names. To facilitate this, set the '@JsonProperty.propertyName' attribute:
+
+pre>
+syntax: fantom
+class User {
+    @JsonProperty { propertyName = "judge" }
+    Str? name
+
+    new make(|This| f) { f(this) }
+}
+
+user := User { name = "Dredd" }
+json := Json().writeEntity(user)
+
+echo(json)  // --> {"judge":"Dredd"}
+<pre
 
 
 
 Custom Conversion
 *****************
-Json is extremely configurable at all levels. Because of that, the path to conversion may not be as straight forward as you may think. This is how the process works internally.
+The Json library is extremely configurable at all levels. Because of that, object conversion may not be as straight forward as you may think. This explains how the process works...
 
-Every Fantom type to be converted, either a top level entity or an embedded object, is inspected by 'JsonTypeInspectors' which produces a 'JsonTypeMeta' instance. 'JsonTypeMeta' describes how the Fantom type will be converted to / and from JSON. It even holds the 'JsonConverter' instance that will do the converting!
+Every Fantom type to be converted, either a top level entity or an embedded object, is inspected by 'JsonTypeInspectors' which produces a 'JsonTypeMeta' instance. 'JsonTypeMeta' describes how the Fantom type will be converted to / and from JSON. It also holds the 'JsonConverter' instance that will do the converting.
 
-Because each Fantom Type is mapped to a cached 'JsonTypeMeta' instance, this makes conversion fast as types don't have to be re-inspected. Also, if an object is not being converted as you expect, you can inspect the nested hierarchy of 'JsonTypeMeta' objects to see exactly what will happen.
+Because each Fantom Type is mapped to a cached 'JsonTypeMeta' instance, conversion is fast because types don't have to be re-inspected. Also, if an object is not being converted as you expect, you can inspect the nested hierarchy of 'JsonTypeMeta' objects to see exactly what will happen.
 
 'JsonTypeInspectors' holds a list of 'JsonTypeInspector' instances. During inspection, each inspector is called in turn until one of them returns a 'JsonTypeMeta' instance. This makes the order of the inspectors important.
 
 To go the full hog with respect to custom conversion, you should create your own 'JsonTypeInspector' and add / contribute it to 'JsonTypeInspectors'. Your inspector should create 'JsonTypeMeta', complete with a custom converter, that completely describes how the type should be converted.
 
-If you did not want to go as far as creating an inspector you could instead create a 'JsonTypeMeta' instance. This could either be set on 'JsonTypeInspectors' to be used for all given types, or passed to 'Json' methods for adhoc conversions.
+If you did not want to go as far as creating an inspector, you could instead create a 'JsonTypeMeta' instance. This could either be set on 'JsonTypeInspectors' to be used for all given types, or passed to 'Json' methods for ad hoc conversions.
 
-If you are contemplating implementating custom conversion then you are encouraged to look at the Json library source for help and examples.
+Or the easiest, but most limited way, would be to set the '@JsonProperty.converterType' attribute on the affected fields.
+
+If you are contemplating implementating custom conversion then you are encouraged to look at the Json library source for help and examples. It may be preferable to simply extend one the current Inspectors or Converters.
+
+
+
+Examples
+========
+An example of a custom converter maybe one which converts *all* fields of a Fantom obj, and not just those annotated with '@JsonProperty'.
 
 
 

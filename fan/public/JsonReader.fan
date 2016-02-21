@@ -14,13 +14,7 @@ const class JsonReader {
 	**	 - 'Str'
 	**	 - 'Str:Obj?'
 	**	 - 'Obj?[]'
-	**
-	** Use [Str.in]`sys::Str.in` to read from an in-memory string. Example:
-	** 
-	**   syntax: fantom
-	**   json = "[1:true]"
-	**   jsonObj := JsonReader().readObj(json.in)
-	Obj? readObj(InStream? in, Bool closeStream := true) {
+	Obj? readObjFromStream(InStream? in, Bool closeStream := true) {
 		if (in == null)
 			return null
 
@@ -35,18 +29,25 @@ const class JsonReader {
 				in.close
 	}
 
-	** Reads a 'List' from the given stream.
+	** Translates the given JSON to a Fantom 'Obj'.
 	** 
-	** Convenience for '(Obj?[]?) readJsonObj(...)'
-	Obj?[]? readList(InStream? in, Bool closeStream := true) {
-		readObj(in, closeStream)
+	** Convenience for 'readObjFromStream(json?.in)'
+	Obj? readObj(Str? json) {
+		readObjFromStream(json?.in)
 	}
 
-	** Reads a 'Map' from the given stream.
+	** Translates the given JSON to a Fantom 'List'.
 	** 
-	** Convenience for '([Str:Obj?]?) readJsonObj(...)'
-	[Str:Obj?]? readMap(InStream? in, Bool closeStream := true) {
-		readObj(in, closeStream)
+	** Convenience for '(Obj?[]?) readObj(...)'
+	Obj?[]? readList(Str? json) {
+		readObj(json)
+	}
+
+	** Translates the given JSON to a Fantom 'Map'.
+	** 
+	** Convenience for '([Str:Obj?]?) readObj(...)'
+	[Str:Obj?]? readMap(Str? json) {
+		readObj(json)
 	}
 
 	** A simple override hook to alter values *after* they have been read.

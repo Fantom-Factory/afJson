@@ -24,3 +24,4 @@ internal class T_Entity02 {
 	@JsonProperty
 	Str? nullDefault
 }
+
