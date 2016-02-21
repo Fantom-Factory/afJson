@@ -43,13 +43,13 @@ internal class TestJsonReadWrite : JsonTest {
 		verifyBasics(Str<|{"a":1, "b":2,}|>, Str:Obj?["a":1, "b":2])
 
 		// errors
-		verifyErr(ParseErr#) { jsonReader.readObj("\""			.in) }
-		verifyErr(ParseErr#) { jsonReader.readObj("["			.in) }
-		verifyErr(ParseErr#) { jsonReader.readObj("[1"			.in) }
-		verifyErr(ParseErr#) { jsonReader.readObj("[1,2"		.in) }
-		verifyErr(ParseErr#) { jsonReader.readObj(" {"			.in) }
-		verifyErr(ParseErr#) { jsonReader.readObj(""" {"x":"""	.in) }
-		verifyErr(ParseErr#) { jsonReader.readObj(""" {"x":4,""".in) }
+		verifyErr(ParseErr#) { jsonReader.readObj("\""			) }
+		verifyErr(ParseErr#) { jsonReader.readObj("["			) }
+		verifyErr(ParseErr#) { jsonReader.readObj("[1"			) }
+		verifyErr(ParseErr#) { jsonReader.readObj("[1,2"		) }
+		verifyErr(ParseErr#) { jsonReader.readObj(" {"			) }
+		verifyErr(ParseErr#) { jsonReader.readObj(""" {"x":"""	) }
+		verifyErr(ParseErr#) { jsonReader.readObj(""" {"x":4,""") }
 	}
 
 	Void verifyBasics(Str s, Obj? expected) {
@@ -57,14 +57,14 @@ internal class TestJsonReadWrite : JsonTest {
 		verifyRoundtrip(expected)
 
 		// wrap as [s]
-		array := jsonReader.readObj("[$s]".in) as Obj?[]
+		array := jsonReader.readObj("[$s]") as Obj?[]
 		verifyType(array, Obj?[]#)
 		verifyEq(array.size, 1)
 		verifyEq(array[0], expected)
 		verifyRoundtrip(array)
 
 		// wrap as [s, s]
-		array = jsonReader.readObj("[$s,$s]".in) as Obj?[]
+		array = jsonReader.readObj("[$s,$s]") as Obj?[]
 		verifyType(array, Obj?[]#)
 		verifyEq(array.size, 2)
 		verifyEq(array[0], expected)
@@ -72,7 +72,7 @@ internal class TestJsonReadWrite : JsonTest {
 		verifyRoundtrip(array)
 
 		// wrap as {"key":s}
-		map := jsonReader.readObj(" {\"key\":$s}".in) as Str:Obj?
+		map := jsonReader.readObj(" {\"key\":$s}") as Str:Obj?
 		verifyType(map, Str:Obj?#)
 		verifyEq(map.size, 1)
 		verifyEq(map["key"], expected)
@@ -81,7 +81,7 @@ internal class TestJsonReadWrite : JsonTest {
 
 	Void verifyRoundtrip(Obj? obj) {
 		str := jsonWriter.writeObj(obj)
-		roundtrip := jsonReader.readObj(str.in)
+		roundtrip := jsonReader.readObj(str)
 		verifyEq(obj, roundtrip)
 	}
 
@@ -121,7 +121,7 @@ internal class TestJsonReadWrite : JsonTest {
 		str := buf.toStr
 
 		// parse
-		Str:Obj? map := jsonReader.readObj(str.in)
+		Str:Obj? map := jsonReader.readObj(str)
 
 		// verify
 		verifyEq(map["type"], "Foobar")
@@ -147,7 +147,7 @@ internal class TestJsonReadWrite : JsonTest {
 			     "float"	: 2.4,
 			     "dollar"	: "$100 \u00f7",
 			     "a\nb"		: "crazy key"
-			     }|>.in)
+			     }|>)
 
 		f := |->| {
 			verifyEq(obj["foo"], "bar\nbaz")
@@ -164,7 +164,7 @@ internal class TestJsonReadWrite : JsonTest {
 		f()
 		buf := Buf()
 		jsonWriter.writeObjToStream(obj, buf.out)
-		obj = jsonReader.readObj(buf.flip.in)
+		obj = jsonReader.readObjFromStream(buf.flip.in)
 		f()
 	}
 }
