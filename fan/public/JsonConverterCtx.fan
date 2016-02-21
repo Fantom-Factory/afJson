@@ -1,6 +1,8 @@
 
+** Passed to 'JsonConverters' to them contextual information of the conversion in progress.
 mixin JsonConverterCtx {
 
+	** A stack of meta objects that represent the contextual parents of converted objects.
 	abstract JsonTypeMeta[]	metaStack()
 	
 	** A stack of Fantom objects that represent the contextual parents of converted objects.
@@ -26,8 +28,7 @@ mixin JsonConverterCtx {
 		metaStack.last
 	}
 	
-	
-	** For use by converters to convert embedded objects. 
+	** For use by 'JsonConverters' to convert embedded objects. 
 	** The given arguments are pushed on to their corresponding stacks so the conversion that follows may be performed in the proper context.
 	Obj? toJson(JsonTypeMeta meta, Obj? fantomObj) {
 		metaStack.push(meta)
@@ -40,7 +41,7 @@ mixin JsonConverterCtx {
 		}
 	}
 	
-	** For use by converters to convert embedded objects. 
+	** For use by 'JsonConverters' to convert embedded objects. 
 	** The given arguments are pushed on to their corresponding stacks so the conversion that follows may be performed in the proper context.
 	Obj? toFantom(JsonTypeMeta meta, Obj? jsonObj) {
 		metaStack.push(meta)

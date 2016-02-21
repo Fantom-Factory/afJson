@@ -1,6 +1,60 @@
 Overview [#overview]
 ********************
-Json is a Fantom to JSON object mapping library.
+Json is a Fantom to Javascript Object Notation (JSON) mapping library.
+
+
+
+Quick Start
+***********
+
+
+Terminology
+***********
+**JSON** is the **string** representation of a Javascript object.
+
+**JsonObj** is the Fantom representation of a JSON object. It *only* contains 'Maps', 'Lists', 'Bools', 'Nums', 'Strs', and 'null'.
+
+**Entity** is a Fantom object from your problem domain.
+
+All conversion of Entities to and from JSON goes through an intermediary 'JsonObj' stage:
+
+  Entity <--> JsonObj <--> JSON
+
+'JsonConverters' convert between Entities and JsonObjs.
+
+'JsonReaders' and 'JsonWriters' convert between JsonObjs and JSON.
+
+
+
+Usage
+*****
+Some default behaviour:
+
+ - Every field on an entity to be converted must be annotated with the '@JsonProperty' facet.
+
+ - When converting *to JSON*, 'null' values are persisted.
+
+ - When converting *to Fantom*, all 'non-null' fields *must* have a corresponding JSON value.
+
+
+
+
+Custom Conversion
+*****************
+Json is extremely configurable at all levels. Because of that, the path to conversion may not be as straight forward as you may think. This is how the process works internally.
+
+Every Fantom type to be converted, either a top level entity or an embedded object, is inspected by 'JsonTypeInspectors' which produces a 'JsonTypeMeta' instance. 'JsonTypeMeta' describes how the Fantom type will be converted to / and from JSON. It even holds the 'JsonConverter' instance that will do the converting!
+
+Because each Fantom Type is mapped to a cached 'JsonTypeMeta' instance, this makes conversion fast as types don't have to be re-inspected. Also, if an object is not being converted as you expect, you can inspect the nested hierarchy of 'JsonTypeMeta' objects to see exactly what will happen.
+
+'JsonTypeInspectors' holds a list of 'JsonTypeInspector' instances. During inspection, each inspector is called in turn until one of them returns a 'JsonTypeMeta' instance. This makes the order of the inspectors important.
+
+To go the full hog with respect to custom conversion, you should create your own 'JsonTypeInspector' and add / contribute it to 'JsonTypeInspectors'. Your inspector should create 'JsonTypeMeta', complete with a custom converter, that completely describes how the type should be converted.
+
+If you did not want to go as far as creating an inspector you could instead create a 'JsonTypeMeta' instance. This could either be set on 'JsonTypeInspectors' to be used for all given types, or passed to 'Json' methods for adhoc conversions.
+
+If you are contemplating implementating custom conversion then you are encouraged to look at the Json library source for help and examples.
+
 
 
 IoC
@@ -8,6 +62,8 @@ IoC
 When Json is added as a dependency to an IoC enabled application, such as [BedSheet]`pod:afBedSheet` or [Reflux]`pod:afReflux`, then the following services are automatically made available to IoC:
 
  - `Json`
+ - `JsonReader`
+ - `JsonWriter`
  - `JsonTypeInspectors` - takes contributions of 'Str:JsonTypeInspector'
 
 The above makes use of the non-invasive module feature of IoC 3.

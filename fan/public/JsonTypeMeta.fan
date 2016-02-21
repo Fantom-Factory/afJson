@@ -1,4 +1,6 @@
 
+** Describes how a Fantom 'Type' will be converted to / and from JSON. 
+** This holds the 'JsonConverter' instance that will do the converting. 
 const class JsonTypeMeta {
 
 	** The fantom 'Type' being converted. 
@@ -56,6 +58,7 @@ const class JsonTypeMeta {
 	// Singleton instance.
 	private static const Field:JsonTypeMeta emptyMap := Field:JsonTypeMeta[:]
 	
+	@NoDoc
 	override Str toStr() {
 		field?.qname ?: type.qname
 	}

@@ -79,7 +79,7 @@ internal class TestJsonReadWrite : JsonTest {
 	}
 
 	Void verifyRoundtrip(Obj? obj) {
-		str := jsonWriter.writeObjToJson(obj)
+		str := jsonWriter.writeObj(obj)
 		roundtrip := jsonReader.readObj(str.in)
 		verifyEq(obj, roundtrip)
 	}
@@ -105,7 +105,7 @@ internal class TestJsonReadWrite : JsonTest {
 	}
 
 	Void verifyWrite(Obj? obj, Str expected) {
-		verifyEq(jsonWriter.writeObjToJson(obj), expected)
+		verifyEq(jsonWriter.writeObj(obj), expected)
 	}
 
 	public Void testRaw() {
@@ -159,7 +159,7 @@ internal class TestJsonReadWrite : JsonTest {
 
 		f()
 		buf := Buf()
-		jsonWriter.writeObj(obj, buf.out)
+		jsonWriter.writeObjToStream(obj, buf.out)
 		obj = jsonReader.readObj(buf.flip.in)
 		f()
 	}
