@@ -4,9 +4,8 @@ using afBeanUtils::BeanFactory
 @NoDoc
 const class ObjConverter : JsonConverter {
 	
-	** If 'false' then 
+	// TODO should these default values be on the Inspector instead of this Converter?  
 	const Bool	storeNullValues
-
 	const Bool	allowSurplusJson	:= true
 
 	** Creates a new 'ObjConverter' with the given 'null' strategy.

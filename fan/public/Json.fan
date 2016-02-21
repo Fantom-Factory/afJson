@@ -1,54 +1,45 @@
 
 ** (Service) - 
-** A one-stop shop for all your JSON needs!
+** A one-stop shop for all your JSON mapping needs!
 const mixin Json {
 	
-	static new make() {
-		JsonImpl(JsonTypeInspectors())
+	** Creates a new 'Json' instance with the given inspectors.
+	static new make(JsonTypeInspectors inspectors := JsonTypeInspectors()) {
+		JsonImpl(inspectors, JsonReader(), JsonWriter())
 	}
 	
-	** If 'fantomType' is 'null' it defaults to 'fantomObj.typeof()'. 
-	abstract Obj? toJson(Obj? fantomObj, Type? fantomType := null, JsonTypeMeta? meta := null)
-	
-	abstract Obj? toFantom(Obj? jsonObj, Type fantomType, JsonTypeMeta? meta := null)
+	** Returns the underlying 'JsonTypeInspectors'. 
+	abstract JsonTypeInspectors	inspectors()
 
-	abstract JsonTypeMeta getOrInspectTypeMeta(Type type)
+	** Converts the given entity to JSON.
+	** 
+	** If 'fantomType' is 'null' it defaults to the type of the given obj.
+	abstract Str writeEntity(Obj? fantomObj, Type? fantomType := null)
 
-	abstract Void setTypeMeta(Type type, JsonTypeMeta meta)
+	** Reads the the given JSON and converts it to a Fantom entity instance.
+	abstract Obj? readEntity(Str? json, Type fantomType)
 }
 
 internal const class JsonImpl : Json {	
-	private const JsonTypeInspectors	inspectors
+	override const JsonTypeInspectors	inspectors
+	private  const JsonReader			jsonReader
+	private  const JsonWriter			jsonWriter
 	
-	new makeWithIoc(JsonTypeInspectors inspectors) {
+	new make(JsonTypeInspectors inspectors, JsonReader jsonReader, JsonWriter jsonWriter) {
 		this.inspectors = inspectors
+		this.jsonReader	= jsonReader
+		this.jsonWriter	= jsonWriter
 	}
 	
-	override Obj? toJson(Obj? fantomObj, Type? fantomType := null, JsonTypeMeta? meta := null) {
-		meta = meta ?: inspectors.getOrInspect(fantomType ?: fantomObj.typeof)
-		ctx  := JsonConverterCtxImpl {
-			it.inspectors	= this.inspectors
-			it.metaStack	= JsonTypeMeta[meta]
-			it.fantomStack	= Obj?[,]
-		}
-		return meta.converter.toJson(ctx, fantomObj)
-	}
-	
-	override Obj? toFantom(Obj? jsonObj, Type fantomType, JsonTypeMeta? meta := null) {
-		meta = meta ?: inspectors.getOrInspect(fantomType)
-		ctx  := JsonConverterCtxImpl {
-			it.inspectors	= this.inspectors
-			it.metaStack	= JsonTypeMeta[meta]
-			it.jsonStack	= Obj?[,]
-		}
-		return meta.converter.toFantom(ctx, jsonObj)
+	override Str writeEntity(Obj? fantomObj, Type? fantomType := null) {
+		jsonObj	:= inspectors.toJson(fantomObj, fantomType)
+		json 	:= jsonWriter.writeObj(jsonObj)
+		return json
 	}
 
-	override JsonTypeMeta getOrInspectTypeMeta(Type type) {
-		inspectors.getOrInspect(type)
-	}
-
-	override Void setTypeMeta(Type type, JsonTypeMeta meta) {
-		inspectors.set(type, meta)
+	override Obj? readEntity(Str? json, Type fantomType) {
+		jsonObj	:= jsonReader.readObj(json?.in)
+		entity	:= inspectors.toFantom(jsonObj, fantomType)
+		return entity
 	}
 }

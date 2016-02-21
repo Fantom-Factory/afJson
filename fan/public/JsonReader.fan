@@ -1,6 +1,6 @@
 
 ** (Service) - 
-** Reads Fantom objects from Javascript Object Notation (JSON).
+** Reads Fantom objects from JSON.
 const class JsonReader {
 
 	// FIXME what if the JSON is a whole number like '69' not '69.0' and we want to map it to a float? 
@@ -14,8 +14,15 @@ const class JsonReader {
 	**	 - 'Str:Obj?'
 	**	 - 'Obj?[]'
 	**
-	** Use [Str.in]`sys::Str.in` to read from an in-memory string.
-	Obj? readObj(InStream in, Bool closeStream := true) {
+	** Use [Str.in]`sys::Str.in` to read from an in-memory string. Example:
+	** 
+	**   syntax: fantom
+	**   json = "[1:true]"
+	**   jsonObj := JsonReader().readObj(json.in)
+	Obj? readObj(InStream? in, Bool closeStream := true) {
+		if (in == null)
+			return null
+
 		ctx := JsonReadCtx(in)
 		try {
 			ctx.consume
@@ -30,42 +37,42 @@ const class JsonReader {
 	** Reads a 'List' from the given stream.
 	** 
 	** Convenience for '(Obj?[]?) readJsonObj(...)'
-	Obj?[]? readList(InStream in, Bool closeStream := true) {
+	Obj?[]? readList(InStream? in, Bool closeStream := true) {
 		readObj(in, closeStream)
 	}
 
 	** Reads a 'Map' from the given stream.
 	** 
 	** Convenience for '([Str:Obj?]?) readJsonObj(...)'
-	[Str:Obj?]? readMap(InStream in, Bool closeStream := true) {
+	[Str:Obj?]? readMap(InStream? in, Bool closeStream := true) {
 		readObj(in, closeStream)
 	}
 
-	** A simple hook to alter values *after* they have been read.
+	** A simple override hook to alter values *after* they have been read.
 	** 
 	** By default this just returns the given value.  
-	virtual Obj? convertVal(Obj? val) { val }
+	virtual Obj? convertHook(Obj? val) { val }
 
 
 	
 	// ---- private methods -----------------------------------------------------------------------
 	
 	private Obj? _parseVal(JsonReadCtx ctx) {
-			 if (ctx.cur == JsonToken.quote)		return convertVal(_parseStr(ctx))
-		else if (ctx.cur.isDigit || ctx.cur == '-')	return convertVal(_parseNum(ctx))
-		else if (ctx.cur == JsonToken.objectStart)	return convertVal(_parseObj(ctx))
-		else if (ctx.cur == JsonToken.arrayStart)	return convertVal(_parseArray(ctx))
+			 if (ctx.cur == JsonToken.quote)		return convertHook(_parseStr(ctx))
+		else if (ctx.cur.isDigit || ctx.cur == '-')	return convertHook(_parseNum(ctx))
+		else if (ctx.cur == JsonToken.objectStart)	return convertHook(_parseObj(ctx))
+		else if (ctx.cur == JsonToken.arrayStart)	return convertHook(_parseArray(ctx))
 		else if (ctx.cur == 't') {
 			"true".size.times |->| { ctx.consume }
-			return convertVal(true)
+			return convertHook(true)
 		}
 		else if (ctx.cur == 'f') {
 			"false".size.times |->| { ctx.consume }
-			return convertVal(false)
+			return convertHook(false)
 		}
 		else if (ctx.cur == 'n') {
 			"null".size.times |->| { ctx.consume }
-			return convertVal(null)
+			return convertHook(null)
 		}
 
 		if (ctx.cur < 0) throw ctx.err("Unexpected end of stream")

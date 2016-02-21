@@ -24,7 +24,7 @@ class Build : BuildPod {
 			"afConcurrent 1.0.12 - 1.0",	// for afConcurrent::AtomicMap
 		]
 
-		srcDirs = [`fan/`, `fan/internal/`, `fan/internal/converters/`, `fan/internal/inspectors/`, `fan/public/`, `fan/public/advanced/`, `test/`]
+		srcDirs = [`fan/`, `fan/internal/`, `fan/internal/converters/`, `fan/internal/inspectors/`, `fan/public/`, `test/`]
 		resDirs = [,]
 
 		docApi = true

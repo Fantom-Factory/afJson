@@ -1,5 +1,6 @@
 
-internal const class SimpleConveter : JsonConverter {
+** Converts objects annotated with '@Serializable { simple = true }'.
+internal const class SerializableConveter : JsonConverter {
 
 	private const Method fromStr
 	
