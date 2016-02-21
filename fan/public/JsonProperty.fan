@@ -1,5 +1,6 @@
 
 ** Marks a field as a property of a JSON document.
+@Js
 facet class JsonProperty {
 
 	** Name of the JSON object property this field maps to. 

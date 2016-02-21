@@ -1,6 +1,7 @@
 
 ** (Service) - 
 ** Writes Fantom objects to JSON.
+@Js
 const class JsonWriter {
 
 	// FIXME prittyPrint

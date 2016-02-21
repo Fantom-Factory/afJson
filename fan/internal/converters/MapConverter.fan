@@ -3,7 +3,7 @@ using afBeanUtils::BeanFactory
 
 ** Maps need to be defined as specific, non-generic, types, e.g. Str:Int[]
 ** Otherwise we don't know how to convert!
-@NoDoc
+@Js @NoDoc
 const class MapConverter : JsonConverter {
 	private const TypeCoercer	typeCoercer	:= CachingTypeCoercer()
 	
@@ -23,7 +23,7 @@ const class MapConverter : JsonConverter {
 				return fantomObj
 		}
 		
-		mongoMap	:= emptyDoc
+		jsonMap	:= emptyDoc
 		fanMap.each |fVal, fKey| {
 			// Map keys are special and have to be converted <=> Str
 			// As *anything* can be converter toStr(), let's check up front that we can convert it back to Fantom again!
@@ -35,9 +35,9 @@ const class MapConverter : JsonConverter {
 			// converters are for converting JSON values, hence we've chosen to use simple coercion for map keys 
 			mKey := typeCoercer.coerce(fKey, Str#)
 			mVal := fVal == null ? null : ctx.toJson(ctx.inspect(fVal.typeof), fVal)
-			mongoMap[mKey] = mVal
+			jsonMap[mKey] = mVal
 		}		
-		return mongoMap
+		return jsonMap
 	}
 	
 	override Obj? toFantom(JsonConverterCtx ctx, Obj? jsonObj) {

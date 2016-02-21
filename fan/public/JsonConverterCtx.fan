@@ -1,5 +1,6 @@
 
 ** Passed to 'JsonConverters' to them contextual information of the conversion in progress.
+@Js
 mixin JsonConverterCtx {
 
 	** A stack of meta objects that represent the contextual parents of converted objects.
@@ -55,6 +56,7 @@ mixin JsonConverterCtx {
 	}
 }
 
+@Js
 internal class JsonConverterCtxImpl : JsonConverterCtx {
 		JsonTypeInspectors	inspectors
 	override JsonTypeMeta[]	metaStack

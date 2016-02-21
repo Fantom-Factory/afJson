@@ -1,5 +1,6 @@
 
 ** See [Slot does not conform to @Serializable rules]`http://fantom.org/forum/topic/2504`
+@Js
 internal const class SlotConverter : JsonConverter {
 
 	override Obj? toJson(JsonConverterCtx ctx, Obj? fantomObj) {

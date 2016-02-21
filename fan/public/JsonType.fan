@@ -2,6 +2,7 @@
 ** An enum of JSON types.
 ** 
 ** @see `http://www.json.org/`
+@Js
 enum class JsonType {
 
 	** A JSON array.

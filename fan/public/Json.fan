@@ -1,6 +1,7 @@
 
 ** (Service) - 
 ** A one-stop shop for all your JSON mapping needs!
+@Js
 const mixin Json {
 	
 	** Creates a new 'Json' instance with the given inspectors.
@@ -20,6 +21,7 @@ const mixin Json {
 	abstract Obj? readEntity(Str? json, Type fantomType)
 }
 
+@Js
 internal const class JsonImpl : Json {	
 	override const JsonTypeInspectors	inspectors
 	private  const JsonReader			jsonReader

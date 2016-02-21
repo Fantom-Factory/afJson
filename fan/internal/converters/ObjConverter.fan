@@ -1,7 +1,7 @@
 using afBeanUtils::BeanFactory
 
 ** The main converter for JSON objects.
-@NoDoc
+@Js @NoDoc
 const class ObjConverter : JsonConverter {
 	
 	// TODO should these default values be on the Inspector instead of this Converter?  

@@ -1,4 +1,5 @@
 
+@Js
 internal const class LiteralInspector : JsonTypeInspector {
 
 	const JsonConverter converter	:= LiteralConverter()

@@ -1,6 +1,7 @@
 
 ** (Service) - 
 ** Reads Fantom objects from JSON.
+@Js
 const class JsonReader {
 
 	// FIXME what if the JSON is a whole number like '69' not '69.0' and we want to map it to a float? 
@@ -195,6 +196,7 @@ const class JsonReader {
 }
 
 ** JsonToken represents the tokens in JSON.
+@Js
 internal mixin JsonToken {
 	internal static const Int objectStart	:= '{'
 	internal static const Int objectEnd		:= '}'
@@ -206,6 +208,7 @@ internal mixin JsonToken {
 	internal static const Int grave			:= '`'
 }
 
+@Js
 internal class JsonReadCtx {
 
 	private InStream	in

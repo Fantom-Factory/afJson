@@ -1,4 +1,5 @@
 
+@Js
 internal class TestPropertyNames : JsonTest {
 	
 	Void testPropNames() {
@@ -9,6 +10,7 @@ internal class TestPropertyNames : JsonTest {
 	}
 }
 
+@Js
 internal class T_Entity03 {
 	@JsonProperty { propertyName="spdx" }
 	Str name	:= "Booya!"
