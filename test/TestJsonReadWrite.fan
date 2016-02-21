@@ -1,4 +1,5 @@
 
+@Js
 internal class TestJsonReadWrite : JsonTest {
 
 	JsonReader	jsonReader	:= JsonReader()
@@ -90,7 +91,10 @@ internal class TestJsonReadWrite : JsonTest {
 		verifyWrite(true, Str<|true|>)
 		verifyWrite(false, Str<|false|>)
 		verifyWrite("hi", Str<|"hi"|>)
-		verifyWrite(-2.3e34f, Str<|-2.3E34|>)
+		if (Env.cur.runtime == "js")	// both are valid JSON numbers
+			verifyWrite(-2.3e34f, Str<|-2.3e+34|>)
+		else
+			verifyWrite(-2.3e34f, Str<|-2.3E34|>)
 		verifyWrite(34.12345d, Str<|34.12345|>)
 
 		// list/map sanity checks

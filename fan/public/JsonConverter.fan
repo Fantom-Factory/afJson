@@ -1,5 +1,6 @@
 
 ** Implement to define a custom Fantom '<->' JSON converter.
+@Js
 const mixin JsonConverter {
 	
 	** Converts the given 'fantomObj' to its JSON representation.

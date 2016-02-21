@@ -1,5 +1,5 @@
 
-@NoDoc	// advanced use only
+@Js @NoDoc	// advanced use only
 const class JsonModule {
 	
 	Str:Obj nonInvasiveIocModule() {

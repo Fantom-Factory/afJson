@@ -1,5 +1,6 @@
 using afBeanUtils
 
+@Js
 internal const mixin ErrMsgs {
 
 	static Str jsonType_unknownType(Type type) {

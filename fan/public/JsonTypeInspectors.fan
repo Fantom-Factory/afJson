@@ -1,7 +1,7 @@
 using afConcurrent::AtomicMap
 
-// We need JsonInspectors if only to have an IoC service to contribute Inspectors too!
 ** (Service) - Holds a list of 'JsonTypeInspector' instances and the cached 'JsonTypeMeta' objects.
+@Js
 const mixin JsonTypeInspectors {
 
 	** Creates an instance of 'JsonTypeInspectors' with the given inspectors.
@@ -46,6 +46,7 @@ const mixin JsonTypeInspectors {
 
 }
 
+@Js
 internal const class JsonTypeInspectorsImpl : JsonTypeInspectors {
 	private const AtomicMap				metaObjs	:= AtomicMap { it.keyType=Type#; it.valType=JsonTypeMeta# }
 	private const JsonTypeInspector[] 	inspectors

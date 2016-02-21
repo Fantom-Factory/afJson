@@ -1,6 +1,7 @@
 using afConcurrent::AtomicMap
 
 ** Inspects objects annotated with '@Serializable { simple = true }'.
+@Js
 internal const class SerializableInspector : JsonTypeInspector {
 	private const AtomicMap	converters	:= AtomicMap { it.keyType=Type#; it.valType=SerializableConveter# }
 

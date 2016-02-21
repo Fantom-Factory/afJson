@@ -11,17 +11,17 @@ class Build : BuildPod {
 			"proj.name"		: "Json",
 			"afIoc.module"	: "afJson::JsonModule",
 			"repo.tags"		: "web",
-			
-			// TODO make afJson a @Js lib
 			"repo.public"	: "false"
 		]
 
 		depends = [
 			"sys 1.0.67 - 1.0",
 			
+			"concurrent 1.0",
 			// ---- Core ------------------------
 			"afBeanUtils  1.0.8  - 1.0",	// for afBeanUtils::BeanFactory
-			"afConcurrent 1.0.12 - 1.0",	// for afConcurrent::AtomicMap
+			"afConcurrent 1.0.10 - 1.0",	// for afConcurrent::AtomicMap
+			
 		]
 
 		srcDirs = [`fan/`, `fan/internal/`, `fan/internal/converters/`, `fan/internal/inspectors/`, `fan/public/`, `test/`]

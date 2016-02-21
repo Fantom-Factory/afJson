@@ -1,9 +1,14 @@
 
+@Js
 internal class TestJsonConversion : JsonTest {
 	
 	private DateTime now	:= DateTime.now
 	
 	Void testConversion() {
+		// units are defined in JS
+		if (Unit.fromStr("pH", false) == null)
+			Unit.define("pH")
+		
 		entity := T_Entity01() {
 			
 			// JSON literals			
@@ -82,6 +87,7 @@ internal class TestJsonConversion : JsonTest {
 	}
 }
 
+@Js
 internal class T_Entity01 {
 
 	// JSON Literals
@@ -121,6 +127,7 @@ internal class T_Entity01 {
 	new make(|This|in) { in(this) }
 }
 
+@Js
 internal enum class T_Entity01_Enum {
 	wot, ever;
 }

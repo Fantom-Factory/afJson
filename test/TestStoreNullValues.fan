@@ -1,4 +1,5 @@
 
+@Js
 internal class TestStoreNullValues : JsonTest {
 	
 	Void testNullValues() {
@@ -11,6 +12,7 @@ internal class TestStoreNullValues : JsonTest {
 	}
 }
 
+@Js
 internal class T_Entity02 {
 	
 	@JsonProperty { storeNullValues=true }

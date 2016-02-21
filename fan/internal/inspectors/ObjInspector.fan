@@ -2,7 +2,7 @@ using afBeanUtils
 
 ** The main inspector for Objects. 
 ** Creates a nested ZZZZ blah by inspecting fields annotated with the '@JsonProperty' facet.
-@NoDoc	// Advanced use only!
+@Js @NoDoc	// Advanced use only!
 const class ObjInspector : JsonTypeInspector {
 
 	** Defaults to an instance of 'ObjConverter'.

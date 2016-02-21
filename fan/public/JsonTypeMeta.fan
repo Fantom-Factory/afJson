@@ -1,6 +1,7 @@
 
 ** Describes how a Fantom 'Type' will be converted to / and from JSON. 
 ** This holds the 'JsonConverter' instance that will do the converting. 
+@Js
 const class JsonTypeMeta {
 
 	** The fantom 'Type' being converted. 

@@ -1,6 +1,5 @@
 
-// FIXME this is a crap name! JsonMetaFactory?
-@NoDoc
+@Js @NoDoc
 const class NamedInspector : JsonTypeInspector {
 	private const Type type
 	private const JsonConverter	converter
