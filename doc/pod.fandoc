@@ -4,6 +4,7 @@ Json is a Fantom to Javascript Object Notation (JSON) mapping library.
 
 Features:
 
+ - Converts all core Fantom types
  - Converts nested / embedded objects
  - Runs on Javascript platforms
  - IoC enabled

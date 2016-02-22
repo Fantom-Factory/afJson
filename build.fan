@@ -5,12 +5,13 @@ class Build : BuildPod {
 	new make() {
 		podName = "afJson"
 		summary = "A JSON to Fantom object mapping library"
-		version = Version("0.0.1")
+		version = Version("0.0.2")
 
 		meta = [
 			"proj.name"		: "Json",
 			"afIoc.module"	: "afJson::JsonModule",
-			"repo.tags"		: "web",
+			"repo.internal"	: "true",
+			"repo.tags"		: "system, web",
 			"repo.public"	: "false"
 		]
 
@@ -25,7 +26,7 @@ class Build : BuildPod {
 		]
 
 		srcDirs = [`fan/`, `fan/internal/`, `fan/internal/converters/`, `fan/internal/inspectors/`, `fan/public/`, `test/`]
-		resDirs = [,]
+		resDirs = [`doc/`]
 
 		docApi = true
 		docSrc = true
