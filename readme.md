@@ -129,8 +129,7 @@ Any Fantom object may be converted to and from JSON. Just make sure that all fie
 The [JSON Spec](http://www.json.org/) only defines types for `Bool`, `List`, `Null`, `Number`, `Object`, and `String`. As such, this library provides the following mappings:
 
 ```
-table:
- Fantom              JSON
+ Fantom              JSON
 --------------      --------
  sys::Bool     <-->  Bool
  sys::Decimal  <-->  Number
@@ -235,28 +234,6 @@ json := Json().writeEntity(user)
 echo(json)  // --> {"judge":"Dredd"}
 ```
 
-## Custom Conversion
-
-The Json library is extremely configurable at all levels. Because of that, object conversion may not be as straight forward as you may think. This explains how the process works...
-
-Every Fantom type to be converted, either a top level entity or an embedded object, is inspected by `JsonTypeInspectors` which produces a `JsonTypeMeta` instance. `JsonTypeMeta` describes how the Fantom type will be converted to / and from JSON. It also holds the `JsonConverter` instance that will do the converting.
-
-Because each Fantom Type is mapped to a cached `JsonTypeMeta` instance, conversion is fast because types don't have to be re-inspected. Also, if an object is not being converted as you expect, you can inspect the nested hierarchy of `JsonTypeMeta` objects to see exactly what will happen.
-
-`JsonTypeInspectors` holds a list of `JsonTypeInspector` instances. During inspection, each inspector is called in turn until one of them returns a `JsonTypeMeta` instance. This makes the order of the inspectors important.
-
-To go the full hog with respect to custom conversion, you should create your own `JsonTypeInspector` and add / contribute it to `JsonTypeInspectors`. Your inspector should create `JsonTypeMeta`, complete with a custom converter, that completely describes how the type should be converted.
-
-If you did not want to go as far as creating an inspector, you could instead create a `JsonTypeMeta` instance. This could either be set on `JsonTypeInspectors` to be used for all given types, or passed to `Json` methods for ad hoc conversions.
-
-Or the easiest, but most limited way, would be to set the `@JsonProperty.converterType` attribute on the affected fields.
-
-If you are contemplating implementating custom conversion then you are encouraged to look at the Json library source for help and examples. It may be preferable to simply extend one the current Inspectors or Converters.
-
-### Examples
-
-An example of a custom converter maybe one which converts *all* fields of a Fantom obj, and not just those annotated with `@JsonProperty`.
-
 ## IoC
 
 When Json is added as a dependency to an IoC enabled application, such as [BedSheet](http://pods.fantomfactory.org/pods/afBedSheet) or [Reflux](http://pods.fantomfactory.org/pods/afReflux), then the following services are automatically made available to IoC:
@@ -293,4 +270,81 @@ Void contributeJsonTypeInspectors(Configuration config) {
     config.overrideValue("afJson.obj", ObjInspector { it.converter = config.build(IocObjConverter#) })
 }
 ```
+
+## Custom Conversion
+
+The Json library is extremely configurable at all levels. Because of that, object conversion may not be as straight forward as you may think. This explains how the process works...
+
+Every Fantom type to be converted, either a top level entity or an embedded object, is inspected by `JsonTypeInspectors` which produces a `JsonTypeMeta` instance. `JsonTypeMeta` describes how the Fantom type will be converted to / and from JSON. It also holds the `JsonConverter` instance that will do the converting.
+
+Because each Fantom Type is mapped to a cached `JsonTypeMeta` instance, conversion is fast because types don't have to be re-inspected. Also, if an object is not being converted as you expect, you can inspect the nested hierarchy of `JsonTypeMeta` objects to see exactly what will happen.
+
+`JsonTypeInspectors` holds a list of `JsonTypeInspector` instances. During inspection, each inspector is called in turn until one of them returns a `JsonTypeMeta` instance. This makes the order of the inspectors important.
+
+To go the full hog with respect to custom conversion, you should create your own `JsonTypeInspector` and add / contribute it to `JsonTypeInspectors`. Your inspector should create `JsonTypeMeta`, complete with a custom converter, that completely describes how the type should be converted.
+
+For example, there's no reason why fields must be annotated with `@JsonProperty`, you could easily create an inspector that returns `JsonTypeMeta` for *every* field!
+
+If you did not want to go as far as creating an inspector, you could instead create a `JsonTypeMeta` instance. This could either be set on `JsonTypeInspectors` to be used for all given types, or passed to `Json` methods for ad hoc conversions.
+
+Or the easiest, but most limited way, would be to set the `@JsonProperty.converterType` attribute on the affected fields.
+
+If you are contemplating implementating custom conversion then you are encouraged to look at the Json library source for help and examples. It may be preferable to simply extend one the current Inspectors or Converters.
+
+## JSON and Dates
+
+JSON does *not* define a Date object. As such, when writing Dates, they are serialised as ISO strings. At the other end, presumably in Javascript land, something must walk your object and de-serialise all your date strings back into Date objects.
+
+But sometimes you want a quick hack and some people advocate inserting Javascript statements directly into the JSON. It may not be the best idea, but it's a good example of custom inspectors and converters...
+
+```
+using afJson
+
+class User {
+    @JsonProperty Str?      name
+    @JsonProperty DateTime? timestamp
+}
+
+class Example {
+    Void main() {
+        jsonService := Json(JsonTypeInspectors(
+            JsonTypeInspectors.defaultInspectors.insert(0, JsDateInspector())
+        ))
+
+        user := User { name = "Judge Dredd"; timestamp = DateTime.now }
+        json := jsonService.writeEntity(user)
+
+        echo(json) // --> {"name":"Judge Dredd","timestamp":new Date(1456178248297)}
+    }
+}
+
+const class JsDateInspector : JsonTypeInspector {
+    const JsonConverter converter := JsDateConverter()
+
+    override JsonTypeMeta? inspect(Type type, JsonTypeInspectors inspectors) {
+        type.toNonNullable == DateTime# ? JsonTypeMeta { it.type = type; it.converter = this.converter } : null
+    }
+}
+
+const class JsDateConverter : JsonConverter {
+    override Obj? toFantom(JsonConverterCtx ctx, Obj? jsonObj) { throw UnsupportedErr() }
+
+    override Obj? toJsonObj(JsonConverterCtx ctx, Obj? fantomObj) {
+        fantomObj == null ? null : JsLiteral("new Date(${((DateTime) fantomObj).toJava})")
+    }
+}
+```
+
+### IoC
+
+If using IoC then you wouldn't create a new `Json()` service, instead you would contribute `JsDateInspector` to `JsonTypeInspectors`:
+
+```
+@Contribute { serviceType=JsonTypeInspectors# }
+Void contributeJsonTypeInspectors(Configuration config) {
+    config.set("jsDates", JsDateInspector()).before("afJson.literal")
+}
+```
+
+Putting your inspector before `afJson.literal` ensures it is first in the inspector list.
 

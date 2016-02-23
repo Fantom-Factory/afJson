@@ -18,7 +18,7 @@ const class ObjConverter : JsonConverter {
 	}
 	
 	@NoDoc
-	override Obj? toJson(JsonConverterCtx ctx, Obj? fantomObj) {
+	override Obj? toJsonObj(JsonConverterCtx ctx, Obj? fantomObj) {
 		if (fantomObj == null) return null
 
 		jsonMap := createJsonObj

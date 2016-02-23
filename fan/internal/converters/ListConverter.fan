@@ -4,7 +4,7 @@
 @Js
 internal const class ListConverter : JsonConverter {
 
-	override Obj? toJson(JsonConverterCtx ctx, Obj? fantomObj) {
+	override Obj? toJsonObj(JsonConverterCtx ctx, Obj? fantomObj) {
 		if (fantomObj == null) return null
 
 		fanList	 := (List) fantomObj

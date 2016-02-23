@@ -1,20 +1,20 @@
 
-** Converts objects annotated with '@Serializable { simple = true }'.
-@Js
-internal const class SerializableConveter : JsonConverter {
+** Converts to and from JsLiterals. The given type must have a 'fromStr()' ctor.
+@NoDoc @Js
+const class JsLiteralConverter : JsonConverter {
 
 	private const Method fromStr
 	
 	new make(Type type) {
 		this.fromStr = type.method("fromStr", true)
 	}
-	
-	override Obj? toJsonObj(JsonConverterCtx ctx, Obj? fantomObj) {
+
+	override Obj? toJsonObj(JsonConverterCtx ctx, Obj? fantomObj)	{
 		if (fantomObj == null) return null
-		return fantomObj?.toStr
+		return JsLiteral(fantomObj.toStr)
 	}
 
-	override Obj? toFantom(JsonConverterCtx ctx, Obj? jsonObj) {
+	override Obj? toFantom(JsonConverterCtx ctx, Obj? jsonObj)	{
 		if (jsonObj == null) return null
 
 		try {

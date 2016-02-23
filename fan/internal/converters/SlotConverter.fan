@@ -3,7 +3,7 @@
 @Js
 internal const class SlotConverter : JsonConverter {
 
-	override Obj? toJson(JsonConverterCtx ctx, Obj? fantomObj) {
+	override Obj? toJsonObj(JsonConverterCtx ctx, Obj? fantomObj) {
 		if (fantomObj == null) return null
 		return ((Slot) fantomObj).qname
 	}

@@ -34,7 +34,7 @@ internal const class JsonImpl : Json {
 	}
 	
 	override Str writeEntity(Obj? fantomObj, Type? fantomType := null) {
-		jsonObj	:= inspectors.toJson(fantomObj, fantomType)
+		jsonObj	:= inspectors.toJsonObj(fantomObj, fantomType)
 		json 	:= jsonWriter.writeObj(jsonObj)
 		return json
 	}
