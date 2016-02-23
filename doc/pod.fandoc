@@ -244,6 +244,7 @@ The above makes use of the non-invasive module feature of IoC 3.
 It is useful if your converted Fantom objects are built by IoC. That way they may contain services and perform operations on themselves, such as persisting to a database. To enable this, create an 'IocObjConverter' class that extends from Json's '@NoDoc ObjConverter' class:
 
 pre>
+syntax: fantom
 using afIoc
 using afJson
 
@@ -261,6 +262,7 @@ const class IocObjConverter : ObjConverter {
 Contribute this with the following:
 
 pre>
+syntax: fantom
 @Contribute { serviceType=JsonTypeInspectors# }
 Void contributeJsonTypeInspectors(Configuration config) {
     config.overrideValue("afJson.obj", ObjInspector { it.converter = config.build(IocObjConverter#) })
@@ -343,6 +345,7 @@ IoC
 If using IoC then you wouldn't create a new 'Json()' service, instead you would contribute 'JsDateInspector' to 'JsonTypeInspectors':
 
 pre>
+syntax: fantom
 @Contribute { serviceType=JsonTypeInspectors# }
 Void contributeJsonTypeInspectors(Configuration config) {
     config.set("jsDates", JsDateInspector()).before("afJson.literal")

@@ -12,7 +12,7 @@ class Build : BuildPod {
 			"afIoc.module"	: "afJson::JsonModule",
 			"repo.internal"	: "true",
 			"repo.tags"		: "system, web",
-			"repo.public"	: "true"
+			"repo.public"	: "false"
 		]
 
 		depends = [

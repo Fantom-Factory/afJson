@@ -8,7 +8,7 @@
 
 *Json is a support library that aids Alien-Factory in the development of other libraries, frameworks and applications. Though you are welcome to use it, you may find features are missing and the documentation incomplete.*
 
-Json is a Fantom to Javascript Object Notation (JSON) mapping library.
+Json is a customisable Fantom to Javascript Object Notation (JSON) mapping library.
 
 Features:
 
@@ -16,7 +16,9 @@ Features:
 - Converts nested / embedded objects
 - Runs on Javascript platforms
 - IoC enabled
-- Very customisable
+- Simple to use
+
+Just annotate fields with `@JsonProperty` then read / write JSON with `Json().readEntity(...)` and `Json().writeEntity(...)` - couldn't be easier!
 
 ## Install
 
