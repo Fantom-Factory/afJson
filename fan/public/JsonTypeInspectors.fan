@@ -37,7 +37,7 @@ const mixin JsonTypeInspectors {
 	** If 'fantomType' is 'null' it defaults to 'fantomObj.typeof()'.
 	** 
 	** If 'meta' is 'null' then a cached version for 'fantomType' is retrieved from 'JsonTypeInspectors'.
-	abstract Obj? toJson(Obj? fantomObj, Type? fantomType := null, JsonTypeMeta? meta := null)
+	abstract Obj? toJsonObj(Obj? fantomObj, Type? fantomType := null, JsonTypeMeta? meta := null)
 	
 	** Converts the given 'jsonObj' to its Fantom representation.
 	** 	
@@ -65,14 +65,14 @@ internal const class JsonTypeInspectorsImpl : JsonTypeInspectors {
 		metaObjs[type] = meta
 	}
 	
-	override Obj? toJson(Obj? fantomObj, Type? fantomType := null, JsonTypeMeta? meta := null) {
+	override Obj? toJsonObj(Obj? fantomObj, Type? fantomType := null, JsonTypeMeta? meta := null) {
 		meta = meta ?: getOrInspect(fantomType ?: fantomObj.typeof)
 		ctx  := JsonConverterCtxImpl {
 			it.inspectors	= this
 			it.metaStack	= JsonTypeMeta[meta]
 			it.fantomStack	= Obj?[,]
 		}
-		return meta.converter.toJson(ctx, fantomObj)
+		return meta.converter.toJsonObj(ctx, fantomObj)
 	}
 	
 	override Obj? toFantom(Obj? jsonObj, Type fantomType, JsonTypeMeta? meta := null) {

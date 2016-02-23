@@ -7,7 +7,7 @@ using afBeanUtils::BeanFactory
 const class MapConverter : JsonConverter {
 	private const TypeCoercer	typeCoercer	:= CachingTypeCoercer()
 	
-	override Obj? toJson(JsonConverterCtx ctx, Obj? fantomObj) {
+	override Obj? toJsonObj(JsonConverterCtx ctx, Obj? fantomObj) {
 		if (fantomObj == null) return null
 
 		// the field declaration is more likely to have params than the actual object

@@ -30,12 +30,13 @@ const class JsonWriter {
 	**	 - 'Obj?[]'
 	This writeObjToStream(Obj? obj, OutStream out) {
 		obj = convertHook(obj)
-			 if (obj is Str)	_writeJsonStr	(out, obj)
-		else if (obj is Num)	_writeJsonNum	(out, obj)
-		else if (obj is Bool)	_writeJsonBool	(out, obj)
-		else if (obj is Map)	_writeJsonMap	(out, obj)
-		else if (obj is List)	_writeJsonList	(out, obj)
-		else if (obj == null)	_writeJsonNull	(out)
+			 if (obj is Str)		_writeJsonStr	(out, obj)
+		else if (obj is Num)		_writeJsonNum	(out, obj)
+		else if (obj is Bool)		_writeJsonBool	(out, obj)
+		else if (obj is Map)		_writeJsonMap	(out, obj)
+		else if (obj is List)		_writeJsonList	(out, obj)
+		else if (obj is JsLiteral)	_writeJsonLit	(out, obj)
+		else if (obj == null)		_writeJsonNull	(out)
 		else throw IOErr("Unknown JSON object: ${obj.typeof} - ${obj}")
 		return this
 	}
@@ -44,7 +45,7 @@ const class JsonWriter {
 	** 
 	** By default this just returns the given value.  
 	virtual Obj? convertHook(Obj? val) { val }
-	
+	 
 	// ---- private methods -----------------------------------------------------------------------
 
 	private Void _writeJsonMap(OutStream out, Map map) {
@@ -90,6 +91,10 @@ const class JsonWriter {
 			}
 		}
 		out.writeChar(JsonToken.quote)
+	}
+
+	private Void _writeJsonLit(OutStream out, JsLiteral lit) {
+		out.print(lit.val)
 	}
 
 	private Void _writeJsonNum(OutStream out, Num num) {

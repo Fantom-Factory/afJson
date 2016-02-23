@@ -35,7 +35,7 @@ mixin JsonConverterCtx {
 		metaStack.push(meta)
 		fantomStack.push(fantomObj)
 		try {
-			return meta.converter.toJson(this, fantomObj)
+			return meta.converter.toJsonObj(this, fantomObj)
 		} finally {
 			fantomStack.pop
 			metaStack.pop

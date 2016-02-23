@@ -1,6 +1,0 @@
-
-Give examples of how to send Dates and function()s
-
- -> add a literal converter to keep Dates as date Objs
- -> Override JsonWriter.convertHook() to write it out as plain text
- 

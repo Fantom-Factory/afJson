@@ -47,8 +47,8 @@ internal class TestJsonConversion : JsonTest {
 		}
 
 		// perform round trip conversion
-		fanObj := inspectors.toJson(entity, T_Entity01#)
-		entity = inspectors.toFantom(fanObj, T_Entity01#)
+		fanObj := inspectors.toJsonObj(entity, T_Entity01#)
+		entity  = inspectors.toFantom(fanObj, T_Entity01#)
 		
 		// JSON types
 		verifyEq(entity.float, 		69f)
