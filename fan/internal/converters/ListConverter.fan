@@ -1,8 +1,8 @@
 
 ** Lists need to be defined as specific, non-generic, types, e.g. Int[]
 ** Otherwise we don't know how to convert!
-@Js
-internal const class ListConverter : JsonConverter {
+@Js @NoDoc
+const class ListConverter : JsonConverter {
 
 	override Obj? toJsonObj(JsonConverterCtx ctx, Obj? fantomObj) {
 		if (fantomObj == null) return null

@@ -1,6 +1,10 @@
 Versions
 ********
 
+v0.0.4
+======
+ - Chg: Made more inspectors and converters public, but '@NoDoc' for now.
+
 v0.0.2
 ======
  - New: Initial release.
