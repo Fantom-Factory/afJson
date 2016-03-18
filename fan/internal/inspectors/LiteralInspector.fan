@@ -1,7 +1,6 @@
 
-@Js
-internal const class LiteralInspector : JsonTypeInspector {
-
+@Js @NoDoc
+const class LiteralInspector : JsonTypeInspector {
 	const JsonConverter converter	:= LiteralConverter()
 
 	new make(|This|? in := null) { in?.call(this) }
