@@ -5,8 +5,8 @@
 const mixin Json {
 	
 	** Creates a new 'Json' instance with the given inspectors.
-	static new make(JsonTypeInspectors inspectors := JsonTypeInspectors()) {
-		JsonImpl(inspectors, JsonReader(), JsonWriter())
+	static new make(JsonTypeInspectors? inspectors := null, JsonReader? reader := null, JsonWriter? writer := null) {
+		JsonImpl(inspectors ?: JsonTypeInspectors(), reader ?: JsonReader(), writer ?: JsonWriter())
 	}
 	
 	** Returns the underlying 'JsonTypeInspectors'. 
