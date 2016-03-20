@@ -6,6 +6,9 @@ const class JsonReader {
 
 	// FIXME what if the JSON is a whole number like '69' not '69.0' and we want to map it to a float? 
 	
+	** Default ctor.
+	new make() { }
+	
 	** Reads an object from the given JSON stream and returns one of the following:
 	**	 - 'null'
 	**	 - 'Bool'
@@ -199,14 +202,13 @@ const class JsonReader {
 ** JsonToken represents the tokens in JSON.
 @Js
 internal mixin JsonToken {
-	internal static const Int objectStart	:= '{'
-	internal static const Int objectEnd		:= '}'
-	internal static const Int colon			:= ':'
-	internal static const Int arrayStart	:= '['
-	internal static const Int arrayEnd		:= ']'
-	internal static const Int comma			:= ','
-	internal static const Int quote			:= '"'
-	internal static const Int grave			:= '`'
+	static const Int objectStart	:= '{'
+	static const Int objectEnd		:= '}'
+	static const Int colon			:= ':'
+	static const Int arrayStart		:= '['
+	static const Int arrayEnd		:= ']'
+	static const Int comma			:= ','
+	static const Int quote			:= '"'
 }
 
 @Js

@@ -3,6 +3,7 @@ Versions
 
 v0.0.4
 ======
+ - New: 'JsonWriter' now pretty prints!
  - Chg: Made more inspectors and converters public, but '@NoDoc' for now.
 
 v0.0.2
