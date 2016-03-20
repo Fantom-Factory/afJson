@@ -4,8 +4,6 @@
 @Js
 const class JsonReader {
 
-	// FIXME what if the JSON is a whole number like '69' not '69.0' and we want to map it to a float? 
-	
 	** Default ctor.
 	new make() { }
 	
