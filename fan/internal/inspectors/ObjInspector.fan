@@ -33,7 +33,7 @@ const class ObjInspector : JsonTypeInspector {
 					it.storeNullValues	= prop.storeNullValues
 					it.converter 		= createConverter(prop.converterType)
 				}
-			} else {			
+			} else {
 				meta := inspectors.getOrInspect(type)
 				map[field] = JsonTypeMeta {
 					it.type		 		= type
