@@ -18,7 +18,7 @@ const class JsonWriter {
 	**   syntax: fantom
 	**   writer := JsonWriter()
 	**   writer := JsonWriter(true)
-	**   writer := JsonWriter(PrettyPrintOptions { it.indent = "  " })
+	**   writer := JsonWriter(PrettyPrintOptions { it.indent = "\t" })
 	new make(Obj? prettyPrintOptions := null) {
 		if (prettyPrintOptions != null) {
 			if (prettyPrintOptions == false)
@@ -37,7 +37,7 @@ const class JsonWriter {
 	**   syntax: fantom
 	**   json := jsonWriter.writeObj(jsonObj)
 	**   json := jsonWriter.writeObj(jsonObj, true)
-	**   json := jsonWriter.writeObj(jsonObj, PrettyPrintOptions { it.indent = "  " })
+	**   json := jsonWriter.writeObj(jsonObj, PrettyPrintOptions { it.indent = "\t" })
 	** 
 	Str writeObj(Obj? obj, Obj? prettyPrintOptions := null) {
 		buf := StrBuf()
@@ -60,7 +60,7 @@ const class JsonWriter {
 	**   syntax: fantom
 	**   json := jsonWriter.writeObjToStream(jsonObj, out)
 	**   json := jsonWriter.writeObjToStream(jsonObj, out, true)
-	**   json := jsonWriter.writeObjToStream(jsonObj, out, PrettyPrintOptions { it.indent = "  " })
+	**   json := jsonWriter.writeObjToStream(jsonObj, out, PrettyPrintOptions { it.indent = "\t" })
 	** 
 	This writeObjToStream(Obj? obj, OutStream out, Obj? prettyPrintOptions := null) {
 		ctx := JsonWriteCtx(out, prettyPrintOptions ?: this.prettyPrintOptions)
@@ -401,12 +401,12 @@ internal class JsonWriteCtxUgly : JsonWriteCtx {
 ** Options to pass to 'JsonWriter'.
 ** 
 **   syntax: fantom
-**   writer := JsonWriter(PrettyPrintOptions { it.indent = "  " })
+**   writer := JsonWriter(PrettyPrintOptions { it.indent = "\t" })
 @Js
 const class PrettyPrintOptions {
 
 	** The indent string used to indent the JSON.
-	const Str 	indent		:= "\t"
+	const Str 	indent		:= "  "
 
 	** The maximum width of a list or map before it is broken up into separate lines.
 	const Int 	maxWidth	:= 80	

@@ -5,6 +5,7 @@ v0.0.4
 ======
  - New: 'JsonWriter' now pretty prints!
  - Chg: Made more inspectors and converters public, but '@NoDoc' for now.
+ - Bug: Numbers weren't converted to their correct sub-type.
 
 v0.0.2
 ======

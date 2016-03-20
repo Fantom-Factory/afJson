@@ -72,7 +72,7 @@ const class ObjConverter : JsonConverter {
 		
 		try return createEntity(ctx.meta.implType ?: ctx.meta.type, fieldVals)
 		catch (Err err)
-			throw Err("Could not create instance of ${ctx.meta.type} with: ${fieldVals}", err)
+			throw Err("Could not create instance of ${ctx.meta.type} with: ${jsonMap}", err)
 	}
 	
 	** Hook for dealing with surplus JSON.
