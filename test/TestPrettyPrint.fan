@@ -30,7 +30,7 @@ internal class TestPrettyPrint : JsonTest {
 	}
 
 	Void testNarrowList() {
-		json := jsonWriter.writeObj([1, 2, 3], PrettyPrintOptions { it.maxWidth=5 })
+		json := jsonWriter.writeObj([1, 2, 3], PrettyPrintOptions { it.maxWidth=5; it.indent="\t" })
 		verifyEq("[
 		          	1,
 		          	2,
@@ -45,7 +45,7 @@ internal class TestPrettyPrint : JsonTest {
 
 	Void testNarrowMap() {
 		map	 := [:] { ordered=true }.add("1", 1).add("2", 2).add("3", 3)
-		json := jsonWriter.writeObj(map, PrettyPrintOptions { it.maxWidth=5 })
+		json := jsonWriter.writeObj(map, PrettyPrintOptions { it.maxWidth=5; it.indent="\t" })
 		verifyEq("""{
 		            	"1" : 1,
 		            	"2" : 2,
@@ -74,10 +74,10 @@ internal class TestPrettyPrint : JsonTest {
 	Void testListOfMaps() {
 		map	 := 
 		[
-			[
-				"key1"	: "ever",
-				"key2"	: "ever"
-			],
+			[:] { ordered=true }
+				.add("key1", "ever")
+				.add("key2", "ever")
+			,
 			[
 				"wot"	: "ever",
 			],
@@ -86,8 +86,8 @@ internal class TestPrettyPrint : JsonTest {
 		verifyEq(
 """[
        {
-           "key2" : "ever",
-           "key1" : "ever"
+           "key1" : "ever",
+           "key2" : "ever"
        },
        {
            "wot" : "ever"
@@ -97,30 +97,30 @@ internal class TestPrettyPrint : JsonTest {
 
 	Void testMapOfMaps() {
 		map	 := 
-		[
-			"key1" : [
-				"key1"	: [
-					"key1"	: "ever", 
-					"key2"	: "ever", 
-				],
-				"key2"	: "ever"
-			],
-			"key2" : [
+		[:] { ordered=true }
+			.add("key1", [:] { ordered=true }
+				.add("key1", [:] { ordered=true }
+					.add("key1", "ever")
+					.add("key2", "ever")
+				)
+				.add("key2", "ever")
+			)
+			.add("key2",[
 				"wot"	: "ever",
-			],
-		]
+			])
+
 		json := jsonWriter.writeObj(map, PrettyPrintOptions { it.maxWidth=5; it.indent="    " })
 		verifyEq(
 """{
+       "key1" : {
+           "key1" : {
+               "key1" : "ever",
+               "key2" : "ever"
+           },
+           "key2" : "ever"
+       },
        "key2" : {
            "wot" : "ever"
-       },
-       "key1" : {
-           "key2" : "ever",
-           "key1" : {
-               "key2" : "ever",
-               "key1" : "ever"
-           }
        }
    }""", json)
 	}

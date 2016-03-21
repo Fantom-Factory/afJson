@@ -19,6 +19,7 @@ const mixin JsonTypeInspectors {
 			NamedInspector(Slot#,	SlotConverter()),
 			NamedInspector(Method#,	SlotConverter()),
 			NamedInspector(Field#,	SlotConverter()),
+			NamedInspector(Obj#,	LiteralConverter()),	// use Obj as a catch all
 			SerializableInspector(),
 			ObjInspector()
 		]
