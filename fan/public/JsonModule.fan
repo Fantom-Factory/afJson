@@ -67,8 +67,15 @@ const class JsonModule {
 				],
 				[
 					"serviceId"	: JsonTypeInspectors#.qname,
+					"key"		: "afJson.objLit",
+					"after"		: "afJson.method",
+					"before"	: "afJson.obj",		// this is the important constraint
+					"value"		: NamedInspector(Obj#, LiteralConverter())
+				],
+				[
+					"serviceId"	: JsonTypeInspectors#.qname,
 					"key"		: "afJson.serializable",
-					"after"		: "afJson.field",
+					"after"		: "afJson.objLit",
 					"value"		: SerializableInspector()
 				],
 				[
