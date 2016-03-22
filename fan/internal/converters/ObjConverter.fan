@@ -55,7 +55,7 @@ const class ObjConverter : JsonConverter {
 				if (jsonMap.containsKey(meta.propertyName))
 					throw Err(ErrMsgs.objConv_propertyIsNull(meta.propertyName, field, logDoc(jsonMap)))
 				else 
-					throw Err(ErrMsgs.objConv_propertyNotFound(field, logDoc(jsonMap)))
+					throw Err(ErrMsgs.objConv_propertyNotFound(field, meta.propertyName, logDoc(jsonMap)))
 			}
 
 //			// too much processing overhead for little value

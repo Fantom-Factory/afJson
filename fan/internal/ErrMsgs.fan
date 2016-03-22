@@ -15,8 +15,8 @@ internal const mixin ErrMsgs {
 		stripSys("Could not find a Converter to ${fantomType.qname} from ${jsonObj.typeof.qname}: ${jsonObj}")
 	}
 
-	static Str objConv_propertyNotFound(Field field, Str:Obj? jsonMap) {
-		stripSys("Could not set field '${field.qname}' because I couldn't find a matching JSON property in : ${jsonMap}")
+	static Str objConv_propertyNotFound(Field field, Str propName, Str:Obj? jsonMap) {
+		stripSys("Could not set field '${field.qname}' because I couldn't find '${propName}' in : ${jsonMap}")
 	}
 
 	static Str objConv_propertyIsNull(Str propName, Field field, Str:Obj? jsonMap) {
