@@ -49,8 +49,11 @@ const class ObjConverter : JsonConverter {
 		jsonMap		:= ((Str:Obj?) jsonObj).dup.rw
 		jsonDup		:= jsonMap.dup.rw
 		fieldVals	:= ctx.meta.properties.map |meta, slot -> Obj?| {
+			// we can only set Fields!
 			if (slot is Method)
 				return removeMe
+			
+			// don't set fields that aren't in the given JSON - that allows us to set default values
 			if (!jsonDup.containsKey(meta.propertyName))
 				return removeMe
 
