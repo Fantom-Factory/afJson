@@ -36,7 +36,7 @@ const class JsonTypeMeta {
 	
 	** If this type models a JSON object, then this is the meta for the containing properties.
 	** Returns empty list if there are no properties.
-	const Field:JsonTypeMeta	properties	:= emptyMap
+	const Slot:JsonTypeMeta	properties	:= emptyMap
 	
 	** If this type models a JSON object, this value dictates whether or not surplus JSON values 
 	** are allowed when converting it to Fantom.  
@@ -54,10 +54,15 @@ const class JsonTypeMeta {
 	**       it.type      = MyType#
 	**       it.converter = MyTypeConverter()
 	**   }
-	new make(|This| f) { f(this) }
+	new make(|This| f) {
+		f(this)
+		_fields = properties.findAll |v, k| { k is Field }
+	}
 	
 	// Singleton instance.
-	private static const Field:JsonTypeMeta emptyMap := Field:JsonTypeMeta[:]
+	private static const Slot:JsonTypeMeta emptyMap := Slot:JsonTypeMeta[:]
+
+	internal const Field:JsonTypeMeta _fields
 	
 	@NoDoc
 	override Str toStr() {
