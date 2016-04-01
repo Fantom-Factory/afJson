@@ -29,7 +29,7 @@ const class ObjInspector : JsonTypeInspector {
 			if (prop?.converterType != null) {
 				map[slot] = JsonTypeMeta {
 					it.type		 		= type
-					it.field	 		= slot as Field
+					it.slot		 		= slot
 					it.implType	 		= getImplType(slot, type)
 					it.propertyName		= getPropertyName(slot, prop?.propertyName ?: slot.name)
 					it.storeNullValues	= prop?.storeNullValues
@@ -39,7 +39,7 @@ const class ObjInspector : JsonTypeInspector {
 				meta := inspectors.getOrInspect(type)
 				map[slot] = JsonTypeMeta {
 					it.type		 		= type
-					it.field	 		= slot as Field
+					it.slot		 		= slot
 					it.implType	 		= getImplType(slot, type)
 					it.propertyName		= getPropertyName(slot, prop?.propertyName ?: slot.name)
 					it.storeNullValues	= prop?.storeNullValues

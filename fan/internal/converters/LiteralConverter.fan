@@ -17,7 +17,12 @@ const class LiteralConverter : JsonConverter {
 			if (type == Decimal#) 
 				return ((Num) jsonObj).toDecimal
 		}
-		
+
+		// this could be nice, but it's a lot of overhead for little use
+		// plus by not having it, it forces people to be more careful over their types,
+		// thus causing less confusion
+		// return CachingTypeCoercer().coerce(jsonObj, ctx.meta.type)
+
 		return jsonObj
 	}
 }
