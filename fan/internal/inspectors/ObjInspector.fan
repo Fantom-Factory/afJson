@@ -15,32 +15,34 @@ const class ObjInspector : JsonTypeInspector {
 	}
 	
 	override JsonTypeMeta? inspect(Type objType, JsonTypeInspectors inspectors) {
-		map := Field:JsonTypeMeta[:] { it.ordered=true }
+		map := Slot:JsonTypeMeta[:] { it.ordered=true }
 
-		objType.fields.findAll { it.hasFacet(JsonProperty#) }.each |field| {
-			prop := (JsonProperty) field.facet(JsonProperty#)
-			if (prop.implType != null && prop.implType.fits(field.type).not)
-				throw Err(ErrMsgs.objInspect_implTypeDoesNotFit(prop.implType, field))
-
-			type := prop.implType ?: field.type
+		findJsonFields(objType).each |slot| {
+			prop := (JsonProperty?) slot.facet(JsonProperty#, false)
 			
-			if (prop.converterType != null) {
-				map[field] = JsonTypeMeta {
+			defType := (slot as Field)?.type ?: (slot as Method)?.returns
+			if (prop?.implType != null && prop.implType.fits(defType).not)
+				throw Err(ErrMsgs.objInspect_implTypeDoesNotFit(prop.implType, slot))
+
+			type := prop?.implType ?: defType
+			
+			if (prop?.converterType != null) {
+				map[slot] = JsonTypeMeta {
 					it.type		 		= type
-					it.field	 		= field
-					it.implType	 		= getImplType(field, prop.implType ?: field.type)
-					it.propertyName		= getPropertyName(field, prop.propertyName ?: field.name)
-					it.storeNullValues	= prop.storeNullValues
+					it.field	 		= slot as Field
+					it.implType	 		= getImplType(slot, type)
+					it.propertyName		= getPropertyName(slot, prop?.propertyName ?: slot.name)
+					it.storeNullValues	= prop?.storeNullValues
 					it.converter 		= createConverter(prop.converterType)
 				}
 			} else {
 				meta := inspectors.getOrInspect(type)
-				map[field] = JsonTypeMeta {
+				map[slot] = JsonTypeMeta {
 					it.type		 		= type
-					it.field	 		= field
-					it.implType	 		= getImplType(field, prop.implType ?: field.type)
-					it.propertyName		= getPropertyName(field, prop.propertyName ?: field.name)
-					it.storeNullValues	= prop.storeNullValues
+					it.field	 		= slot as Field
+					it.implType	 		= getImplType(slot, type)
+					it.propertyName		= getPropertyName(slot, prop?.propertyName ?: slot.name)
+					it.storeNullValues	= prop?.storeNullValues
 					it.converter 		= meta.converter
 					it.properties 		= meta.properties
 					it.stash			= meta.stash
@@ -52,6 +54,18 @@ const class ObjInspector : JsonTypeInspector {
 			it.type		 	= objType
 			it.converter 	= createObjConverter
 			it.properties 	= map
+		}
+	}
+	
+	** Hook to grab all slots (fields) that are to be converted.
+	** 
+	** By default this returns all slots annotated with the facet '@JsonProperty'.
+	virtual Slot[] findJsonFields(Type objType) {
+		objType.slots.findAll |slot -> Bool| {
+			hasProp := slot.hasFacet(JsonProperty#)
+			if (hasProp && slot is Method && ((Method) slot).params.size > 0)
+				throw Err("Method should not take any arguments: ${slot.qname}")
+			return hasProp
 		}
 	}
 	
@@ -75,10 +89,10 @@ const class ObjInspector : JsonTypeInspector {
 	** Hook to alter the given 'implType'.
 	** 
 	** Returns 'implType' by default.
-	virtual Type getImplType(Field field, Type implType) { implType }
+	virtual Type getImplType(Slot slot, Type implType) { implType }
 
 	** Hook to alter the given 'propertyName'.
 	** 
 	** Returns 'propertyName' by default.
-	virtual Str getPropertyName(Field field, Str propertyName) { propertyName }
+	virtual Str getPropertyName(Slot slot, Str propertyName) { propertyName }
 }

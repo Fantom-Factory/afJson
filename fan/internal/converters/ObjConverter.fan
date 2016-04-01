@@ -21,8 +21,8 @@ const class ObjConverter : JsonConverter {
 		if (fantomObj == null) return null
 
 		jsonMap := createJsonObj
-		ctx.meta.properties.each |meta, field| {
-			fval := field.get(fantomObj)
+		ctx.meta.properties.each |meta, slot| {
+			fval := getValue(fantomObj, slot)
 			jval := ctx.toJson(meta, fval)
 			
 			if (jval == null && (meta.storeNullValues ?: storeNullValues).not)
@@ -46,7 +46,7 @@ const class ObjConverter : JsonConverter {
 
 		jsonMap		:= ((Str:Obj?) jsonObj).dup.rw
 		jsonDup		:= jsonMap.dup.rw
-		fieldVals	:= ctx.meta.properties.map |meta, field -> Obj?| {
+		fieldVals	:= ctx.meta._fields.map |meta, field -> Obj?| {
 			jval	:= jsonDup.remove(meta.propertyName)
 			fval	:= ctx.toFantom(meta, jval)
 			
@@ -72,6 +72,17 @@ const class ObjConverter : JsonConverter {
 		try return createEntity(ctx.meta.implType ?: ctx.meta.type, fieldVals)
 		catch (Err err)
 			throw Err("Could not create instance of ${ctx.meta.type} with: ${jsonMap}", err)
+	}
+	
+	** Hook to return a slot value when converting to a jsonObj.
+	virtual Obj? getValue(Obj fantomObj, Slot slot) {
+		if (slot is Field)
+			return ((Field) slot).get(fantomObj)
+		if (slot is Method) {
+			method := (Method) slot
+			return method.isStatic ? method.call : method.call(fantomObj)
+		}
+		return null
 	}
 	
 	** Hook for dealing with surplus JSON.

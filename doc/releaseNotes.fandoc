@@ -1,5 +1,9 @@
 Versions
 ********
+v0.0.6
+======
+ - New: Methods may also be annotated with '@JsonProperty'.
+ - Chg: Added 'ObjInspector.findJsonFields()' hook.
 
 v0.0.4
 ======
@@ -12,4 +16,3 @@ v0.0.4
 v0.0.2
 ======
  - New: Initial release.
-
