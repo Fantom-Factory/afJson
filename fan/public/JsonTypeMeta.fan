@@ -10,8 +10,8 @@ const class JsonTypeMeta {
 	** The converter used to convert this object. 
 	const JsonConverter converter
 
-	** The field, if any, this meta corresponds to.
-	const Field?	field
+	** The slot, if any, this meta corresponds to.
+	const Slot?		slot
 
 	** The property name used when this value is stored in a JSON object.
 	** 
@@ -22,7 +22,7 @@ const class JsonTypeMeta {
 	** Use when this field references a mixin or a superclass. 
 	** 
 	** Taken from '@JsonProperty.implType' and defaults to the field type if not available.
-	const Type? 	implType
+	const Type?	 	implType
 
 	** Dictates whether or not 'null' values are persisted in JSON objects.
 	** 
@@ -63,9 +63,15 @@ const class JsonTypeMeta {
 	private static const Slot:JsonTypeMeta emptyMap := Slot:JsonTypeMeta[:]
 
 	internal const Field:JsonTypeMeta _fields
-	
+
+	** The field, if any, this meta corresponds to.
+	Field?	field() { slot as Field }
+
+	** The method, if any, this meta corresponds to.
+	Method?	method()  { slot as Method }
+
 	@NoDoc
 	override Str toStr() {
-		field?.qname ?: type.qname
+		(field?.qname ?: method?.returns) ?: type.qname
 	}
 }
