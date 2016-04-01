@@ -7,6 +7,8 @@ const class ObjConverter : JsonConverter {
 	const Bool	storeNullValues
 	const Bool	allowSurplusJson	:= true
 
+	private const Str	removeMe	:= "afJson.removeMe"
+	
 	** Creates a new 'ObjConverter' with the given 'null' strategy.
 	** 
 	** If 'storeNullFields' is 'true' then converted 'null' values are returned in the resultant JSON.
@@ -46,7 +48,13 @@ const class ObjConverter : JsonConverter {
 
 		jsonMap		:= ((Str:Obj?) jsonObj).dup.rw
 		jsonDup		:= jsonMap.dup.rw
-		fieldVals	:= ctx.meta._fields.map |meta, field -> Obj?| {
+		fieldVals	:= ctx.meta.properties.map |meta, slot -> Obj?| {
+			if (slot is Method)
+				return removeMe
+			if (!jsonDup.containsKey(meta.propertyName))
+				return removeMe
+
+			field	:= (Field) slot
 			jval	:= jsonDup.remove(meta.propertyName)
 			fval	:= ctx.toFantom(meta, jval)
 			
@@ -64,7 +72,7 @@ const class ObjConverter : JsonConverter {
 //				throw Err(ErrMsgs.objConv_propertyDoesNotFitField(meta.propertyName, fval.typeof, field, logDoc(jsonMap)))
 			
 			return fval
-		}
+		}.exclude { it === removeMe }
 		
 		if (jsonDup.size > 0)
 			surplusJson(ctx, jsonDup)

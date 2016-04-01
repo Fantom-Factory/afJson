@@ -54,15 +54,10 @@ const class JsonTypeMeta {
 	**       it.type      = MyType#
 	**       it.converter = MyTypeConverter()
 	**   }
-	new make(|This| f) {
-		f(this)
-		_fields = properties.findAll |v, k| { k is Field }
-	}
+	new make(|This| f) { f(this) }
 	
 	// Singleton instance.
 	private static const Slot:JsonTypeMeta emptyMap := Slot:JsonTypeMeta[:]
-
-	internal const Field:JsonTypeMeta _fields
 
 	** The field, if any, this meta corresponds to.
 	Field?	field() { slot as Field }
