@@ -12,7 +12,7 @@ class Example {
         ))
         
         user := User { name = "Judge Dredd"; timestamp = DateTime.now }
-        json := jsonService.writeEntity(user)
+        json := jsonService.writeJson(user, User#)
         
         echo(json) // --> {"name":"Judge Dredd","timestamp":"new Date(1456178248297)"}
     }

@@ -20,6 +20,12 @@ const mixin Json {
 	** Returns the underlying 'JsonTypeInspectors' instance. 
 	abstract JsonTypeInspectors	inspectors()
 
+	** Returns the underlying 'JsonReader' instance. 
+	abstract JsonReader	jsonReader()
+
+	** Returns the underlying 'JsonWriter' instance. 
+	abstract JsonWriter	jsonWriter()
+
 	** Reads the the given JSON and (optionally) converts it to a Fantom entity instance.
 	** 
 	** The given JSON is read into a 'jsonObj'.
@@ -58,8 +64,8 @@ const mixin Json {
 internal const class JsonImpl : Json {	
 	override const EntityConverter		converter
 	override const JsonTypeInspectors	inspectors
-	private  const JsonReader			jsonReader
-	private  const JsonWriter			jsonWriter
+	override const JsonReader			jsonReader
+	override const JsonWriter			jsonWriter
 	
 	new make(JsonTypeInspectors inspectors, JsonReader jsonReader, JsonWriter jsonWriter) {
 		this.converter	= EntityConverter(inspectors)
