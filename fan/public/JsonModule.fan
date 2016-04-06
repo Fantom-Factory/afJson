@@ -10,6 +10,10 @@ const class JsonModule {
 					"type"	: Json#,
 				],
 				[
+					"id"	: EntityConverter#.qname,
+					"type"	: EntityConverter#,
+				],
+				[
 					"id"	: JsonTypeInspectors#.qname,
 					"type"	: JsonTypeInspectors#,
 				],

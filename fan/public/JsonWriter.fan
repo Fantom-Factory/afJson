@@ -35,13 +35,13 @@ const class JsonWriter {
 	** pretty printing with defaults. If 'null' then it defaults to the class default.
 	** 
 	**   syntax: fantom
-	**   json := jsonWriter.writeObj(jsonObj)
-	**   json := jsonWriter.writeObj(jsonObj, true)
-	**   json := jsonWriter.writeObj(jsonObj, PrettyPrintOptions { it.indent = "\t" })
+	**   json := jsonWriter.writeJson(jsonObj)
+	**   json := jsonWriter.writeJson(jsonObj, true)
+	**   json := jsonWriter.writeJson(jsonObj, PrettyPrintOptions { it.indent = "\t" })
 	** 
-	Str writeObj(Obj? obj, Obj? prettyPrintOptions := null) {
+	Str writeJson(Obj? obj, Obj? prettyPrintOptions := null) {
 		buf := StrBuf()
-		writeObjToStream(obj, buf.out, prettyPrintOptions ?: this.prettyPrintOptions)
+		writeJsonToStream(obj, buf.out, prettyPrintOptions ?: this.prettyPrintOptions)
 		return buf.toStr
 	}
 
@@ -58,13 +58,13 @@ const class JsonWriter {
 	** pretty printing with defaults.
 	**  
 	**   syntax: fantom
-	**   json := jsonWriter.writeObjToStream(jsonObj, out)
-	**   json := jsonWriter.writeObjToStream(jsonObj, out, true)
-	**   json := jsonWriter.writeObjToStream(jsonObj, out, PrettyPrintOptions { it.indent = "\t" })
+	**   json := jsonWriter.writeJsonToStream(jsonObj, out)
+	**   json := jsonWriter.writeJsonToStream(jsonObj, out, true)
+	**   json := jsonWriter.writeJsonToStream(jsonObj, out, PrettyPrintOptions { it.indent = "\t" })
 	** 
-	This writeObjToStream(Obj? obj, OutStream out, Obj? prettyPrintOptions := null) {
+	This writeJsonToStream(Obj? obj, OutStream out, Obj? prettyPrintOptions := null) {
 		ctx := JsonWriteCtx(out, prettyPrintOptions ?: this.prettyPrintOptions)
-		_writeObjToStream(ctx, obj)
+		_writeJsonToStream(ctx, obj)
 		ctx.finalise
 		return this
 	}
@@ -76,7 +76,7 @@ const class JsonWriter {
 	 
 	// ---- private methods -----------------------------------------------------------------------
 
-	private This _writeObjToStream(JsonWriteCtx ctx, Obj? obj) {
+	private This _writeJsonToStream(JsonWriteCtx ctx, Obj? obj) {
 		obj = convertHook(obj)
 			 if (obj is Str)		_writeJsonStr	(ctx, obj)
 		else if (obj is Num)		_writeJsonNum	(ctx, obj)
@@ -97,7 +97,7 @@ const class JsonWriter {
 			if (notFirst) ctx.objectVal
 			_writeJsonStr(ctx, key)
 			ctx.objectKey
-			_writeObjToStream(ctx, val)
+			_writeJsonToStream(ctx, val)
 			notFirst = true
 		}
 		ctx.objectEnd
@@ -108,7 +108,7 @@ const class JsonWriter {
 		notFirst := false
 		array.each |item| {
 			if (notFirst) ctx.arrayItem
-			_writeObjToStream(ctx, item)
+			_writeJsonToStream(ctx, item)
 			notFirst = true
 		}
 		ctx.arrayEnd
@@ -204,7 +204,7 @@ internal class JsonWriteCtxPretty : JsonWriteCtx {
 	}
 	
 	override This print(Obj s) {
-		valWriters.peek.writeObj(s)
+		valWriters.peek.writeJson(s)
 		return this
 	}
 	
@@ -243,7 +243,7 @@ internal abstract class JsonValWriter {
 		this.ppOpts	= ppOpts
 	}
 	
-	virtual  Void writeObj(Obj obj)	{ throw Err("WTF?") }
+	virtual  Void writeJson(Obj ob) { throw Err("WTF?") }
 	virtual  Void writeChar(Int ch)	{ throw Err("WTF?") }
 	virtual  Void add(Str item)		{ throw Err("WTF?")	}
 	abstract Str  str()
@@ -255,7 +255,7 @@ internal class JsonValWriterLit : JsonValWriter {
 	
 	new make(PrettyPrintOptions ppOpts) : super(ppOpts) { }
 
-	override Void writeObj(Obj obj)	{ value.add(obj)	}
+	override Void writeJson(Obj ob)	{ value.add(ob)	}
 	override Void writeChar(Int ch)	{ value.addChar(ch)	}
 	override Str str() 				{ value.toStr		}
 }

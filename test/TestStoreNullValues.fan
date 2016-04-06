@@ -3,7 +3,7 @@
 internal class TestStoreNullValues : JsonTest {
 	
 	Void testNullValues() {
-		jsonObj := inspectors.toJsonObj(T_Entity02()) as Str:Obj?
+		jsonObj := converter.fromEntity(T_Entity02()) as Str:Obj?
 		
 		verify		(jsonObj.containsKey("nullTrue"))
 		verifyNull	(jsonObj["nullTrue"])
