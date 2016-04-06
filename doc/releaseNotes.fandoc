@@ -1,15 +1,13 @@
 Versions
 ********
-v0.0.6
-======
- - New: Methods may also be annotated with '@JsonProperty'.
- - Chg: Added 'ObjInspector.findJsonFields()' hook.
 
 v0.0.4
 ======
+ - New: Methods may also be annotated with '@JsonProperty'.
  - New: 'JsonWriter' now pretty prints!
- - Chg: Added moar methods to 'Json' along with a pretty picture.
- - Chg: Made more inspectors and converters public, but '@NoDoc' for now.
+ - Chg: Renamed *everything*! Well, pretty much all of the main methods. (Breaking change.)
+ - Chg: Added lots of hooks to 'ObjInspector'.
+ - Chg: Made more inspectors and converters public, but they're all '@NoDoc' for now.
  - Chg: Fields declared as 'Obj' may capture any obj.
  - Bug: Numbers weren't converted to their correct sub-type.
 

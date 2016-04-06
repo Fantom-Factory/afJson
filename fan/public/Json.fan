@@ -14,85 +14,87 @@ const mixin Json {
 		JsonImpl(inspectors ?: JsonTypeInspectors(), reader ?: JsonReader(), writer ?: JsonWriter())
 	}
 	
-	** Returns the underlying 'JsonTypeInspectors'. 
+	** Returns the underlying 'EntityConverter' instance. 
+	abstract EntityConverter converter()
+
+	** Returns the underlying 'JsonTypeInspectors' instance. 
 	abstract JsonTypeInspectors	inspectors()
 
-	** Reads the the given JSON and converts it to a Fantom entity instance.
-	abstract Obj? readEntity(Str? json, Type fantomType)
-
-	** Converts the given entity to JSON.
+	** Reads the the given JSON and (optionally) converts it to a Fantom entity instance.
 	** 
-	** If 'fantomType' is 'null' it defaults to the type of the given obj.
-	abstract Str writeEntity(Obj? fantomObj, Type? fantomType := null)
+	** The given JSON is read into a 'jsonObj'.
+	** Should 'entityType' not be null then the 'jsonObj' is converted to a Fantom entity.
+	abstract Obj? readJson(Str? json, Type? entityType := null)
 
-	** Translates the given JSON to a Fantom 'Obj'.
-	abstract Obj? readObj(Str? json)
-
-	** Translates the given JSON to a Fantom 'Map'.
+	** Translates the given JSON to its Fantom List representation.
 	** 
-	** Convenience for '([Str:Obj?]?) readObj(...)'
-	abstract [Str:Obj?]? readMap(Str? json)
+	** Convenience for '(Obj?[]?) readJson(json, null)'
+	abstract Obj?[]? readJsonAsList(Str? json)
 	
-	** Convenience for serialising the given Fantom object to JSON.
+	** Translates the given JSON to its Fantom Map representation.
+	** 
+	** Convenience for '([Str:Obj?]?) readJson(json, null)'
+	abstract [Str:Obj?]? readJsonAsMap(Str? json)
+	
+	** Converts the given obj to JSON.
+	**  
+	** If 'entityType' is not null then the given 'obj' is taken to be an entity and is first 
+	** converted to an 'jsonObj'. The 'jsonObj' is then written out to JSON.
 	** 
 	** 'prettyPrintOptions' may be either a 'PrettyPrintOptions' instance, or just 'true' to enable 
 	** pretty printing with defaults.
-	abstract Str writeObj(Obj? obj, Obj? prettyPrintOptions := null)
-	
-	** Converts the given entity to its JSON representation.
+	abstract Str writeJson(Obj? obj, Type? entityType := null, Obj? prettyPrintOptions := null)
+
+	** Converts the given entity instance to its 'jsonObj' representation.
 	** 
-	** If 'fantomType' is 'null' it defaults to 'fantomObj.typeof()'.
-	** 
-	** If 'meta' is 'null' then a cached version for 'fantomType' is retrieved from 'JsonTypeInspectors'.
-	abstract Obj? toJsonObj(Obj? fantomObj, Type? fantomType := null, JsonTypeMeta? meta := null)
+	** If 'entityType' is 'null' it defaults to 'entity.typeof()'.
+	abstract Obj? fromEntity(Obj? entity, Type? entityType := null)
 	
-	** Converts the given 'jsonObj' to its Fantom representation.
-	** 	
-	** If 'meta' is 'null' then a cached version for 'fantomType' is retrieved from 'JsonTypeInspectors'.
-	abstract Obj? toFantom(Obj? jsonObj, Type fantomType, JsonTypeMeta? meta := null)
+	** Converts the given 'jsonObj' to a Fantom entity instance.
+	abstract Obj? toEntity(Obj? jsonObj, Type entityType)
 }
 
 @Js
 internal const class JsonImpl : Json {	
+	override const EntityConverter		converter
 	override const JsonTypeInspectors	inspectors
 	private  const JsonReader			jsonReader
 	private  const JsonWriter			jsonWriter
 	
 	new make(JsonTypeInspectors inspectors, JsonReader jsonReader, JsonWriter jsonWriter) {
+		this.converter	= EntityConverter(inspectors)
 		this.inspectors = inspectors
 		this.jsonReader	= jsonReader
 		this.jsonWriter	= jsonWriter
 	}
 	
-	override Str writeEntity(Obj? fantomObj, Type? fantomType := null) {
-		jsonObj	:= inspectors.toJsonObj(fantomObj, fantomType)
-		json 	:= jsonWriter.writeObj(jsonObj)
+	override Obj? readJson(Str? json, Type? entityType := null) {
+		jsonObj	:= jsonReader.readJson(json)
+		fantObj := entityType == null ? jsonObj : converter.toEntity(jsonObj, entityType)
+		return fantObj
+	}
+
+	override Obj?[]? readJsonAsList(Str? json) {
+		jsonReader.readJsonAsList(json)
+	}
+	
+	override [Str:Obj?]? readJsonAsMap(Str? json) {
+		jsonReader.readJsonAsMap(json)
+	}
+	
+	override Str writeJson(Obj? obj, Type? entityType := null, Obj? prettyPrintOptions := null) {
+		// I could forego the entity check and first convert ALL objs, 
+		// but it's a bucket load faster not to when just serialising out a given jsonObj
+		jsonObj	:= entityType == null ? obj : converter.fromEntity(obj, entityType)
+		json 	:= jsonWriter.writeJson(jsonObj, prettyPrintOptions)
 		return json
 	}
-
-	override Obj? readEntity(Str? json, Type fantomType) {
-		jsonObj	:= jsonReader.readObj(json)
-		entity	:= inspectors.toFantom(jsonObj, fantomType)
-		return entity
+	
+	override Obj? fromEntity(Obj? entity, Type? entityType := null) {
+		converter.fromEntity(entity, entityType)
 	}
 	
-	override Obj? readObj(Str? json) {
-		jsonReader.readObj(json)
-	}
-
-	override [Str:Obj?]? readMap(Str? json) {
-		jsonReader.readMap(json)
-	}
-	
-	override Str writeObj(Obj? obj, Obj? prettyPrintOptions := null) {
-		jsonWriter.writeObj(obj, prettyPrintOptions)
-	}
-
-	override Obj? toJsonObj(Obj? fantomObj, Type? fantomType := null, JsonTypeMeta? meta := null) {
-		inspectors.toJsonObj(fantomObj, fantomType, meta)
-	}
-	
-	override Obj? toFantom(Obj? jsonObj, Type fantomType, JsonTypeMeta? meta := null) {
-		inspectors.toFantom(jsonObj, fantomType, meta)
+	override Obj? toEntity(Obj? jsonObj, Type entityType) {
+		converter.toEntity(jsonObj, entityType)
 	}
 }

@@ -3,7 +3,7 @@
 internal class TestPropertyNames : JsonTest {
 	
 	Void testPropNames() {
-		jsonObj := inspectors.toJsonObj(T_Entity03()) as Str:Obj?
+		jsonObj := converter.fromEntity(T_Entity03()) as Str:Obj?
 		
 		verifyFalse	(jsonObj.containsKey("name"))
 		verifyEq	(jsonObj["spdx"], "Booya!")

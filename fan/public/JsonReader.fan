@@ -15,7 +15,9 @@ const class JsonReader {
 	**	 - 'Str'
 	**	 - 'Str:Obj?'
 	**	 - 'Obj?[]'
-	Obj? readObjFromStream(InStream? in, Bool closeStream := true) {
+	** 
+	** If 'closeStream' is 'true', the given 'InStream' is guarenteed to be closed.
+	Obj? readJsonFromStream(InStream? in, Bool closeStream := true) {
 		if (in == null)
 			return null
 
@@ -30,25 +32,26 @@ const class JsonReader {
 				in.close
 	}
 
-	** Translates the given JSON to a Fantom 'Obj'.
+	** Translates the given JSON to its Fantom representation. 
+	** The returned 'Obj' may be any `JsonLiteral`.
 	** 
-	** Convenience for 'readObjFromStream(json?.in)'
-	Obj? readObj(Str? json) {
-		readObjFromStream(json?.in)
+	** Convenience for 'readJsonFromStream(json?.in)'
+	Obj? readJson(Str? json) {
+		readJsonFromStream(json?.in)
 	}
 
-	** Translates the given JSON to a Fantom 'List'.
+	** Translates the given JSON to its Fantom List representation. 
 	** 
-	** Convenience for '(Obj?[]?) readObj(...)'
-	Obj?[]? readList(Str? json) {
-		readObj(json)
+	** Convenience for '(Obj?[]?) readJson(...)'
+	Obj?[]? readJsonAsList(Str? json) {
+		readJson(json)
 	}
 
-	** Translates the given JSON to a Fantom 'Map'.
+	** Translates the given JSON to its Fantom Map representation. 
 	** 
-	** Convenience for '([Str:Obj?]?) readObj(...)'
-	[Str:Obj?]? readMap(Str? json) {
-		readObj(json)
+	** Convenience for '([Str:Obj?]?) readJson(...)'
+	[Str:Obj?]? readJsonAsMap(Str? json) {
+		readJson(json)
 	}
 
 	** A simple override hook to alter values *after* they have been read.

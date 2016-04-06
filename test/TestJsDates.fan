@@ -7,7 +7,7 @@ internal class TestJsDates : JsonTest {
 		))
 		
 		user := T_User04 { name = "Judge Dredd"; timestamp = DateTime.now }
-		json := jsonService.writeEntity(user)
+		json := jsonService.writeJson(user, T_User04#)
 		
 		echo(json) // --> {"name":"Judge Dredd","timestamp":"new Date(1456178248297)"}
 	}

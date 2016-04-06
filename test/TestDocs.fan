@@ -4,37 +4,37 @@ internal class TestDocs : JsonTest {
 	
 	Void testDocs() {
 		
-		user1 := Json().readEntity("{}", T_User1#) as T_User1
+		user1 := Json().readJson("{}", T_User01#) as T_User01
 		verifyEq(null, user1.name)
 		
-		json1 := Json().writeEntity(user1)
+		json1 := Json().writeJson(user1, T_User01#)
 		verifyEq(json1, "{}")
 
-		user2 := T_User2 { name = null }
-		json2 := Json().writeEntity(user2)
+		user2 := T_User02 { name = null }
+		json2 := Json().writeJson(user2, T_User02#)
 		verifyEq(json2, "{\"name\":null}")
 
-		user3 := T_User3 { name = "Dredd" }
-		json3 := Json().writeEntity(user3)
+		user3 := T_User03 { name = "Dredd" }
+		json3 := Json().writeJson(user3, T_User03#)
 		verifyEq(json3, """{"judge":"Dredd"}""")
 	}
 }
 
 @Js
-internal class T_User1 {
+internal class T_User01 {
 	@JsonProperty Str? name
 	new make(|This| f) { f(this) }
 }
 
 @Js
-internal class T_User2 {
+internal class T_User02 {
 	@JsonProperty { storeNullValues=true } 
 	Str? name
 	new make(|This| f) { f(this) }
 }
 
 @Js
-internal class T_User3 {
+internal class T_User03 {
 	@JsonProperty { propertyName="judge" } 
 	Str? name
 	new make(|This| f) { f(this) }

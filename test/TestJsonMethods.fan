@@ -3,12 +3,12 @@
 internal class TestJsonMethods : JsonTest {
 	
 	Void testJsonMethods() {
-		json := this.json.writeEntity(T_Entity05())
+		json := this.json.writeJson(T_Entity05(), T_Entity05#)
 		echo(json)
 		verifyEq("""{"int":69,"dis":"Judge Dredd"}""", json)
 		
 		// and lets check we don't try to set method values!
-		this.json.readEntity(json, T_Entity05#)
+		this.json.readJson(json, T_Entity05#)
 	}
 }
 
