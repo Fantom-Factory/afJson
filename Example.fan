@@ -17,7 +17,7 @@
                        }"""
     
             // ...and WHAM! A fully inflated domain object!
-            friend := (Friend) jsonService.readEntity(json, Friend#)
+            friend := (Friend) jsonService.readJson(json, Friend#)
             
             echo(friend.name)     // --> Emma
             echo(friend.car.name) // --> Golf
@@ -26,7 +26,7 @@
             friend.car   = null
             
             // we can event convert the other way! 
-            moarJson := jsonService.writeEntity(friend)
+            moarJson := jsonService.writeJson(friend, Friend#)
     
             echo(moarJson)
             // --> {"name":"Emma","sex":"female","score":11,"likes":["Cakes","Adventure"]}
