@@ -32,7 +32,8 @@ const class ObjInspector : JsonTypeInspector {
 					it.slot		 		= slot
 					it.implType	 		= getImplType(slot, type)
 					it.propertyName		= getPropertyName(slot, prop?.propertyName ?: slot.name)
-					it.storeNullValues	= prop?.storeNullValues
+					it.storeNullValues	= getStoreNullValues(slot, prop?.storeNullValues)
+					it.allowSurplusJson	= getAllowSurplusJson(slot, null)
 					it.converter 		= createConverter(prop.converterType)
 				}
 			} else {
@@ -42,7 +43,8 @@ const class ObjInspector : JsonTypeInspector {
 					it.slot		 		= slot
 					it.implType	 		= getImplType(slot, type)
 					it.propertyName		= getPropertyName(slot, prop?.propertyName ?: slot.name)
-					it.storeNullValues	= prop?.storeNullValues
+					it.storeNullValues	= getStoreNullValues(slot, prop?.storeNullValues)
+					it.allowSurplusJson	= getAllowSurplusJson(slot, null)
 					it.converter 		= meta.converter
 					it.properties 		= meta.properties
 					it.stash			= meta.stash
@@ -56,7 +58,7 @@ const class ObjInspector : JsonTypeInspector {
 			it.properties 	= map
 		}
 	}
-	
+
 	** Hook to grab all slots (fields) that are to be converted.
 	** 
 	** By default this returns all slots annotated with the facet '@JsonProperty'.
@@ -95,4 +97,14 @@ const class ObjInspector : JsonTypeInspector {
 	** 
 	** Returns 'propertyName' by default.
 	virtual Str getPropertyName(Slot slot, Str propertyName) { propertyName }
+
+	** Hook to alter the given 'storeNullValues'.
+	** 
+	** Returns 'storeNullValues' by default.
+	virtual Bool? getStoreNullValues(Slot slot, Bool? storeNullValues) { storeNullValues }
+
+	** Hook to alter the given 'allowSurplusJson'.
+	** 
+	** Returns 'allowSurplusJson' by default.
+	virtual Bool? getAllowSurplusJson(Slot slot, Bool? allowSurplusJson) { allowSurplusJson }
 }
