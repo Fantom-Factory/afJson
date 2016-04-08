@@ -1,7 +1,7 @@
-#Json v0.0.2
+#Json v0.0.4
 ---
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v0.0.2](http://img.shields.io/badge/pod-v0.0.2-yellow.svg)](http://www.fantomfactory.org/pods/afJson)
+[![pod: v0.0.4](http://img.shields.io/badge/pod-v0.0.4-yellow.svg)](http://www.fantomfactory.org/pods/afJson)
 ![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
 
 ## Overview
@@ -10,15 +10,18 @@
 
 Json is a customisable Fantom to Javascript Object Notation (JSON) mapping library.
 
+It goes far beyond the usual `JsonInStream` and `JsonOutStream` classes by mapping and instantiating fully fledged Fantom domain objects.
+
 Features:
 
+- JSON pretty printing
 - Converts all core Fantom types
 - Converts nested / embedded objects
 - Runs on Javascript platforms
 - IoC enabled
 - Simple to use
 
-Just annotate fields with `@JsonProperty` then read / write JSON with `Json().readEntity(...)` and `Json().writeEntity(...)` - couldn't be easier!
+Just annotate fields with `@JsonProperty` then read / write JSON with `readJson(...)` and `writeJson(...)` - couldn't be easier!
 
 ## Install
 
@@ -57,7 +60,7 @@ Full API & fandocs are available on the [Fantom Pod Repository](http://pods.fant
                            }"""
         
                 // ...and WHAM! A fully inflated domain object!
-                friend := (Friend) jsonService.readEntity(json, Friend#)
+                friend := (Friend) jsonService.readJson(json, Friend#)
         
                 echo(friend.name)     // --> Emma
                 echo(friend.car.name) // --> Golf
@@ -65,8 +68,8 @@ Full API & fandocs are available on the [Fantom Pod Repository](http://pods.fant
                 friend.score = 11
                 friend.car   = null
         
-                // we can event convert the other way!
-                moarJson := jsonService.writeEntity(friend)
+                // we can even convert the other way!
+                moarJson := jsonService.writeJson(friend, Friend#)
         
                 echo(moarJson)
                 // --> {"name":"Emma","sex":"female","score":11,"likes":["Cakes","Adventure"]}
@@ -118,9 +121,13 @@ All conversion of Entities to and from JSON goes through an intermediary `JsonOb
 
     Entity <--> JsonObj <--> JSON
 
-`JsonConverters` convert between Entities and JsonObjs.
+`EntityConverter` converts between Entities and JsonObjs.
 
-`JsonReaders` and `JsonWriters` convert between JsonObjs and JSON.
+`JsonReader` and `JsonWriter` convert between JsonObjs and JSON.
+
+`Json` has methods to convert between all:
+
+![JSON Methods](http://pods.fantomfactory.org/pods/afJson/doc/jsonMethods.png)
 
 ## Usage
 
@@ -181,7 +188,7 @@ class User {
 }
 
 json := "{}"
-user := Json().readEntity(json, User#) as User
+user := Json().readJson(json, User#) as User
 
 echo(user.name)  // --> null
 ```
@@ -197,7 +204,7 @@ class User {
 }
 
 user := User { name = null }
-json := Json().writeEntity(user)
+json := Json().writeJson(user, User#)
 
 echo(json)  // --> {}
 ```
@@ -231,7 +238,7 @@ class User {
 }
 
 user := User { name = "Dredd" }
-json := Json().writeEntity(user)
+json := Json().writeEntity(user, User#)
 
 echo(json)  // --> {"judge":"Dredd"}
 ```
@@ -291,7 +298,7 @@ If you did not want to go as far as creating an inspector, you could instead cre
 
 Or the easiest, but most limited way, would be to set the `@JsonProperty.converterType` attribute on the affected fields.
 
-If you are contemplating implementating custom conversion then you are encouraged to look at the Json library source for help and examples. It may be preferable to simply extend one the current Inspectors or Converters.
+If you are contemplating implementating custom conversion then you are encouraged to look at the Json library source for help and examples. It may be preferable to simply extend one the current `@NoDoc` Inspectors or Converters.
 
 ## JSON and Dates
 
@@ -314,7 +321,7 @@ class Example {
         ))
 
         user := User { name = "Judge Dredd"; timestamp = DateTime.now }
-        json := jsonService.writeEntity(user)
+        jsonService.writeJson(user, User#)
 
         echo(json) // --> {"name":"Judge Dredd","timestamp":new Date(1456178248297)}
     }
