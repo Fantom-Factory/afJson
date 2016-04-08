@@ -33,7 +33,7 @@ const class JsonReader {
 	}
 
 	** Translates the given JSON to its Fantom representation. 
-	** The returned 'Obj' may be any `JsonLiteral`.
+	** The returned 'Obj' may be any `JsonType`.
 	** 
 	** Convenience for 'readJsonFromStream(json?.in)'
 	Obj? readJson(Str? json) {
