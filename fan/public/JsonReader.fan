@@ -16,7 +16,7 @@ const class JsonReader {
 	**	 - 'Str:Obj?'
 	**	 - 'Obj?[]'
 	** 
-	** If 'closeStream' is 'true', the given 'InStream' is guarenteed to be closed.
+	** If 'closeStream' is 'true', the given 'InStream' is guaranteed to be closed.
 	Obj? readJsonFromStream(InStream? in, Bool closeStream := true) {
 		if (in == null)
 			return null
