@@ -33,19 +33,6 @@ const mixin JsonTypeInspectors {
 	** Sets 'JsonTypeMeta' to be associated with the given type.
 	@Operator
 	abstract Void set(Type type, JsonTypeMeta meta)
-	
-//	** Converts the given entity to its JSON representation.
-//	** 
-//	** If 'fantomType' is 'null' it defaults to 'fantomObj.typeof()'.
-//	** 
-//	** If 'meta' is 'null' then a cached version for 'fantomType' is retrieved from 'JsonTypeInspectors'.
-//	abstract Obj? toJsonObj(Obj? fantomObj, Type? fantomType := null, JsonTypeMeta? meta := null)
-//	
-//	** Converts the given 'jsonObj' to its Fantom representation.
-//	** 	
-//	** If 'meta' is 'null' then a cached version for 'fantomType' is retrieved from 'JsonTypeInspectors'.
-//	abstract Obj? toFantom(Obj? jsonObj, Type fantomType, JsonTypeMeta? meta := null)
-
 }
 
 @Js
@@ -66,24 +53,4 @@ internal const class JsonTypeInspectorsImpl : JsonTypeInspectors {
 	override Void set(Type type, JsonTypeMeta meta) {
 		metaObjs[type] = meta
 	}
-	
-//	override Obj? toJsonObj(Obj? fantomObj, Type? fantomType := null, JsonTypeMeta? meta := null) {
-//		meta = meta ?: getOrInspect(fantomType ?: fantomObj.typeof)
-//		ctx  := JsonConverterCtxImpl {
-//			it.inspectors	= this
-//			it.metaStack	= JsonTypeMeta[meta]
-//			it.fantomStack	= Obj?[,]
-//		}
-//		return meta.converter.toJsonObj(ctx, fantomObj)
-//	}
-//	
-//	override Obj? toFantom(Obj? jsonObj, Type fantomType, JsonTypeMeta? meta := null) {
-//		meta = meta ?: getOrInspect(fantomType)
-//		ctx  := JsonConverterCtxImpl {
-//			it.inspectors	= this
-//			it.metaStack	= JsonTypeMeta[meta]
-//			it.jsonStack	= Obj?[,]
-//		}
-//		return meta.converter.toFantom(ctx, jsonObj)
-//	}
 }
