@@ -8,12 +8,14 @@ const class JsonWriter {
 
 	** Default options used for pretty printing.
 	** 
-	** Is 'null' if the default is NOT to pretty print.
+	** If 'null' then the default is to NOT pretty print.
 	const PrettyPrintOptions? prettyPrintOptions := null
 	
 	** Creates a 'JsonWriter' with the default pretty printing options. 
 	** May be either a 'PrettyPrintOptions' instance, or just 'true' to enable pretty printing 
-	** with defaults. If 'null' then it defaults to the class default.
+	** with defaults. 
+	** 
+	** If 'null' then the default is to NOT pretty print.
 	** 
 	**   syntax: fantom
 	**   writer := JsonWriter()
@@ -413,4 +415,8 @@ const class PrettyPrintOptions {
 
 	** Default 'it-block' ctor.
 	new make(|This|? in := null) { in?.call(this) }
+	
+	override Str toStr() {
+		"indent=${indent.toCode}, maxWidth = 80"
+	}
 }
