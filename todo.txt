@@ -1,9 +1,0 @@
-
-for 1.0.0
-=========
-Better name for JsonTypeInspectors when it comes to toJsonObj() and toFantom()
-
-Better name for Json methods:
-
-	writeXXX / readXXX / toXXX / fromXXX, etc
-	
