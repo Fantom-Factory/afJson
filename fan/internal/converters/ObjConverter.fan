@@ -80,7 +80,9 @@ const class ObjConverter : JsonConverter {
 		if (jsonDup.size > 0)
 			surplusJson(ctx, jsonDup)
 		
-		try return createEntity(ctx.meta.implType ?: ctx.meta.type, fieldVals)
+		
+		try
+			return createEntity(ctx.meta.implType ?: ctx.meta.type, fieldVals)
 		catch (Err err)
 			throw Err("Could not create instance of ${ctx.meta.type} with: ${jsonMap}", err)
 	}
