@@ -1,6 +1,10 @@
 Versions
 ********
 
+v1.0.0
+======
+ - Chg: Added 'fieldVals' parameter to 'ObjConverter.surplusJson(...)' 
+
 v0.0.4
 ======
  - New: Methods may also be annotated with '@JsonProperty'.

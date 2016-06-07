@@ -78,7 +78,7 @@ const class ObjConverter : JsonConverter {
 		}.exclude { it === removeMe }
 		
 		if (jsonDup.size > 0)
-			surplusJson(ctx, jsonDup)
+			surplusJson(ctx, jsonDup, fieldVals)
 		
 		
 		try
@@ -98,10 +98,11 @@ const class ObjConverter : JsonConverter {
 		return null
 	}
 	
-	** Hook for dealing with surplus JSON.
-	virtual Void surplusJson(JsonConverterCtx ctx, Str:Obj? jsonMap) {
+	** Hook for dealing with surplus JSON. 
+	** 'fieldVals' is what the fantom object will be constructed with.
+	virtual Void surplusJson(JsonConverterCtx ctx, Str:Obj? surplusJson, Field:Obj? fieldVals) {
 		if ((ctx.meta.allowSurplusJson ?: allowSurplusJson).not)
-			throw Err("The following JSON keys were not mapped to ${ctx.meta.implType ?: ctx.meta.type} - $jsonMap.keys")		
+			throw Err("The following JSON keys were not mapped to ${ctx.meta.implType ?: ctx.meta.type} - $surplusJson.keys")		
 	}
 	
 	** Creates an Entity instance using [BeanFactory]`afBeanUtils::BeanFactory`.
