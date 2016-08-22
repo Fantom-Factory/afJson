@@ -13,7 +13,7 @@ const class ListConverter : JsonConverter {
 		// if the list only contains JSON literals that require no conversion, then return it as is
 		if (!listType.isGeneric)
 			if (requiresNoConversion(ctx, listType) || fanList.all { requiresNoConversion(ctx, it?.typeof) })
-				return fantomObj
+				return fanList.isRO ? fanList : fanList.dup
 		
 		return fanList.map {
 			it == null ? null : ctx.toJson(ctx.inspect(it.typeof), it) 
@@ -29,18 +29,13 @@ const class ListConverter : JsonConverter {
 		jsonValType	:= jsonListType.params["V"] ?: Obj?#
 	
 		// if the list requires no conversion, then return it as is
-		if (jsonValType.fits(fanValType) && requiresNoConversion(ctx, fanValType))
-			return jsonList
+		if (jsonValType.fits(fanValType) || requiresNoConversion(ctx, fanValType))
+			return jsonList.isRO ? jsonList : jsonList.dup
 		
-		// the given JSON list may have been Obj?[], hence wouldn't have fit fanValType
 		fanList	:= List(fanValType, jsonList.size)
-		if (requiresNoConversion(ctx, fanValType))
-			fanList.addAll(jsonList)
-		else {
-			fanList.addAll(jsonList.map {	
-				ctx.toFantom(ctx.inspect(fanValType), it) 
-			})
-		}
+		fanList.addAll(jsonList.map {	
+			ctx.toFantom(ctx.inspect(fanValType), it) 
+		})
 
 		return fanList
 	}
