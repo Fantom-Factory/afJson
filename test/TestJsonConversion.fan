@@ -85,6 +85,14 @@ internal class TestJsonConversion : JsonTest {
 		verifyEq(entity.uuid,		Uuid("03f0e2bb-8f1a-c800-e1f8-00623f7473c4"))
 		verifyEq(entity.version,	Version([6, 9, 6, 9]))
 	}
+	
+	Void testConvertMaps() {
+		// so the map isn't strictly a fanObj, but it'd be nice for it to pass though
+		// also HaystackOps query params relies on this working
+		fanObj := Str:Obj?["key" : Version("69")]
+		entity := (Str:Obj?) converter.toEntity(fanObj, [Str:Obj?]#)
+		verifyEq(entity["key"], Version("69"))
+	}
 }
 
 @Js

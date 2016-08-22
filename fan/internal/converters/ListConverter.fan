@@ -36,8 +36,11 @@ const class ListConverter : JsonConverter {
 		fanList	:= List(fanValType, jsonList.size)
 		if (requiresNoConversion(ctx, fanValType))
 			fanList.addAll(jsonList)
-		else
-			fanList.addAll(jsonList.map { ctx.toFantom(ctx.inspect(fanValType), it) })
+		else {
+			fanList.addAll(jsonList.map {	
+				ctx.toFantom(ctx.inspect(fanValType), it) 
+			})
+		}
 
 		return fanList
 	}
