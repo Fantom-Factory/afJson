@@ -1,9 +1,13 @@
 Versions
 ********
 
+v1.0.2
+======
+ - Chg: Simplified Map -> toFantom conversion.
+
 v1.0.0
 ======
- - Chg: Added 'fieldVals' parameter to 'ObjConverter.surplusJson(...)' 
+ - Chg: Added 'fieldVals' parameter to 'ObjConverter.surplusJson(...)'
 
 v0.0.4
 ======
