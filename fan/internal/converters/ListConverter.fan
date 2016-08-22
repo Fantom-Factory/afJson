@@ -29,10 +29,13 @@ const class ListConverter : JsonConverter {
 		jsonValType	:= jsonListType.params["V"] ?: Obj?#
 	
 		// if the list requires no conversion, then return it as is
-		if (jsonValType.fits(fanValType) || requiresNoConversion(ctx, fanValType))
-			return jsonList.isRO ? jsonList : jsonList.dup
-		
 		fanList	:= List(fanValType, jsonList.size)
+		if (jsonValType.fits(fanValType) || requiresNoConversion(ctx, fanValType)) {
+			// use fanList to ensure we're correctly typed - we don't want no Obj?[] if we can help it!
+			fanList.addAll(jsonList)
+			return fanList
+		}
+		
 		fanList.addAll(jsonList.map {	
 			ctx.toFantom(ctx.inspect(fanValType), it) 
 		})

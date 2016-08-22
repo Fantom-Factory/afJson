@@ -52,10 +52,14 @@ const class MapConverter : JsonConverter {
 		jsonValType	:= jsonMapType.params["V"] ?: Obj?#
 		
 		if (fanKeyType == Str#) {
-			if (jsonValType.fits(fanValType) || requiresNoConversion(ctx, fanValType))
-				return jsonMap.isRO ? jsonMap.dup : jsonMap
-
 			fanMap := makeMap(fanMapType)
+
+			if (jsonValType.fits(fanValType) || requiresNoConversion(ctx, fanValType)) {
+				// use fanList to ensure we're correctly typed - we don't want no Obj?[] if we can help it!
+				fanMap.addAll(jsonMap)
+				return jsonMap
+			}
+
 			// keep the keys, just convert the vals
 			jsonMap.each |jVal, jKey| {
 				meta := ctx.inspect(fanValType)
