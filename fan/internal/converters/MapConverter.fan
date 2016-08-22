@@ -20,7 +20,7 @@ const class MapConverter : JsonConverter {
 			keyType 	:= mapType.params["K"] ?: Obj?#
 			valType 	:= mapType.params["V"] ?: Obj?#
 			if (keyType == Str# && requiresNoConversion(ctx, valType))
-				return fantomObj
+				return fanMap.isRO ? fanMap.dup : fanMap
 		}
 		
 		jsonMap	:= emptyDoc
@@ -53,7 +53,7 @@ const class MapConverter : JsonConverter {
 		
 		if (fanKeyType == Str#) {
 			if (jsonValType.fits(fanValType) || requiresNoConversion(ctx, fanValType))
-				return jsonMap
+				return jsonMap.isRO ? jsonMap.dup : jsonMap
 
 			fanMap := makeMap(fanMapType)
 			// keep the keys, just convert the vals

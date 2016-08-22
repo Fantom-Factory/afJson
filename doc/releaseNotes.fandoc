@@ -3,7 +3,8 @@ Versions
 
 v1.0.2
 ======
- - Chg: Simplified Map -> toFantom conversion.
+ - Chg: Simplified List / Map -> toFantom conversion.
+ - Chg: Converted lists and maps are always duplicated, even if they require no conversion
 
 v1.0.0
 ======
