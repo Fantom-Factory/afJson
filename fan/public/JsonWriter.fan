@@ -417,6 +417,6 @@ const class PrettyPrintOptions {
 	new make(|This|? in := null) { in?.call(this) }
 	
 	override Str toStr() {
-		"indent=${indent.toCode}, maxWidth = 80"
+		"indent=${indent.toCode}, maxWidth = ${maxWidth}"
 	}
 }

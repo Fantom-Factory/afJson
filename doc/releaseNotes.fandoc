@@ -5,6 +5,7 @@ v1.0.2
 ======
  - Chg: Simplified List / Map -> toFantom conversion.
  - Chg: Converted lists and maps are always duplicated, even if they require no conversion
+ - Bug: 'PrettyPrintOptions.toStr()' printed wrong 'maxWidth'.
 
 v1.0.0
 ======
