@@ -60,9 +60,9 @@ const class JsonWriter {
 	** pretty printing with defaults.
 	**  
 	**   syntax: fantom
-	**   json := jsonWriter.writeJsonToStream(jsonObj, out)
-	**   json := jsonWriter.writeJsonToStream(jsonObj, out, true)
-	**   json := jsonWriter.writeJsonToStream(jsonObj, out, PrettyPrintOptions { it.indent = "\t" })
+	**   jsonWriter.writeJsonToStream(jsonObj, out)
+	**   jsonWriter.writeJsonToStream(jsonObj, out, true)
+	**   jsonWriter.writeJsonToStream(jsonObj, out, PrettyPrintOptions { it.indent = "\t" })
 	** 
 	This writeJsonToStream(Obj? obj, OutStream out, Obj? prettyPrintOptions := null) {
 		ctx := JsonWriteCtx(out, prettyPrintOptions ?: this.prettyPrintOptions)
