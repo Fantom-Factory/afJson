@@ -1,8 +1,9 @@
-#Json v1.0.0
+# Json v1.0.2
 ---
-[![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom.org/)
-[![pod: v1.0.0](http://img.shields.io/badge/pod-v1.0.0-yellow.svg)](http://www.fantomfactory.org/pods/afJson)
-![Licence: MIT](http://img.shields.io/badge/licence-MIT-blue.svg)
+
+[![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom-lang.org/)
+[![pod: v1.0.2](http://img.shields.io/badge/pod-v1.0.2-yellow.svg)](http://eggbox.fantomfactory.org/pods/afJson)
+[![Licence: ISC](http://img.shields.io/badge/licence-ISC-blue.svg)](https://choosealicense.com/licenses/isc/)
 
 ## Overview
 
@@ -25,17 +26,21 @@ Just annotate fields with `@JsonProperty` then read / write JSON with `readJson(
 
 ## Install
 
-Install `Json` with the Fantom Repository Manager ( [fanr](http://fantom.org/doc/docFanr/Tool.html#install) ):
+Install `Json` with the Fantom Pod Manager ( [FPM](http://eggbox.fantomfactory.org/pods/afFpm) ):
 
-    C:\> fanr install -r http://pods.fantomfactory.org/fanr/ afJson
+    C:\> fpm install afJson
 
-To use in a [Fantom](http://fantom.org/) project, add a dependency to `build.fan`:
+Or install `Json` with [fanr](http://fantom.org/doc/docFanr/Tool.html#install):
+
+    C:\> fanr install -r http://eggbox.fantomfactory.org/fanr/ afJson
+
+To use in a [Fantom](http://fantom-lang.org/) project, add a dependency to `build.fan`:
 
     depends = ["sys 1.0", ..., "afJson 1.0"]
 
 ## Documentation
 
-Full API & fandocs are available on the [Fantom Pod Repository](http://pods.fantomfactory.org/pods/afJson/).
+Full API & fandocs are available on the [Eggbox](http://eggbox.fantomfactory.org/pods/afJson/) - the Fantom Pod Repository.
 
 ## Quick Start
 
@@ -127,7 +132,7 @@ All conversion of Entities to and from JSON goes through an intermediary `JsonOb
 
 `Json` has methods to convert between all:
 
-![JSON Methods](http://pods.fantomfactory.org/pods/afJson/doc/jsonMethods.png)
+![JSON Methods](http://eggbox.fantomfactory.org/pods/afJson/doc/jsonMethods.png)
 
 ## Usage
 
@@ -245,12 +250,12 @@ echo(json)  // --> {"judge":"Dredd"}
 
 ## IoC
 
-When Json is added as a dependency to an IoC enabled application, such as [BedSheet](http://pods.fantomfactory.org/pods/afBedSheet) or [Reflux](http://pods.fantomfactory.org/pods/afReflux), then the following services are automatically made available to IoC:
+When Json is added as a dependency to an IoC enabled application, such as [BedSheet](http://eggbox.fantomfactory.org/pods/afBedSheet) or [Reflux](http://eggbox.fantomfactory.org/pods/afReflux), then the following services are automatically made available to IoC:
 
-- [Json](http://pods.fantomfactory.org/pods/afJson/api/Json)
-- [JsonReader](http://pods.fantomfactory.org/pods/afJson/api/JsonReader)
-- [JsonWriter](http://pods.fantomfactory.org/pods/afJson/api/JsonWriter)
-- [JsonTypeInspectors](http://pods.fantomfactory.org/pods/afJson/api/JsonTypeInspectors) - takes contributions of `Str:JsonTypeInspector`
+- [Json](http://eggbox.fantomfactory.org/pods/afJson/api/Json)
+- [JsonReader](http://eggbox.fantomfactory.org/pods/afJson/api/JsonReader)
+- [JsonWriter](http://eggbox.fantomfactory.org/pods/afJson/api/JsonWriter)
+- [JsonTypeInspectors](http://eggbox.fantomfactory.org/pods/afJson/api/JsonTypeInspectors) - takes contributions of `Str:JsonTypeInspector`
 
 The above makes use of the non-invasive module feature of IoC 3.
 
