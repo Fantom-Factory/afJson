@@ -1,9 +1,8 @@
-using afBeanUtils
-using afConcurrent
+using afBeanUtils::TypeCoercer
+using afConcurrent::AtomicMap
 
 ** A 'TypeCoercer' that caches its conversion methods.
-@Js
-internal const class CachingTypeCoercer : TypeCoercer {
+@Js internal const class CachingTypeCoercer : TypeCoercer {
 	private const AtomicMap cache := AtomicMap()
 
 	** Cache the conversion functions
