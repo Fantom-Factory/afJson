@@ -34,8 +34,10 @@ using afBeanUtils::ReflectUtils
 		fantomType := ctx.type
 
 		// because ObjConverter is a catch-all converter, we sometimes get sent here by mistake
+		// or when fields are of type 'Obj?' - so just return the JSON literal
 		if (jsonVal isnot Map)
-			throw Err(documentConv_noConverter(fantomType, jsonVal))
+			return jsonVal
+//			throw Err(documentConv_noConverter(fantomType, jsonVal))
 
 		jsonObj		:= (Str:Obj?) jsonVal
 		fieldVals	:= [Field:Obj?][:]
@@ -112,9 +114,9 @@ using afBeanUtils::ReflectUtils
 		}
 	}
 
-	private static Str documentConv_noConverter(Type fantomType, Obj jsonObj) {
-		stripSys("Could not find a Converter to ${fantomType.qname} from '${jsonObj.typeof.qname} - ${jsonObj}'")
-	}
+//	private static Str documentConv_noConverter(Type fantomType, Obj jsonObj) {
+//		stripSys("Could not find a Converter to ${fantomType.qname} from '${jsonObj.typeof.qname} - ${jsonObj}'")
+//	}
 	
 	private static Str documentConv_propertyIsNull(Str propName, Field field, Str:Obj? document) {
 		stripSys("Dict tag '${propName}' is null but field ${field.qname} is NOT nullable : ${document}")

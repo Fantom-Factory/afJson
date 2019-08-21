@@ -1,3 +1,4 @@
+using afBeanUtils::BeanFactory
 
 ** (Service) - 
 ** Converts Fantom objects to and from their JSON representation.
@@ -50,7 +51,7 @@
 	abstract Obj? fromJsonVal(Obj? jsonVal, Type fantomType)
 
 	
-	** Converts the given Fantom object to its JSON representation.
+	** Converts the given Fantom object to its JSON object representation.
 	** 
 	** 'fantomType' is required in case 'fantomObj' is null. 
 	** 'fantomObj' is nullable so converters can create empty / default objects.
@@ -87,7 +88,7 @@
 	new makeArgs(Type:JsonConverter converters, [Str:Obj?]? options) {
 		this.typeLookup = CachingTypeLookup(converters)
 		this.optionsRef	= Unsafe(Str:Obj?[
-			"afJson.makeEntity"		: |Type t, Field:Obj? vals->Obj?| { t.make([Field.makeSetFunc(vals)]) },
+			"afJson.makeEntity"		: |Type type, Field:Obj? vals->Obj?| { BeanFactory(type, null, vals).create },
 			"afJson.makeJsonObj"	: |-> Str:Obj?| { Str:Obj?[:] { ordered = true } },
 			"afJson.makeMap"		: |Type t->Map| { Map((t.isGeneric ? Obj:Obj?# : t).toNonNullable) { it.ordered = true } },
 			"afJson.strictMode"		: false,
@@ -166,13 +167,14 @@
 	static Type:JsonConverter _defConvs() {
 		config				:= Type:JsonConverter[:]
 		jsonLiteral			:= JsonLiteralConverter()
+		numLiteral			:= JsonNumConverter()
 
 		// JSON Literals - https://json.org/
 		config[Bool#]		= jsonLiteral
-		config[Float#]		= jsonLiteral
-		config[Decimal#]	= jsonLiteral
-		config[Int#]		= jsonLiteral
-		config[Num#]		= jsonLiteral
+		config[Float#]		= numLiteral
+		config[Decimal#]	= numLiteral
+		config[Int#]		= numLiteral
+		config[Num#]		= numLiteral
 		config[Str#]		= jsonLiteral
 		
 		// Containers
