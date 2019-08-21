@@ -18,17 +18,17 @@
 		if (jsonVal == null) return null
 
 		fanValType	:= ctx.type.params["V"]
-		folioList	:= (List) jsonVal
-		folListType	:= folioList.typeof
+		jsonList	:= (List) jsonVal
+		folListType	:= jsonList.typeof
 		folValType	:= folListType.params["V"]
 		
 		// if the whole list is of the same type, return it as is
 		if (folValType.fits(fanValType))
-			return folioList
+			return jsonList
 		
-		fanList		:= List(fanValType, folioList.size)
-		fanList.addAll(folioList.map |obj, idx| {
-			ctx.makeList(fanValType, folioList, idx, obj).fromJsonVal
+		fanList		:= List(fanValType, jsonList.size)
+		fanList.addAll(jsonList.map |obj, idx| {
+			ctx.makeList(fanValType, jsonList, idx, obj).fromJsonVal
 		})
 
 		return fanList

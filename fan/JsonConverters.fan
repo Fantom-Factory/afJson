@@ -173,7 +173,7 @@
 		
 		// Containers
 		config[Obj#]		= JsonObjConverter()
-//		config[Map#]		= FomMapConverter()
+		config[Map#]		= JsonMapConverter()
 		config[List#]		= JsonListConverter()
 
 		// Fantom Literals

@@ -36,7 +36,7 @@ internal class TestLiteralConverters : Test {
 			version		= Version("1.2.3.4")
 		}
 		
-		jsonObj := (Str:Obj?) JsonConverters().toJsonObj(entity, T_Entity08#)
+		jsonObj := JsonConverters().toJsonObj(entity)
 		
 		verifyEq(jsonObj["bool"],		entity.bool)
 		verifyEq(jsonObj["decimal"],	entity.decimal)
