@@ -60,11 +60,11 @@ using afBeanUtils::ReflectUtils
 	}
 	
 	private static Str msgFacetTypeDoesNotFitField(Type facetType, Field field) {
-		stripSys("@FomProp.implType of type '${facetType.signature}' does not fit field '${field.type.qname} ${field.qname}'")
+		stripSys("@JsonProperty.implType of type '${facetType.signature}' does not fit field '${field.type.qname} ${field.qname}'")
 	}
 
 	static Str msgFacetDefValDoesNotFitField(Type facetType, Field field) {
-		stripSys("@FomProp.defVal of type '${facetType.signature}' does not fit field '${field.type.qname} ${field.qname}'")
+		stripSys("@JsonProperty.defVal of type '${facetType.signature}' does not fit field '${field.type.qname} ${field.qname}'")
 	}
 
 	private static Str stripSys(Str str) {

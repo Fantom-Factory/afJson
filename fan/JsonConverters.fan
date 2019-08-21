@@ -7,8 +7,8 @@
 	** 
 	** If 'converters' is 'null' then 'defConvs' is used. Common option defaults are:
 	** 
-	**   afFom.makeEntity : |Type objType, Field:Obj? fieldVals->Obj?| { ...use Type.make()...  }
-	**   afFom.strictMode : false
+	**   afJson.makeEntity : |Type objType, Field:Obj? fieldVals->Obj?| { ...use Type.make()...  }
+	**   afJson.strictMode : false
 	** 
 	** Override 'makeEntity' to have IoC create entity instances.
 	** Set 'strictMode' to 'true' to Err if the JSON contains unmapped data.
@@ -16,7 +16,7 @@
 		JsonConvertersImpl(converters ?: defConvs, options)
 	}
 
-	** Returns a new 'FomConverters' whose options are overridden with the given ones.
+	** Returns a new 'JsonConverters' whose options are overridden with the given ones.
 	abstract JsonConverters withOptions(Str:Obj? newOptions)
 	
 	** Returns the 'Converter' instance used to convert the given type. 

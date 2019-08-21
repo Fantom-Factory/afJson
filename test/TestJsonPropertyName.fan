@@ -16,9 +16,9 @@ internal class TestJsonPropertyName : Test {
 			wotever		= "dude"
 		}
 		
-		folioRec := JsonConverters().toJsonObj(entity)
+		jsonObj := JsonConverters().toJsonObj(entity)
 		
-		verifyEq(folioRec["judge"],		"dude")
+		verifyEq(jsonObj["judge"],		"dude")
 	}
 }
 
