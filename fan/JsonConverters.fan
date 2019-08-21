@@ -145,13 +145,17 @@
 	override Str toJson(Obj? fantomObj, Obj? options := null) {
 		// let's not dick about - just convert null to null
 		if (fantomObj == null) return "null"
-		throw UnsupportedErr()
+		jsonObj := toJsonObj(fantomObj)
+		jsonStr := JsonWriter(options).writeJson(jsonObj)
+		return jsonStr
 	}
 	
-	override Obj? fromJson(Str? json, Type fantomType) {
+	override Obj? fromJson(Str? jsonStr, Type fantomType) {
 		// let's not dick about - just convert null to null
-		if (json == null) return null
-		throw UnsupportedErr()
+		if (jsonStr == null) return null
+		jsonObj := JsonReader().readJson(jsonStr)
+		fantObj := fromJsonObj(jsonObj, fantomType)
+		return fantObj
 	}
 
 	override JsonConverter get(Type type) {
