@@ -54,7 +54,7 @@
 	** 
 	** 'fantomType' is required in case 'fantomObj' is null. 
 	** 'fantomObj' is nullable so converters can create empty / default objects.
-	abstract Str:Obj? toJsonObj(Obj? fantomObj, Type fantomType)
+	abstract [Str:Obj?]? toJsonObj(Obj? fantomObj)
 	
 	** Converts a JSON object to the given Fantom type.
 	** 
@@ -68,12 +68,12 @@
 //	** 
 //	** 'fantomType' is required in case 'fantomObj' is null. 
 //	** 'fantomObj' is nullable so converters can create empty / default objects.
-	abstract Str toJson(Obj? fantomObj, Type fantomType, Obj? options := null)
+	abstract Str toJson(Obj? fantomObj, Obj? options := null)
 	
 //	** Converts a JSON string to the given Fantom type.
 //	** 
 //	** 'json' is nullable so converters can choose whether or not to create empty lists and maps.
-	abstract Obj? fromJson(Str json, Type fantomType)
+	abstract Obj? fromJson(Str? json, Type fantomType)
 
 }
 
@@ -132,19 +132,25 @@
 		return fromJsonCtx(jsonVal, ctx)
 	}
 	
-	override Str:Obj? toJsonObj(Obj? fantomObj, Type fantomType) {
-		toJsonVal(fantomObj, fantomType)
+	override [Str:Obj?]? toJsonObj(Obj? fantomObj) {
+		// let's not dick about - just convert null to null
+		if (fantomObj == null) return null
+		return toJsonVal(fantomObj, fantomObj.typeof)
 	}
 
 	override Obj? fromJsonObj([Str:Obj?]? jsonObj, Type fantomType) {
 		fromJsonVal(jsonObj, fantomType)
 	}
-	
-	override Str toJson(Obj? fantomObj, Type fantomType, Obj? options := null) {
-		throw UnsupportedErr()		
+
+	override Str toJson(Obj? fantomObj, Obj? options := null) {
+		// let's not dick about - just convert null to null
+		if (fantomObj == null) return "null"
+		throw UnsupportedErr()
 	}
 	
-	override Obj? fromJson(Str json, Type fantomType) {
+	override Obj? fromJson(Str? json, Type fantomType) {
+		// let's not dick about - just convert null to null
+		if (json == null) return null
 		throw UnsupportedErr()
 	}
 
@@ -168,7 +174,7 @@
 		// Containers
 		config[Obj#]		= JsonObjConverter()
 //		config[Map#]		= FomMapConverter()
-//		config[List#]		= FomListConverter()
+		config[List#]		= JsonListConverter()
 
 		// Fantom Literals
 		config[Date#]		= JsonSimpleConverter(Date#)
