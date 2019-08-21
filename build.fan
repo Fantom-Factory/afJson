@@ -25,7 +25,7 @@ class Build : BuildPod {
 			
 		]
 
-		srcDirs = [`fan/`, `fan/internal/`, `fan/internal/converters/`, `fan/meh/`, `test/`]
+		srcDirs = [`fan/`, `fan/internal/`, `fan/internal/converters/`, `test/`]
 		resDirs = [`doc/`]
 
 		docApi = true

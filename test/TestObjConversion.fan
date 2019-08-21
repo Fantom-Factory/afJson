@@ -1,9 +1,9 @@
 
 @Js
-internal class TestObjConversion : JsonTest {
+internal class TestObjConversion : Test {
 	
 	Void testConversion() {
-		ent := json.readJson("""{ "obj1":68, "obj2":"judge", "obj3":68.9 }""", T_Entity04#) as T_Entity04
+		ent := JsonConverters().fromJson("""{ "obj1":68, "obj2":"judge", "obj3":68.9 }""", T_Entity04#) as T_Entity04
 		verifyEq(ent.obj1, 68)
 		verifyEq(ent.obj2, "judge")
 		verifyEq(ent.obj3, 68.9f)
