@@ -174,6 +174,7 @@ using afBeanUtils::BeanFactory
 		config[Float#]		= numLiteral
 		config[Decimal#]	= numLiteral
 		config[Int#]		= numLiteral
+		config[JsLiteral#]	= jsonLiteral
 		config[Num#]		= numLiteral
 		config[Str#]		= jsonLiteral
 		

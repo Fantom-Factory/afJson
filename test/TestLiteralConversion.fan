@@ -10,6 +10,7 @@ internal class TestLiteralConverters : Test {
 			decimal		= 6.9d
 			float		= 6.9f
 			int			= 666
+			literal		= JsLiteral("Dude!")
 			nul			= null
 			num			= 69f
 			str			= "hello!"
@@ -42,6 +43,7 @@ internal class TestLiteralConverters : Test {
 		verifyEq(jsonObj["decimal"],	entity.decimal)
 		verifyEq(jsonObj["float"],		entity.float)
 		verifyEq(jsonObj["int"],		entity.int)
+		verifyEq(jsonObj["literal"],	entity.literal)
 		verifyEq(jsonObj["num"],		entity.num)
 		verifyEq(jsonObj["nul"],		null)
 		verifyEq(jsonObj["str"],		entity.str)
@@ -74,6 +76,7 @@ internal class TestLiteralConverters : Test {
 			"decimal"		: 6.9d,
 			"float"			: 69f,
 			"int"			: 666,
+			"literal"		: JsLiteral("Dude!"),
 			"nul"			: null,
 			"num"			: 69f,
 			"str"			: "string",
@@ -106,6 +109,7 @@ internal class TestLiteralConverters : Test {
 		verifyEq(entity.decimal,	jsonObj["decimal"])
 		verifyEq(entity.float,		jsonObj["float"])
 		verifyEq(entity.int,		jsonObj["int"])
+		verifyEq(entity.literal,	jsonObj["literal"])
 		verifyEq(entity.nul,		jsonObj["nul"])
 		verifyEq(entity.num,		jsonObj["num"])
 		verifyEq(entity.str,		jsonObj["str"])
@@ -138,6 +142,7 @@ internal class T_Entity08 {
 	@JsonProperty	Decimal		decimal
 	@JsonProperty	Float		float
 	@JsonProperty	Int?		int
+	@JsonProperty	JsLiteral	literal
 	@JsonProperty	Num			num
 	@JsonProperty	Obj?		nul
 	@JsonProperty	Str			str

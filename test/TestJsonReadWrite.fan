@@ -112,7 +112,7 @@ internal class TestJsonReadWrite : Test {
 		verifyEq(jsonWriter.writeJson(obj), expected)
 	}
 
-	public Void testRaw() {
+	Void testRaw() {
 		// make raw json
 		buf := StrBuf.make
 		buf.add("\n {\n	\"type\"\n:\n\"Foobar\",\n \n\n\"age\"\n:\n34,		\n\n\n\n")
@@ -136,7 +136,7 @@ internal class TestJsonReadWrite : Test {
 		verifyEq(map["friends"], null)
 	}
 
-	public Void testEscapes() {
+	Void testEscapes() {
 		Str:Obj obj := jsonReader.readJson(
 			Str<|{
 			     "foo"		: "bar\nbaz",
@@ -166,5 +166,14 @@ internal class TestJsonReadWrite : Test {
 		jsonWriter.writeJsonToStream(obj, buf.out)
 		obj = jsonReader.readJsonFromStream(buf.flip.in)
 		f()
+	}
+	
+	Void testJsLiterals() {
+		json := jsonWriter.writeJson(["key":"Dude!"])
+		verifyEq(json, "{\"key\":\"Dude!\"}")
+
+		// Look! No Quotes!
+		json = jsonWriter.writeJson(["key":JsLiteral("Dude!")])
+		verifyEq(json, "{\"key\":Dude!}")
 	}
 }

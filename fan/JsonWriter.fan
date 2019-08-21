@@ -155,7 +155,7 @@ const class JsonWriter {
 	}
 
 	private Void _writeJsonLit(JsonWriteCtx ctx, JsLiteral lit) {
-		ctx.valueStart.print(lit.val).valueEnd
+		ctx.valueStart.print(lit.toStr).valueEnd
 	}
 
 	private Void _writeJsonNum(JsonWriteCtx ctx, Num num) {
