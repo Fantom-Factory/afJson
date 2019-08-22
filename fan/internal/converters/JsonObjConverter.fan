@@ -33,11 +33,15 @@ using afBeanUtils::ReflectUtils
 		if (jsonVal == null) return null
 		fantomType := ctx.type
 
-		// because ObjConverter is a catch-all converter, we sometimes get sent here by mistake
-		// or when fields are of type 'Obj?' - so just return the JSON literal
+		// because ObjConverter is a catch-all Obj converter, we sometimes get sent here when a specific converter can't be found
+		// in which case, the sanity check below throws a really good err msg which should be understood by the user
+		// so no real need for the extra procoessing here 
+//		if (jsonVal isnot Map && !ReflectUtils.fits(jsonVal.typeof, fantomType))
+//			throw Err(documentConv_noConverter(fantomType, jsonVal))
+
+		// we get sent to ObjConverter when the field type is 'Obj?' - so just return the JSON literal
 		if (jsonVal isnot Map)
 			return jsonVal
-//			throw Err(documentConv_noConverter(fantomType, jsonVal))
 
 		jsonObj		:= (Str:Obj?) jsonVal
 		fieldVals	:= [Field:Obj?][:]
@@ -119,15 +123,15 @@ using afBeanUtils::ReflectUtils
 //	}
 	
 	private static Str documentConv_propertyIsNull(Str propName, Field field, Str:Obj? document) {
-		stripSys("Dict tag '${propName}' is null but field ${field.qname} is NOT nullable : ${document}")
+		stripSys("JSON property ${propName} is null but field ${field.qname} is NOT nullable : ${document}")
 	}
 
 	private static Str documentConv_propertyNotFound(Field field, Str:Obj? document) {
-		stripSys("Dict tag does not contain a property for field ${field.qname} : ${document}")
+		stripSys("JSON property does not contain a property for field ${field.qname} : ${document}")
 	}
 	
 	private static Str documentConv_propertyDoesNotFitField(Str propName, Type propType, Field field, Str:Obj? document) {
-		stripSys("Dict tag property '${propName}' of type '${propType.signature}' does not fit field ${field.qname} of type '${field.type.signature}' : ${document}")
+		stripSys("JSON property ${propName} of type ${propType.signature} does not fit field ${field.qname} of type ${field.type.signature} : ${document}")
 	}
 
 	private static Str stripSys(Str str) {
