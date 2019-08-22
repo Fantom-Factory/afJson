@@ -27,7 +27,7 @@ using afBeanUtils::ReflectUtils
 
 		return jsonObj
 	}
-	
+
 	@NoDoc
 	override Obj? fromJsonVal(Obj? jsonVal, JsonConverterCtx ctx) {
 		if (jsonVal == null) return null
@@ -43,7 +43,7 @@ using afBeanUtils::ReflectUtils
 		if (jsonVal isnot Map)
 			return jsonVal
 
-		jsonObj		:= (Str:Obj?) jsonVal
+		jsonObj		:= (Str:Obj?) fromJsonHook(ctx, jsonVal)
 		fieldVals	:= [Field:Obj?][:]
 
 		if (jsonObj.containsKey("_type"))
@@ -89,8 +89,16 @@ using afBeanUtils::ReflectUtils
 		return makeEntity(ctx, fieldVals)
 	}
 
+	// FIXME move to ctx
+
 	private JsonPropertyData[] findTagData(JsonConverterCtx ctx, Type entityType) {
 		((JsonPropertyCache) ctx.options["afJson.propertyCache"]).getOrFindTags(entityType)
+	}
+	
+	// jsonHook 
+	// FIXME make sure ALL objs go through this
+	private Str:Obj? fromJsonHook(JsonConverterCtx ctx, Str:Obj? jsonObj) {
+		((|Obj?, JsonConverterCtx->Obj?|?) ctx.options["afJson.fromJsonHook"])?.call(jsonObj, ctx) ?: jsonObj
 	}
 	
 	** Creates an Entity instance. 

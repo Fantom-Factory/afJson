@@ -76,6 +76,49 @@ using afBeanUtils::BeanFactory
 //	** 'json' is nullable so converters can choose whether or not to create empty lists and maps.
 	abstract Obj? fromJson(Str? json, Type fantomType)
 
+
+
+	** Returns a fn that normalises .NET JSON key names into standard Fantom camelCase names. 
+	** 
+	** Use as a hook option:
+	** 
+	** pre>
+	** syntax: fatom
+	** converters := JsonConverters(null, [
+	**     "afJson.fromJsonHook" : JsonConverters.normaliseDotNetKeyNames
+	** ])
+	** <pre
+	static |Obj?->Obj?| normaliseDotNetKeyNames() {	
+		|Obj? obj->Obj?| {
+			if (obj is Map) {
+				oldMap := (Str:Obj?) obj
+				newMap :=  Str:Obj?  [:]
+				oldMap.each |val, key| {
+					newMap[_noramliseKeyName(key)] = val
+				}
+				return newMap
+			}
+			return obj
+		}
+	}
+	
+	** This seems like a handy little Str method, so we'll keep it hanging around!
+	@NoDoc
+	static Str _noramliseKeyName(Str str) {
+		net := str.any |ch, i| { ch.isUpper && str.getSafe(i+1).isUpper }
+		if (net == false)
+			return str.decapitalize
+
+		buf := StrBuf()
+		str.each |ch, i| {
+					if (i == 0)
+					buf.addChar(ch.lower)
+			else	if (i+1 != str.size)
+					buf.addChar(ch.isUpper && str[i-1].isUpper && str[i+1].isUpper	? ch.lower : ch)
+			else	buf.addChar(ch.isUpper && str[i-1].isUpper						? ch.lower : ch)
+		}
+		return buf.toStr 
+	}
 }
 
 @Js internal const class JsonConvertersImpl : JsonConverters {
@@ -88,7 +131,9 @@ using afBeanUtils::BeanFactory
 	new makeArgs(Type:JsonConverter converters, [Str:Obj?]? options) {
 		this.typeLookup = CachingTypeLookup(converters)
 		this.optionsRef	= Unsafe(Str:Obj?[
-			"afJson.makeEntity"		: |Type type, Field:Obj? vals->Obj?| { BeanFactory(type, null, vals).create },
+			// FIXME fix beanfactory for const types
+//			"afJson.makeEntity"		: |Type type, Field:Obj? vals->Obj?| { BeanFactory(type, null, vals).create },
+			"afJson.makeEntity"		: |Type type, Field:Obj? vals->Obj?| { type.make([Field.makeSetFunc(vals.toImmutable)]) },
 			"afJson.makeJsonObj"	: |-> Str:Obj?| { Str:Obj?[:] { ordered = true } },
 			"afJson.makeMap"		: |Type t->Map| { Map((t.isGeneric ? Obj:Obj?# : t).toNonNullable) { it.ordered = true } },
 			"afJson.strictMode"		: false,
