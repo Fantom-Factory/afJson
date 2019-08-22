@@ -1,48 +1,34 @@
 using afBeanUtils::ReflectUtils
 
+// FIXME make public in FOM ?
 ** Holds resolved '@JsonProperty' values.
-@NoDoc
-@Js internal const mixin JsonPropertyData {
+@Js @NoDoc
+const class JsonPropertyData {
 	
 	** The backing storage field.
-	abstract	Field	field()
+	const	Field field
 	
 	** The 'JsonProperty' facet on the field (if any).
-	abstract	JsonProperty?	jsonProperty()
+	const	JsonProperty? jsonProperty
 	
 	** Name of the JSON property name this field maps to.
-	abstract	Str		name()
+	const	Str	name
 	
 	** The implementation 'Type' to be instantiated.
-	abstract	Type	type()
+	const	Type type
 	
 	** The default values that maps to 'null'.
-	abstract	Obj?	defVal()
-
-	** Returns the field's value on the given instance.
-	virtual Obj? val(Obj obj) {
-		field.get(obj)
-	}
+	const	Obj? defVal
 	
 	** Creates a 'JsonPropertyData' instance from a 'Field' - must have the '@JsonProperty' facet.
-	static new make(Field tagField) {
-		JsonPropertyDataField(tagField)
-	}
-}
-
-@Js internal const class JsonPropertyDataField : JsonPropertyData {
-	override const Field			field
-	override const JsonProperty?	jsonProperty
-	override const Str				name
-	override const Type				type
-	override const Obj?				defVal
-	
-	new make(Field field) {
+	new make(Field field, |This|? fn := null) {
 		this.jsonProperty	= field.facet(JsonProperty#, true)
 		this.field			= field
 		this.name			= jsonProperty.name		?: field.name
 		this.type			= jsonProperty.implType	?: field.type
 		this.defVal			= jsonProperty.defVal
+		
+		fn?.call(this)
 		
 		if (!ReflectUtils.fits(type, field.type))
 			throw Err(msgFacetTypeDoesNotFitField(type, field))
@@ -70,6 +56,11 @@ using afBeanUtils::ReflectUtils
 	private static Str stripSys(Str str) {
 		str.replace("sys::", "")
 	}
-	
+
+	** Returns the field's value on the given instance.
+	virtual Obj? val(Obj obj) {
+		field.get(obj)
+	}
+
 	override Str toStr() { name }
 }
