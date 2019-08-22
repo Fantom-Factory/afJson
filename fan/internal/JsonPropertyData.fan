@@ -1,6 +1,5 @@
 using afBeanUtils::ReflectUtils
 
-// FIXME make public in FOM ?
 ** Holds resolved '@JsonProperty' values.
 @Js @NoDoc
 const class JsonPropertyData {

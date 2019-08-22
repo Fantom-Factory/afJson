@@ -23,10 +23,12 @@ internal class T_Entity04 {
 	@JsonProperty	Obj? obj3
 
 	// T_Entity04 also tests that entities can be created *without* an it-block ctor - which requires afBeanUtils::BeanFactory
+	new make(|This| f) { f(this) }
 }
 
 @Js
 internal class T_Entity02 {
 	@JsonProperty	Obj? obj1
 	@JsonProperty	Buf? obj2
+	new make(|This| f) { f(this) }
 }

@@ -6,10 +6,10 @@ using afBeanUtils::BeanFactory
 
 	** Returns a new 'JsonConverters' instance.
 	** 
-	** If 'converters' is 'null' then 'defConvs' is used. Common option defaults are:
+	** If 'converters' is 'null' then 'defConvs' is used. Common options are:
 	** 
-	**   afJson.makeEntity : |Type objType, Field:Obj? fieldVals->Obj?| { ...use Type.make()...  }
-	**   afJson.strictMode : false
+	**   afJson.makeEntity : |Type type, Field:Obj? fieldVals->Obj?| { ... }
+	**   afJson.strictMode : true
 	** 
 	** Override 'makeEntity' to have IoC create entity instances.
 	** Set 'strictMode' to 'true' to Err if the JSON contains unmapped data.
@@ -131,9 +131,7 @@ using afBeanUtils::BeanFactory
 	new makeArgs(Type:JsonConverter converters, [Str:Obj?]? options) {
 		this.typeLookup = CachingTypeLookup(converters)
 		this.optionsRef	= Unsafe(Str:Obj?[
-			// FIXME fix beanfactory for const types
-//			"afJson.makeEntity"		: |Type type, Field:Obj? vals->Obj?| { BeanFactory(type, null, vals).create },
-			"afJson.makeEntity"		: |Type type, Field:Obj? vals->Obj?| { type.make([Field.makeSetFunc(vals.toImmutable)]) },
+			"afJson.makeEntity"		: |Type type, Field:Obj? vals->Obj?| { type.make([Field.makeSetFunc(vals)]) },
 			"afJson.makeJsonObj"	: |-> Str:Obj?| { Str:Obj?[:] { ordered = true } },
 			"afJson.makeMap"		: |Type t->Map| { Map((t.isGeneric ? Obj:Obj?# : t).toNonNullable) { it.ordered = true } },
 			"afJson.strictMode"		: false,
