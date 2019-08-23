@@ -131,7 +131,10 @@ using afBeanUtils::BeanFactory
 	new makeArgs(Type:JsonConverter converters, [Str:Obj?]? options) {
 		this.typeLookup = CachingTypeLookup(converters)
 		this.optionsRef	= Unsafe(Str:Obj?[
-			"afJson.makeEntity"		: |Type type, Field:Obj? vals->Obj?| { type.make([Field.makeSetFunc(vals)]) },
+			"afJson.makeEntity"		: |Type type, Field:Obj? vals->Obj?| {
+				if (type.isConst) vals = vals.toImmutable
+				return type.make([Field.makeSetFunc(vals)])
+			},
 			"afJson.makeJsonObj"	: |-> Str:Obj?| { Str:Obj?[:] { ordered = true } },
 			"afJson.makeMap"		: |Type t->Map| { Map((t.isGeneric ? Obj:Obj?# : t).toNonNullable) { it.ordered = true } },
 			"afJson.strictMode"		: false,
@@ -159,11 +162,13 @@ using afBeanUtils::BeanFactory
 	}
 	
 	override Obj? toJsonCtx(Obj? fantomObj, JsonConverterCtx ctx) {
-		get(ctx.type).toJsonVal(fantomObj, ctx)		
+		hookVal := ctx.fnToJsonHook(fantomObj)		
+		return get(ctx.type).toJsonVal(fantomObj, ctx)
 	}
 
 	override Obj? fromJsonCtx(Obj? jsonVal, JsonConverterCtx ctx) {
-		get(ctx.type).fromJsonVal(jsonVal, ctx)		
+		hookVal := ctx.fnFromJsonHook(jsonVal)
+		return get(ctx.type).fromJsonVal(hookVal, ctx)
 	}
 
 	override Obj? toJsonVal(Obj? fantomObj, Type fantomType) {

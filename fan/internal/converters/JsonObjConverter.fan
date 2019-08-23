@@ -6,9 +6,9 @@ using afBeanUtils::ReflectUtils
 	@NoDoc
 	override Obj? toJsonVal(Obj? fantomObj, JsonConverterCtx ctx) {
 		if (fantomObj == null) return null
-		jsonObj := makeJsonObj(ctx)
+		jsonObj := ctx.fnMakeJsonObj
 		
-		findTagData(ctx, fantomObj.typeof).each |field| {
+		ctx.optJsonPropertyCache.getOrFindTags(fantomObj.typeof).each |field| {
 			fieldVal := field.val(fantomObj)
 			propName := field.name			
 			defVal	 := field.defVal
@@ -43,15 +43,15 @@ using afBeanUtils::ReflectUtils
 		if (jsonVal isnot Map)
 			return jsonVal
 
-		jsonObj		:= (Str:Obj?) fromJsonHook(ctx, jsonVal)
+		jsonObj		:= (Str:Obj?) jsonVal
 		fieldVals	:= [Field:Obj?][:]
 
 		if (jsonObj.containsKey("_type"))
 			fantomType = Type.find(jsonObj["_type"])
 
-		tagData := findTagData(ctx, fantomType)
+		tagData := ctx.optJsonPropertyCache.getOrFindTags(fantomType)
 		
-		if (strictMode(ctx)) {
+		if (ctx.optStrictMode) {
 			tagNames := tagData.map { it.name }
 			keyNames := jsonObj.keys
 			keyNames = keyNames.removeAll(tagNames)
@@ -86,33 +86,7 @@ using afBeanUtils::ReflectUtils
 			fieldVals[field.field] = fieldVal
 		}
 		
-		return makeEntity(ctx, fieldVals)
-	}
-
-	// FIXME move to ctx
-
-	private JsonPropertyData[] findTagData(JsonConverterCtx ctx, Type entityType) {
-		((JsonPropertyCache) ctx.options["afJson.propertyCache"]).getOrFindTags(entityType)
-	}
-	
-	// jsonHook 
-	// FIXME make sure ALL objs go through this
-	private Str:Obj? fromJsonHook(JsonConverterCtx ctx, Str:Obj? jsonObj) {
-		((|Obj?, JsonConverterCtx->Obj?|?) ctx.options["afJson.fromJsonHook"])?.call(jsonObj, ctx) ?: jsonObj
-	}
-	
-	** Creates an Entity instance. 
-	private Obj? makeEntity(JsonConverterCtx ctx, Field:Obj? fieldVals) {
-		((|Type, Field:Obj?->Obj?|) ctx.options["afJson.makeEntity"])(ctx.type, fieldVals)
-	}
-	
-	** Creates an empty *ordered* JSON object. 
-	private Str:Obj? makeJsonObj(JsonConverterCtx ctx) {
-		((|->Str:Obj?|) ctx.options["afJson.makeJsonObj"])()
-	}
-	
-	private Bool strictMode(JsonConverterCtx ctx) {
-		ctx.options.get("afJson.strictMode", false)
+		return ctx.fnMakeEntity(fieldVals)
 	}
 
 	private static const Type[] literals	:= [Bool#, Date#, DateTime#, Str#, Time#, Uri#, Depend#, Decimal#, Duration#, Enum#, Float#, Int#, Locale#, MimeType#, Range#, Regex#, Slot#, TimeZone#, Type#, Unit#, Version#]

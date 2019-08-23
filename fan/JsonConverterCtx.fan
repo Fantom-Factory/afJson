@@ -73,13 +73,52 @@
 		parent == null
 	}
 	
-	** Uses *this* context to convert 'obj'.
+	** Uses *this* context to convert 'this.obj'.
 	Obj? toJsonVal() {
 		converters.toJsonCtx(obj, this)
 	}
 
-	** Uses *this* context to convert 'obj'.
+	** Uses *this* context to convert 'this.obj'.
 	Obj? fromJsonVal() {
 		converters.fromJsonCtx(obj, this)
+	}
+	
+	// ---- Option Functions ----
+	
+	// FIXME move to FOM
+	
+	** Creates an empty *ordered* JSON object. 
+	@NoDoc Str:Obj? fnMakeJsonObj() {
+		((|JsonConverterCtx->Str:Obj?|) options["afJson.makeJsonObj"])(this)
+	}
+
+	** Creates an Entity instance. 
+	@NoDoc Obj? fnMakeEntity(Field:Obj? fieldVals) {
+		((|Type, Field:Obj?, JsonConverterCtx->Obj?|) options["afJson.makeEntity"])(this.type, fieldVals, this)
+	}
+
+	** Creates an empty map for Fantom.
+	@NoDoc Obj:Obj? fnMakeMap() {
+		((|Type,JsonConverterCtx->Obj:Obj?|) options["afJson.makeMap"])(this.type, this)
+	}
+	
+	** This is called *before* any 'jsonVal' is converted. 
+	@NoDoc Obj? fnFromJsonHook(Obj? jsonVal) {
+		((|Obj?, JsonConverterCtx->Obj?|?) options["afJson.fromJsonHook"])?.call(jsonVal, this) ?: jsonVal
+	}
+	
+	** This is called *before* any 'fantomObj' is converted. 
+	@NoDoc Obj? fnToJsonHook(Obj? fantomObj) {
+		((|Obj?, JsonConverterCtx->Obj?|?) options["afJson.toJsonHook"])?.call(fantomObj, this) ?: fantomObj
+	}
+	
+	** Returns the 'JsonPropertyCache'.
+	@NoDoc JsonPropertyCache optJsonPropertyCache() {
+		options["afJson.propertyCache"]
+	}
+	
+	** Returns strict mode.
+	@NoDoc Bool optStrictMode() {
+		options.get("afJson.strictMode", false)
 	}
 }

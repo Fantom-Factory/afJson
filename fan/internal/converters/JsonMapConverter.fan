@@ -11,7 +11,7 @@ using afBeanUtils::TypeCoercer
 		if (fantomObj == null) return null
 		fanMap		:= (Map) fantomObj
 		mapType		:= fanMap.typeof
-		jsonObj		:= makeJsonObj(ctx)
+		jsonObj		:= ctx.fnMakeJsonObj
 		fanMap.each |fVal, fKey| {
 			// Map keys are special and have to be converted <=> Str
 			// As *anything* can be converter toStr(), let's check up front that we can convert it back to Fantom again!
@@ -32,7 +32,7 @@ using afBeanUtils::TypeCoercer
 		fanValType 	:= ctx.type.params["V"]
 
 		jsonObj		:= (Str:Obj?) jsonVal
-		fanMap		:= makeMap(ctx)
+		fanMap		:= ctx.fnMakeMap
 		jsonObj.each |jVal, jKey| {
 			// Map keys are special and have to be converted <=> Str
 			fKey := typeCoercer.coerce(jKey, fanKeyType)
@@ -40,15 +40,5 @@ using afBeanUtils::TypeCoercer
 			fanMap[fKey] = fVal
 		}
 		return fanMap
-	}
-
-	** Creates an empty *ordered* JSON object. 
-	private Str:Obj? makeJsonObj(JsonConverterCtx ctx) {
-		((|->Str:Obj?|) ctx.options["afJson.makeJsonObj"])()
-	}
-
-	** Creates an empty map for Fantom.
-	private Obj:Obj? makeMap(JsonConverterCtx ctx) {
-		((|Type->Obj:Obj?|) ctx.options["afJson.makeMap"])(ctx.type)
 	}
 }
