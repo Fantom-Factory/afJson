@@ -75,17 +75,15 @@
 	
 	** Uses *this* context to convert 'this.obj'.
 	Obj? toJsonVal() {
-		converters.toJsonCtx(obj, this)
+		converters._toJsonCtx(obj, this)
 	}
 
 	** Uses *this* context to convert 'this.obj'.
 	Obj? fromJsonVal() {
-		converters.fromJsonCtx(obj, this)
+		converters._fromJsonCtx(obj, this)
 	}
 	
 	// ---- Option Functions ----
-	
-	// FIXME move to FOM
 	
 	** Creates an empty *ordered* JSON object. 
 	@NoDoc Str:Obj? fnMakeJsonObj() {

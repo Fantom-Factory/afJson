@@ -32,7 +32,6 @@ class Build : BuildPod {
 			// ---- Core ------------------------
 			"afBeanUtils  1.0.10 - 1.0",	// for afBeanUtils::TypeCoercer & BeanBuilder
 			"afConcurrent 1.0.22 - 1.0",	// for afConcurrent::AtomicMap
-			
 		]
 
 		srcDirs = [`fan/`, `fan/internal/`, `fan/internal/converters/`, `test/`]

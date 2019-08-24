@@ -31,11 +31,11 @@ using afBeanUtils::BeanBuilder
 
 
 
-	@NoDoc
-	abstract Obj? toJsonCtx(Obj? fantomObj, JsonConverterCtx ctx)
+	@NoDoc	// not sure why we'd want these to be pubic?
+	internal abstract Obj? _toJsonCtx(Obj? fantomObj, JsonConverterCtx ctx)
 
-	@NoDoc
-	abstract Obj? fromJsonCtx(Obj? jsonVal, JsonConverterCtx ctx)
+	@NoDoc	// not sure why we'd want these to be pubic?
+	internal abstract Obj? _fromJsonCtx(Obj? jsonVal, JsonConverterCtx ctx)
 	
 	
 
@@ -158,24 +158,24 @@ using afBeanUtils::BeanBuilder
 		}
 	}
 	
-	override Obj? toJsonCtx(Obj? fantomObj, JsonConverterCtx ctx) {
+	override Obj? _toJsonCtx(Obj? fantomObj, JsonConverterCtx ctx) {
 		hookVal := ctx.fnToJsonHook(fantomObj)		
 		return get(ctx.type).toJsonVal(fantomObj, ctx)
 	}
 
-	override Obj? fromJsonCtx(Obj? jsonVal, JsonConverterCtx ctx) {
+	override Obj? _fromJsonCtx(Obj? jsonVal, JsonConverterCtx ctx) {
 		hookVal := ctx.fnFromJsonHook(jsonVal)
 		return get(ctx.type).fromJsonVal(hookVal, ctx)
 	}
 
 	override Obj? toJsonVal(Obj? fantomObj, Type fantomType) {
 		ctx := JsonConverterCtx.makeTop(this, fantomType, fantomObj, options)
-		return toJsonCtx(fantomObj, ctx)
+		return _toJsonCtx(fantomObj, ctx)
 	}
 
 	override Obj? fromJsonVal(Obj? jsonVal, Type fantomType) {
 		ctx := JsonConverterCtx.makeTop(this, fantomType, jsonVal, options)
-		return fromJsonCtx(jsonVal, ctx)
+		return _fromJsonCtx(jsonVal, ctx)
 	}
 	
 	override [Str:Obj?]? toJsonObj(Obj? fantomObj) {
