@@ -1,0 +1,37 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 128 128">
+
+	<title>Fantom Factory Logo</title>
+
+	<g id="outline">
+		<path d="M3,116.47a3.84,3.84,0,0,0,3.84,3.84H27.33a3.84,3.84,0,0,0,3.83-3.84V82.77H49.93V97.7a3.83,3.83,0,0,0,3.83,3.83H74.25a3.83,3.83,0,0,0,3.83-3.83V82.77H120.3a4.69,4.69,0,0,0,4.7-4.54V50.09h0v-.32a4.73,4.73,0,0,0-1.36-3.16,4.67,4.67,0,0,0-3.17-1.37H78.08V30.3a3.83,3.83,0,0,0-3.83-3.84H53.76a3.83,3.83,0,0,0-3.83,3.84V45.23H31.16V11.52a3.83,3.83,0,0,0-3.84-3.83H6.83A3.83,3.83,0,0,0,3,11.52V45.23a8.65,8.65,0,0,0,2.4,6L18.18,64,5.56,76.62A8.66,8.66,0,0,0,3,82.77Z" style="fill:none; stroke:#555; stroke-width:6"/>
+	</g>
+
+	<g id="solid">
+		<path d="M3,116.47a3.84,3.84,0,0,0,3.84,3.84H27.33a3.84,3.84,0,0,0,3.83-3.84V82.77H49.93V97.7a3.83,3.83,0,0,0,3.83,3.83H74.25a3.83,3.83,0,0,0,3.83-3.83V82.77H120.3a4.69,4.69,0,0,0,4.7-4.54V50.09h0v-.32a4.73,4.73,0,0,0-1.36-3.16,4.67,4.67,0,0,0-3.17-1.37H78.08V30.3a3.83,3.83,0,0,0-3.83-3.84H53.76a3.83,3.83,0,0,0-3.83,3.84V45.23H31.16V11.52a3.83,3.83,0,0,0-3.84-3.83H6.83A3.83,3.83,0,0,0,3,11.52V45.23a8.65,8.65,0,0,0,2.4,6L18.18,64,5.56,76.62A8.66,8.66,0,0,0,3,82.77Z" style="fill:#555; stroke:#555; stroke-width:6"/>
+	</g>
+
+	<g id="color">
+		<path d="M49.23,44.31v9.84H29.55a9.08,9.08,0,0,0-6.3,2.52L15.92,64,2.51,50.61A9.13,9.13,0,0,1,0,44.31V39.38a4.92,4.92,0,0,0,4.93,4.93Z" style="fill:url(#ffGrad1)"/>
+		<path d="M128,49.06v.34a4.91,4.91,0,0,1-4.92,4.75H78.78V44.31h44.47a4.9,4.9,0,0,1,3.32,1.43A5,5,0,0,1,128,49.06Z" style="fill:url(#ffGrad1)"/>
+		<path d="M29.55,8.94V44.31H4.93A4.92,4.92,0,0,1,0,39.38V8.94a4,4,0,0,1,4-4h21.5A4,4,0,0,1,29.55,8.94Z" style="fill:url(#ffGrad2)"/>
+		<rect x="49.23" y="24.62" width="29.54" height="78.76" rx="4.02" style="fill:url(#ffGrad3)"/>
+		<path d="M34.47,54.15a4.93,4.93,0,0,0-4.92,4.93v60a4,4,0,0,1-4,4H4a4,4,0,0,1-4-4V83.69H0a9.08,9.08,0,0,1,2.68-6.45L15.92,64l7.33-7.33a9.08,9.08,0,0,1,6.3-2.52Z" style="fill:url(#ffGrad2)"/>
+		<path d="M128,49.4V78.93a4.92,4.92,0,0,1-4.93,4.76H29.55V59.08a4.93,4.93,0,0,1,4.92-4.93h88.6A4.92,4.92,0,0,0,128,49.4Z" style="fill:url(#ffGrad4)"/>
+		<linearGradient id="ffGrad1">
+			<stop offset="0" stop-color="#d27fff"/>
+			<stop offset="1" stop-color="#644fff"/>
+		</linearGradient>
+		<linearGradient id="ffGrad2" gradientTransform="rotate(90)">
+			<stop offset="0" stop-color="#d27fff"/>
+			<stop offset="1" stop-color="#644fff"/>
+		</linearGradient>
+		<linearGradient id="ffGrad3" gradientTransform="rotate(90)">
+			<stop offset="0" stop-color="#ff7fae"/>
+			<stop offset="1" stop-color="#ff4fff"/>
+		</linearGradient>
+		<linearGradient id="ffGrad4">
+			<stop offset="0" stop-color="#644fff"/>
+			<stop offset="1" stop-color="#d27fff"/>
+		</linearGradient>
+	</g>
+</svg>

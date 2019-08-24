@@ -12,7 +12,17 @@ class Build : BuildPod {
 			"afIoc.module"	: "afJson::JsonModule",
 			"repo.internal"	: "true",
 			"repo.tags"		: "system, web",
-			"repo.public"	: "false"
+			"repo.public"	: "true",
+			
+			// ---- SkySpark ----
+			"ext.name"		: "afJson",
+			"ext.icon"		: "afJson",
+			"ext.depends"	: "afBeanUtils, afConcurrent",
+			"skyarc.icons"	: "true",
+		]
+
+		index	= [
+			"skyarc.ext"	: "afJson"
 		]
 
 		depends = [
@@ -26,7 +36,7 @@ class Build : BuildPod {
 		]
 
 		srcDirs = [`fan/`, `fan/internal/`, `fan/internal/converters/`, `test/`]
-		resDirs = [`doc/`]
+		resDirs = [`doc/`, `svg/`]
 
 		docApi = true
 		docSrc = true
