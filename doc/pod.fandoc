@@ -217,12 +217,12 @@ echo(json)  // --> {"name":null}
 
 Property Names
 ==============
-Sometimes you want the JSON name to be different to the field names. To facilitate this, set the '@JsonProperty.propertyName' attribute:
+Sometimes you want the JSON name to be different to the field names. To facilitate this, set the '@JsonProperty.name' attribute:
 
 pre>
 syntax: fantom
 class User {
-    @JsonProperty { propertyName = "judge" }
+    @JsonProperty { name = "judge" }
     Str? name
 
     new make(|This| f) { f(this) }

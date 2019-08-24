@@ -1,4 +1,4 @@
-using afBeanUtils::BeanFactory
+using afBeanUtils::BeanBuilder
 
 ** (Service) - 
 ** Converts Fantom objects to and from their JSON representation.
@@ -131,10 +131,7 @@ using afBeanUtils::BeanFactory
 	new makeArgs(Type:JsonConverter converters, [Str:Obj?]? options) {
 		this.typeLookup = CachingTypeLookup(converters)
 		this.optionsRef	= Unsafe(Str:Obj?[
-			"afJson.makeEntity"		: |Type type, Field:Obj? vals->Obj?| {
-				if (type.isConst) vals = vals.toImmutable
-				return type.make([Field.makeSetFunc(vals)])
-			},
+			"afJson.makeEntity"		: |Type type, Field:Obj? vals->Obj?| { BeanBuilder.build(type, vals) },
 			"afJson.makeJsonObj"	: |-> Str:Obj?| { Str:Obj?[:] { ordered = true } },
 			"afJson.makeMap"		: |Type t->Map| { Map((t.isGeneric ? Obj:Obj?# : t).toNonNullable) { it.ordered = true } },
 			"afJson.strictMode"		: false,
