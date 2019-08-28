@@ -26,12 +26,12 @@
 	}
 }
 
-internal class T_Entity11 {
+@Js internal class T_Entity11 {
 	@JsonProperty T_Entity11_Name name	:= T_Entity11_Name()
 	new make(|This|? in := null) { in?.call(this) }
 }
 
-internal class T_Entity11_Name {
+@Js internal class T_Entity11_Name {
 	@JsonProperty Str name	:= "Dredd"
 	@JsonProperty Int badge	:= 69
 	new make(|This|? in := null) { in?.call(this) }
