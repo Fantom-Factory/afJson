@@ -1,6 +1,5 @@
 
-@Js
-internal class TestObjConversion : Test {
+@Js internal class TestObjConversion : Test {
 	
 	Void testConversion() {
 		ent := JsonConverters().fromJson("""{ "obj1":68, "obj2":"judge", "obj3":68.9 }""", T_Entity04#) as T_Entity04

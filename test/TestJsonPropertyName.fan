@@ -1,5 +1,5 @@
 
-internal class TestJsonPropertyName : Test {
+@Js internal class TestJsonPropertyName : Test {
 	
 	Void testFromJson() {
 		jsonObj := [
@@ -22,7 +22,7 @@ internal class TestJsonPropertyName : Test {
 	}
 }
 
-internal class T_Entity09 {
+@Js internal class T_Entity09 {
 	@JsonProperty { name="judge" }
 			Str			wotever
 

@@ -1,5 +1,5 @@
 
-internal class TestLiteralConverters : Test {
+@Js internal class TestLiteralConverters : Test {
 	private DateTime now	:= DateTime.now
 
 	Void testLiteralsToJson() {
@@ -136,7 +136,7 @@ internal class TestLiteralConverters : Test {
 	}
 }
 
-internal class T_Entity08 {
+@Js internal class T_Entity08 {
 	// JSON literals
 	@JsonProperty	Bool		bool
 	@JsonProperty	Decimal		decimal
@@ -171,6 +171,6 @@ internal class T_Entity08 {
 	new make(|This|in) { in(this) }
 }
 
-internal enum class T_Entity08_Enum {
+@Js internal enum class T_Entity08_Enum {
 	wot, ever;
 }

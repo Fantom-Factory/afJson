@@ -1,6 +1,5 @@
 
-@Js
-internal class TestPrettyPrint : Test {
+@Js internal class TestPrettyPrint : Test {
 	
 	JsonWriter	jsonWriter	:= JsonWriter(true)
 

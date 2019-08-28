@@ -1,5 +1,5 @@
 
-internal class TestListConverter : Test {
+@Js internal class TestListConverter : Test {
 	
 	Void testToJson() {
 		ent := T_Entity12() { list = [T_Entity08_Enum.wot, T_Entity08_Enum.ever] }
@@ -25,7 +25,7 @@ internal class TestListConverter : Test {
 	}
 }
 
-internal class T_Entity12 {
+@Js internal class T_Entity12 {
 	@JsonProperty T_Entity08_Enum[]? list
 	new make(|This|? in := null) { in?.call(this) }
 }

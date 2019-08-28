@@ -1,6 +1,5 @@
 
-@Js
-internal class TestJsonReadWrite : Test {
+@Js internal class TestJsonReadWrite : Test {
 
 	JsonReader	jsonReader	:= JsonReader()
 	JsonWriter	jsonWriter	:= JsonWriter()

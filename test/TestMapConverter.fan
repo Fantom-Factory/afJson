@@ -1,5 +1,5 @@
 
-internal class TestMapConverter : Test {
+@Js internal class TestMapConverter : Test {
 	
 	Void testToJson() {
 		ent := T_Entity13()
@@ -35,7 +35,7 @@ internal class TestMapConverter : Test {
 	}
 }
 
-internal class T_Entity13 {
+@Js internal class T_Entity13 {
 	@JsonProperty [T_Entity08_Enum:Int]? keys
 	@JsonProperty [Int:T_Entity08_Enum]? vals
 	new make(|This|? in := null) { in?.call(this) }

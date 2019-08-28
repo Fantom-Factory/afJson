@@ -1,5 +1,5 @@
 
-internal class TestObjConverter : Test {
+@Js internal class TestObjConverter : Test {
 	
 	Void testToJson() {
 		ent := T_Entity11()

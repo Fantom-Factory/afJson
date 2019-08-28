@@ -1,5 +1,5 @@
 
-internal class TestNormaliseKeyName : Test {
+@Js internal class TestNormaliseKeyName : Test {
 	
 	Void testNormalise() {
 		verifyEq(normaliseInv("Text"),			"text")

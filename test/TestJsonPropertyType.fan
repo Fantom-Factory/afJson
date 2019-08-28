@@ -1,5 +1,5 @@
 
-internal class TestJsonPropertyType : Test {
+@Js internal class TestJsonPropertyType : Test {
 	
 	Void testFromJson() {
 		jsonObj := [
@@ -22,7 +22,7 @@ internal class TestJsonPropertyType : Test {
 	}
 }
 
-internal class T_Entity10 {
+@Js internal class T_Entity10 {
 	@JsonProperty { implType=Int# }
 			Num			inty
 

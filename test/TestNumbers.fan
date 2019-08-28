@@ -25,6 +25,4 @@ internal class T_User4 {
 	@JsonProperty Int?		num1
 	@JsonProperty Float?	num2
 	@JsonProperty Decimal?	num3
-	
-	new make(|This| f) { f(this) }
 }

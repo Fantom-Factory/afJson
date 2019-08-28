@@ -81,7 +81,7 @@ const class JsonWriter {
 				opts["prettyPrint"] = options
 			else if (options is Map)
 				opts.setAll(options)
-			else throw ArgErr("Options must be a Bool or a Map")
+			else throw ArgErr("Options must be a Bool or a Map: $options")
 		}
 		return opts
 	}
@@ -275,7 +275,6 @@ internal class JsonValWriterList : JsonValWriter {
 	private Int		maxWidth
 
 	new make(Str:Obj? opts) : super(opts) {
-		echo(opts)
 		maxWidth = opts["maxWidth"]
 		indent	 = opts["indent"]
 	}
