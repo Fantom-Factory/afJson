@@ -9,8 +9,7 @@ class Build : BuildPod {
 
 		meta = [
 			"pod.dis"		: "Json",
-			"afIoc.module"	: "afJson::JsonModule",
-			"repo.internal"	: "true",
+			//"afIoc.module"	: "afJson::JsonModule",
 			"repo.tags"		: "system, web",
 			"repo.public"	: "true",
 			

@@ -7,8 +7,6 @@
 
 ## Overview
 
-*Json is a support library that aids Alien-Factory in the development of other libraries, frameworks and applications. Though you are welcome to use it, you may find features are missing and the documentation incomplete.*
-
 Json is a customisable Fantom to Javascript Object Notation (JSON) mapping library.
 
 It goes far beyond the usual `JsonInStream` and `JsonOutStream` classes by mapping and instantiating fully fledged Fantom domain objects.
