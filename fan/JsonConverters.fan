@@ -64,16 +64,12 @@ using afBeanUtils::BeanBuilder
 	
 	
 
-//	** Converts the given Fantom object to its JSON representation.
-//	** 'null' values are converted to 'Remove.val'.
-//	** 
-//	** 'fantomType' is required in case 'fantomObj' is null. 
-//	** 'fantomObj' is nullable so converters can create empty / default objects.
+	** Converts the given Fantom object to its JSON string representation.
+	** 
+	** 'options' is passed to 'JsonWriter', so may just be 'true' for pretty printing. 
 	abstract Str toJson(Obj? fantomObj, Obj? options := null)
 	
-//	** Converts a JSON string to the given Fantom type.
-//	** 
-//	** 'json' is nullable so converters can choose whether or not to create empty lists and maps.
+	** Converts a JSON string to the given Fantom type.
 	abstract Obj? fromJson(Str? json, Type fantomType)
 
 

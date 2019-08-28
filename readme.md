@@ -1,8 +1,8 @@
-# Json v1.0.2
+# Json v2.0.0
 ---
 
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](http://fantom-lang.org/)
-[![pod: v1.0.2](http://img.shields.io/badge/pod-v1.0.2-yellow.svg)](http://eggbox.fantomfactory.org/pods/afJson)
+[![pod: v2.0.0](http://img.shields.io/badge/pod-v2.0.0-yellow.svg)](http://eggbox.fantomfactory.org/pods/afJson)
 [![Licence: ISC](http://img.shields.io/badge/licence-ISC-blue.svg)](https://choosealicense.com/licenses/isc/)
 
 ## Overview
@@ -15,14 +15,13 @@ It goes far beyond the usual `JsonInStream` and `JsonOutStream` classes by mappi
 
 Features:
 
-- JSON pretty printing
 - Converts all core Fantom types
 - Converts nested / embedded objects
 - Runs on Javascript platforms
-- IoC enabled
 - Simple to use
+- JSON pretty printing
 
-Just annotate fields with `@JsonProperty` then read / write JSON with `readJson(...)` and `writeJson(...)` - couldn't be easier!
+Just annotate fields with `@JsonProperty` then call `fromJson(...)` and `toJson(...)` - couldn't be easier!
 
 ## Install
 
@@ -36,7 +35,7 @@ Or install `Json` with [fanr](http://fantom.org/doc/docFanr/Tool.html#install):
 
 To use in a [Fantom](http://fantom-lang.org/) project, add a dependency to `build.fan`:
 
-    depends = ["sys 1.0", ..., "afJson 1.0"]
+    depends = ["sys 1.0", ..., "afJson 2.0"]
 
 ## Documentation
 
@@ -50,7 +49,7 @@ Full API & fandocs are available on the [Eggbox](http://eggbox.fantomfactory.org
         
         class Example {
             Void main() {
-                jsonService := Json()
+                json := Json()
         
                 // write some JSON...
                 json := """{
@@ -65,7 +64,7 @@ Full API & fandocs are available on the [Eggbox](http://eggbox.fantomfactory.org
                            }"""
         
                 // ...and WHAM! A fully inflated domain object!
-                friend := (Friend) jsonService.readJson(json, Friend#)
+                friend := (Friend) json().fromJson(json, Friend#)
         
                 echo(friend.name)     // --> Emma
                 echo(friend.car.name) // --> Golf
@@ -74,7 +73,7 @@ Full API & fandocs are available on the [Eggbox](http://eggbox.fantomfactory.org
                 friend.car   = null
         
                 // we can even convert the other way!
-                moarJson := jsonService.writeJson(friend, Friend#)
+                moarJson := json.toJson(friend)
         
                 echo(moarJson)
                 // --> {"name":"Emma","sex":"female","score":11,"likes":["Cakes","Adventure"]}
@@ -126,13 +125,9 @@ All conversion of Entities to and from JSON goes through an intermediary `JsonOb
 
     Entity <--> JsonObj <--> JSON
 
-`EntityConverter` converts between Entities and JsonObjs.
-
 `JsonReader` and `JsonWriter` convert between JsonObjs and JSON.
 
-`Json` has methods to convert between all:
-
-![JSON Methods](http://eggbox.fantomfactory.org/pods/afJson/doc/jsonMethods.png)
+`JsonConverters` has methods to convert between all.
 
 ## Usage
 
@@ -143,22 +138,38 @@ Any Fantom object may be converted to and from JSON. Just make sure that all fie
 The [JSON Spec](http://www.json.org/) only defines types for `Bool`, `List`, `Null`, `Number`, `Object`, and `String`. As such, this library provides the following mappings:
 
 ```
- Fantom              JSON
---------------      --------
- sys::Bool     <-->  Bool
- sys::Decimal  <-->  Number
- sys::Enum     <-->  String
- sys::Field    <-->  String
- sys::Float    <-->  Number
- sys::Int      <-->  Number
- sys::List     <-->  List
- sys::Map      <-->  Object
- sys::Method   <-->  String
-      null     <-->  Null
- sys::Obj      <-->  Object
- sys::Slot     <-->  String
- sys::Str      <-->  String
- sys::Type     <-->  String
+ Fantom                  JSON
+------------------      -------- 
+ afJson::JsLiteral <-->  *as is*
+ sys::Bool         <-->  Bool
+ sys::Decimal      <-->  Number
+ sys::Date         <-->  String
+ sys::DateTime     <-->  String
+ sys::Depend       <-->  String
+ sys::Duration     <-->  String
+ sys::Enum         <-->  String
+ sys::Field        <-->  String
+ sys::Float        <-->  Number
+ sys::Int          <-->  Number
+ sys::List         <-->  List
+ sys::Locale       <-->  String
+ sys::Map          <-->  Object
+ sys::Method       <-->  String
+ sys::MimeType     <-->  String
+ sys::Num          <-->  Number
+      null         <-->  Null
+ sys::Obj          <-->  Object
+ sys::Range        <-->  String
+ sys::Regex        <-->  String
+ sys::Slot         <-->  String
+ sys::Str          <-->  String
+ sys::Time         <-->  String
+ sys::TimeZone     <-->  String
+ sys::Type         <-->  String
+ sys::Unit         <-->  String
+ sys::Uri          <-->  String
+ sys::Uuid         <-->  String
+ sys::Version      <-->  String
 ```
 
 Plus any `Type` annotated with `@Serializable { simple = true }` is converted to and from a `Str`. Combined that accounts for all Fantom literals and core types.
@@ -193,7 +204,7 @@ class User {
 }
 
 json := "{}"
-user := Json().readJson(json, User#) as User
+user := Json().fromJson(json, User#) as User
 
 echo(user.name)  // --> null
 ```
@@ -209,101 +220,28 @@ class User {
 }
 
 user := User { name = null }
-json := Json().writeJson(user, User#)
+json := Json().toJson(user)
 
 echo(json)  // --> {}
 ```
 
-If you want `null` values to be written, then set `storeNullValues = true` on the desired field:
-
-```
-class User {
-    @JsonProperty { storeNullValues = true }
-    Str? name
-
-    new make(|This| f) { f(this) }
-}
-
-user := User { name = null }
-json := Json().writeEntity(user)
-
-echo(json)  // --> {"name":null}
-```
-
 ### Property Names
 
-Sometimes you want the JSON name to be different to the field names. To facilitate this, set the `@JsonProperty.propertyName` attribute:
+Sometimes you want the JSON name to be different to the field names. To facilitate this, set the `@JsonProperty.name` attribute:
 
 ```
 class User {
-    @JsonProperty { propertyName = "judge" }
+    @JsonProperty { name = "judge" }
     Str? name
 
     new make(|This| f) { f(this) }
 }
 
 user := User { name = "Dredd" }
-json := Json().writeEntity(user, User#)
+json := Json().toJson(user, User#)
 
 echo(json)  // --> {"judge":"Dredd"}
 ```
-
-## IoC
-
-When Json is added as a dependency to an IoC enabled application, such as [BedSheet](http://eggbox.fantomfactory.org/pods/afBedSheet) or [Reflux](http://eggbox.fantomfactory.org/pods/afReflux), then the following services are automatically made available to IoC:
-
-- [Json](http://eggbox.fantomfactory.org/pods/afJson/api/Json)
-- [JsonReader](http://eggbox.fantomfactory.org/pods/afJson/api/JsonReader)
-- [JsonWriter](http://eggbox.fantomfactory.org/pods/afJson/api/JsonWriter)
-- [JsonTypeInspectors](http://eggbox.fantomfactory.org/pods/afJson/api/JsonTypeInspectors) - takes contributions of `Str:JsonTypeInspector`
-
-The above makes use of the non-invasive module feature of IoC 3.
-
-It is useful if your converted Fantom objects are built by IoC. That way they may contain services and perform operations on themselves, such as persisting to a database. To enable this, create an `IocObjConverter` class that extends from Json's `@NoDoc ObjConverter` class:
-
-```
-using afIoc
-using afJson
-
-const class IocObjConverter : ObjConverter {
-    @Inject const |->Scope| scope
-
-    new make(|This|in) { in(this) }
-
-    override Obj? createEntity(Type type, Field:Obj? fieldVals) {
-        scope().build(type, null, fieldVals)
-    }
-}
-```
-
-Contribute this with the following:
-
-```
-@Contribute { serviceType=JsonTypeInspectors# }
-Void contributeJsonTypeInspectors(Configuration config) {
-    config.overrideValue("afJson.obj", ObjInspector { it.converter = config.build(IocObjConverter#) })
-}
-```
-
-## Custom Conversion
-
-The Json library is extremely configurable at all levels. Because of that, object conversion may not be as straight forward as you may think. This explains how the process works...
-
-Every Fantom type to be converted, either a top level entity or an embedded object, is inspected by `JsonTypeInspectors` which produces a `JsonTypeMeta` instance. `JsonTypeMeta` describes how the Fantom type will be converted to / and from JSON. It also holds the `JsonConverter` instance that will do the converting.
-
-Because each Fantom Type is mapped to a cached `JsonTypeMeta` instance, conversion is fast because types don't have to be re-inspected. Also, if an object is not being converted as you expect, you can inspect the nested hierarchy of `JsonTypeMeta` objects to see exactly what will happen.
-
-`JsonTypeInspectors` holds a list of `JsonTypeInspector` instances. During inspection, each inspector is called in turn until one of them returns a `JsonTypeMeta` instance. This makes the order of the inspectors important.
-
-To go the full hog with respect to custom conversion, you should create your own `JsonTypeInspector` and add / contribute it to `JsonTypeInspectors`. Your inspector should create `JsonTypeMeta`, complete with a custom converter, that completely describes how the type should be converted.
-
-For example, there's no reason why fields must be annotated with `@JsonProperty`, you could easily create an inspector that returns `JsonTypeMeta` for *every* field!
-
-If you did not want to go as far as creating an inspector, you could instead create a `JsonTypeMeta` instance. This could either be set on `JsonTypeInspectors` to be used for all given types, or passed to `Json` methods for ad hoc conversions.
-
-Or the easiest, but most limited way, would be to set the `@JsonProperty.converterType` attribute on the affected fields.
-
-If you are contemplating implementating custom conversion then you are encouraged to look at the Json library source for help and examples. It may be preferable to simply extend one the current `@NoDoc` Inspectors or Converters.
 
 ## JSON and Dates
 
@@ -321,44 +259,23 @@ class User {
 
 class Example {
     Void main() {
-        jsonService := Json(JsonTypeInspectors(
-            JsonTypeInspectors.defaultInspectors.insert(0, JsDateInspector())
-        ))
+        jsonService := Json(JsonConverters.defConvs.setAll([
+            Date# : JsDateConverter()
+        ]))
 
         user := User { name = "Judge Dredd"; timestamp = DateTime.now }
-        jsonService.writeJson(user, User#)
+        json := jsonService.toJson(user)
 
-        echo(json) // --> {"name":"Judge Dredd","timestamp":new Date(1456178248297)}
-    }
-}
-
-const class JsDateInspector : JsonTypeInspector {
-    const JsonConverter converter := JsDateConverter()
-
-    override JsonTypeMeta? inspect(Type type, JsonTypeInspectors inspectors) {
-        type.toNonNullable == DateTime# ? JsonTypeMeta { it.type = type; it.converter = this.converter } : null
+        echo(json) // --> {"name":"Judge Dredd","timestamp":"new Date(1456178248297)"}
     }
 }
 
 const class JsDateConverter : JsonConverter {
-    override Obj? toFantom(JsonConverterCtx ctx, Obj? jsonObj) { throw UnsupportedErr() }
+    override Obj? fromJsonVal(Obj? jsonVal, JsonConverterCtx ctx)  { throw UnsupportedErr() }
 
-    override Obj? toJsonObj(JsonConverterCtx ctx, Obj? fantomObj) {
+	override Obj? toJsonVal(Obj? fantomObj, JsonConverterCtx ctx) {
         fantomObj == null ? null : JsLiteral("new Date(${((DateTime) fantomObj).toJava})")
     }
 }
 ```
-
-### IoC
-
-If using IoC then you wouldn't create a new `Json()` service, instead you would contribute `JsDateInspector` to `JsonTypeInspectors`:
-
-```
-@Contribute { serviceType=JsonTypeInspectors# }
-Void contributeJsonTypeInspectors(Configuration config) {
-    config.set("jsDates", JsDateInspector()).before("afJson.literal")
-}
-```
-
-Putting your inspector before `afJson.literal` ensures it is first in the inspector list.
 
