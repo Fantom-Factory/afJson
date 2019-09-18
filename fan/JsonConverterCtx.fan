@@ -1,4 +1,5 @@
 
+** Passed to 'JsonConverters' to give context on what they're converting.
 @Js class JsonConverterCtx {
 	JsonConverterCtx?	parent	{ private set }
 	const Type			type
