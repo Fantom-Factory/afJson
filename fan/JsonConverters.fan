@@ -40,15 +40,17 @@ using afBeanUtils::BeanBuilder
 	
 
 	** Converts the given Fantom object to its JSON representation.
+	** If 'fantomType' is 'null' then 'null' is always returned. 
 	** 
 	** 'fantomType' is required in case 'fantomObj' is null. 
 	** 'fantomObj' is nullable so converters can create empty / default objects.
-	abstract Obj? toJsonVal(Obj? fantomObj, Type fantomType)
+	abstract Obj? toJsonVal(Obj? fantomObj, Type? fantomType)
 	
 	** Converts a JSON value to the given Fantom type.
+	** If 'fantomType' is 'null' then 'null' is always returned. 
 	** 
 	** 'jsonVal' is nullable so converters can choose whether or not to create empty lists and maps.
-	abstract Obj? fromJsonVal(Obj? jsonVal, Type fantomType)
+	abstract Obj? fromJsonVal(Obj? jsonVal, Type? fantomType)
 
 	
 	** Converts the given Fantom object to its JSON object representation.
@@ -164,12 +166,14 @@ using afBeanUtils::BeanBuilder
 		return get(ctx.type).fromJsonVal(hookVal, ctx)
 	}
 
-	override Obj? toJsonVal(Obj? fantomObj, Type fantomType) {
+	override Obj? toJsonVal(Obj? fantomObj, Type? fantomType) {
+		if (fantomType == null) return null	// this null is just convenience to allow [args].map { it?.typeof }
 		ctx := JsonConverterCtx.makeTop(this, fantomType, fantomObj, options)
 		return _toJsonCtx(fantomObj, ctx)
 	}
 
-	override Obj? fromJsonVal(Obj? jsonVal, Type fantomType) {
+	override Obj? fromJsonVal(Obj? jsonVal, Type? fantomType) {
+		if (fantomType == null) return null	// this null is just convenience to allow [args].map { it?.typeof }
 		ctx := JsonConverterCtx.makeTop(this, fantomType, jsonVal, options)
 		return _fromJsonCtx(jsonVal, ctx)
 	}
