@@ -30,7 +30,7 @@
 			slot		= Test#setup
 			time		= Time(13, 14, 15)
 			timeZone	= TimeZone.rel
-			type		= Test#
+			type		= Test[]?#
 			unit		= Unit("°C")
 			uri			= `http://wotever/`
 			uuid		= Uuid("088e6a43-3cd0-b300-62f7-c85b768bcc22")
@@ -96,7 +96,7 @@
 			"slot"			: Test#setup.qname,
 			"time"			: Time(13, 14, 15).toStr,
 			"timeZone"		: "Etc/Rel",
-			"type"			: "sys::Test",
+			"type"			: "sys::Test[]?",
 			"unit"			: "°C",
 			"uri"			: "http://wotever/",
 			"uuid"			: "088e6a43-3cd0-b300-62f7-c85b768bcc22",
@@ -128,7 +128,7 @@
 		verifyEq(entity.slot,		Test#setup)
 		verifyEq(entity.time,		Time(13, 14, 15))
 		verifyEq(entity.timeZone,	TimeZone.rel)
-		verifyEq(entity.type,		Test#)
+		verifyEq(entity.type,		Test[]?#)
 		verifyEq(entity.unit,		Unit("°C"))
 		verifyEq(entity.uri,		`http://wotever/`)
 		verifyEq(entity.uuid,		Uuid("088e6a43-3cd0-b300-62f7-c85b768bcc22"))

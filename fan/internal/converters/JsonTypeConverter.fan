@@ -3,7 +3,7 @@
 	
 	override Obj? toJsonVal(Obj? fantomObj, JsonConverterCtx ctx) {
 		if (fantomObj == null) return null
-		return ((Type) fantomObj).qname
+		return ((Type) fantomObj).signature
 	}
 
 	override Obj? fromJsonVal(Obj? jsonVal, JsonConverterCtx ctx) {
