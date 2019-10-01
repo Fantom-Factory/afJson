@@ -52,10 +52,10 @@ using afBeanUtils::BeanBuilder
 	** 'jsonVal' is nullable so converters can choose whether or not to create empty lists and maps.
 	abstract Obj? fromJsonVal(Obj? jsonVal, Type? fantomType)
 
-	
+
+
 	** Converts the given Fantom object to its JSON object representation.
 	** 
-	** 'fantomType' is required in case 'fantomObj' is null. 
 	** 'fantomObj' is nullable so converters can create empty / default objects.
 	abstract [Str:Obj?]? toJsonObj(Obj? fantomObj)
 	
@@ -107,6 +107,12 @@ using afBeanUtils::BeanBuilder
 		if (net == false)
 			return str.decapitalize
 
+		return str.containsChar('.')
+			? str.split('.').map { __noramliseKeyName(it) }.join(".")
+			: __noramliseKeyName(str)
+	}
+
+	private static Str __noramliseKeyName(Str str) {
 		buf := StrBuf()
 		str.each |ch, i| {
 					if (i == 0)

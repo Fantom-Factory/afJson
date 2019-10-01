@@ -25,10 +25,10 @@ class Build : BuildPod {
 		]
 
 		depends = [
+			// ---- Fantom Core -----------------
 			"sys        1.0.71 - 1.0",
-			"concurrent 1.0.71 - 1.0",
 
-			// ---- Core ------------------------
+			// ---- Fantom Factory --------------
 			"afBeanUtils  1.0.10 - 1.0",	// for afBeanUtils::TypeCoercer & BeanBuilder
 			"afConcurrent 1.0.22 - 1.0",	// for afConcurrent::AtomicMap
 		]

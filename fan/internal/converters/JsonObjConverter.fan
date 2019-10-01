@@ -46,8 +46,9 @@ using afBeanUtils::ReflectUtils
 		jsonObj		:= (Str:Obj?) jsonVal
 		fieldVals	:= [Field:Obj?][:]
 
-		if (jsonObj.containsKey("_type"))
-			fantomType = Type.find(jsonObj["_type"])
+		// what is this!? And how is it different to implType? Do I need this?
+//		if (jsonObj.containsKey("_type"))
+//			fantomType = Type.find(jsonObj["_type"])
 
 		tagData := ctx.optJsonPropertyCache.getOrFindTags(fantomType)
 		
