@@ -2,8 +2,6 @@
 
     class Example {
         Void main() {
-            jsonService := Json()
-            
             // write some JSON...
             json := """{
                            "name"  : "Emma",
@@ -17,7 +15,7 @@
                        }"""
     
             // ...and WHAM! A fully inflated domain object!
-            friend := (Friend) jsonService.readJson(json, Friend#)
+            friend := (Friend) Json().fromJson(json, Friend#)
             
             echo(friend.name)     // --> Emma
             echo(friend.car.name) // --> Golf
@@ -26,7 +24,7 @@
             friend.car   = null
             
             // we can event convert the other way! 
-            moarJson := jsonService.writeJson(friend, Friend#)
+            moarJson := Json().toJson(friend)
     
             echo(moarJson)
             // --> {"name":"Emma","sex":"female","score":11,"likes":["Cakes","Adventure"]}

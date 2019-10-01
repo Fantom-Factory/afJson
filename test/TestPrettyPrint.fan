@@ -1,6 +1,5 @@
 
-@Js
-internal class TestPrettyPrint : JsonTest {
+@Js internal class TestPrettyPrint : Test {
 	
 	JsonWriter	jsonWriter	:= JsonWriter(true)
 
@@ -30,7 +29,7 @@ internal class TestPrettyPrint : JsonTest {
 	}
 
 	Void testNarrowList() {
-		json := jsonWriter.writeJson([1, 2, 3], PrettyPrintOptions { it.maxWidth=5; it.indent="\t" })
+		json := jsonWriter.writeJson([1, 2, 3], ["maxWidth":5, "indent":"\t"])
 		verifyEq("[
 		          	1,
 		          	2,
@@ -45,7 +44,7 @@ internal class TestPrettyPrint : JsonTest {
 
 	Void testNarrowMap() {
 		map	 := [:] { ordered=true }.add("1", 1).add("2", 2).add("3", 3)
-		json := jsonWriter.writeJson(map, PrettyPrintOptions { it.maxWidth=5; it.indent="\t" })
+		json := jsonWriter.writeJson(map, ["maxWidth":5, "indent":"\t"])
 		verifyEq("""{
 		            	"1" : 1,
 		            	"2" : 2,
@@ -61,7 +60,7 @@ internal class TestPrettyPrint : JsonTest {
 
 	Void testMapKeyValIndenting() {
 		map	 := [:] { ordered=true }.add("1-", 1).add("2--", 2).add("3---", 3).add("4----", 4).add("5-----", 5)
-		json := jsonWriter.writeJson(map, PrettyPrintOptions { it.maxWidth=5; it.indent="    " })
+		json := jsonWriter.writeJson(map, ["maxWidth":5, "indent":"    "])
 		verifyEq("""{
 		                "1-"     : 1,
 		                "2--"    : 2,
@@ -82,7 +81,7 @@ internal class TestPrettyPrint : JsonTest {
 				"wot"	: "ever",
 			],
 		]
-		json := jsonWriter.writeJson(map, PrettyPrintOptions { it.maxWidth=5; it.indent="    " })
+		json := jsonWriter.writeJson(map, ["maxWidth":5, "indent":"    "])
 		verifyEq(
 """[
        {
@@ -109,7 +108,7 @@ internal class TestPrettyPrint : JsonTest {
 				"wot"	: "ever",
 			])
 
-		json := jsonWriter.writeJson(map, PrettyPrintOptions { it.maxWidth=5; it.indent="    " })
+		json := jsonWriter.writeJson(map, ["maxWidth":5, "indent":"    "])
 		verifyEq(
 """{
        "key1" : {

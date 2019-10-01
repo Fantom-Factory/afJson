@@ -5,30 +5,39 @@ class Build : BuildPod {
 	new make() {
 		podName = "afJson"
 		summary = "A JSON to Fantom object mapping library"
-		version = Version("1.0.3")
+		version = Version("2.0.1")
 
 		meta = [
 			"pod.dis"		: "Json",
-			"afIoc.module"	: "afJson::JsonModule",
-			"repo.internal"	: "true",
+			//"afIoc.module"	: "afJson::JsonModule",
 			"repo.tags"		: "system, web",
-			"repo.public"	: "false"
+			"repo.public"	: "true",
+			
+			// ---- SkySpark ----
+			"ext.name"		: "afJson",
+			"ext.icon"		: "afJson",
+			"ext.depends"	: "afBeanUtils, afConcurrent",
+			"skyarc.icons"	: "true",
+		]
+
+		index	= [
+			"skyarc.ext"	: "afJson"
 		]
 
 		depends = [
-			"sys        1.0.68 - 1.0",
-			"concurrent 1.0.68 - 1.0",
+			// ---- Fantom Core -----------------
+			"sys        1.0.71 - 1.0",
 
-			// ---- Core ------------------------
-			"afBeanUtils  1.0.8  - 1.0",	// for afBeanUtils::BeanFactory
-			"afConcurrent 1.0.12 - 1.0",	// for afConcurrent::AtomicMap
-			
+			// ---- Fantom Factory --------------
+			"afBeanUtils  1.0.10 - 1.0",	// for afBeanUtils::TypeCoercer & BeanBuilder
+			"afConcurrent 1.0.22 - 1.0",	// for afConcurrent::AtomicMap
 		]
 
-		srcDirs = [`fan/`, `fan/internal/`, `fan/internal/converters/`, `fan/internal/inspectors/`, `fan/public/`, `test/`]
-		resDirs = [`doc/`]
+		srcDirs = [`fan/`, `fan/internal/`, `fan/internal/converters/`, `test/`]
+		resDirs = [`doc/`, `svg/`]
 
 		docApi = true
 		docSrc = true
+		
 	}
 }
