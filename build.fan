@@ -33,7 +33,7 @@ class Build : BuildPod {
 			"afConcurrent 1.0.22 - 1.0",	// for afConcurrent::AtomicMap
 		]
 
-		srcDirs = [`fan/`, `fan/internal/`, `fan/internal/converters/`, `test/`]
+		srcDirs = [`fan/`, `fan/advanced/`, `fan/internal/`, `fan/internal/converters/`, `test/`]
 		resDirs = [`doc/`, `svg/`]
 
 		docApi = true
