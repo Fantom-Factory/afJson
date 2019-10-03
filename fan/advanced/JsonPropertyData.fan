@@ -19,14 +19,17 @@ const class JsonPropertyData {
 	** The default values that maps to 'null'.
 	const	Obj? defVal
 	
-	** Creates a 'JsonPropertyData' instance from a 'Field' - must have the '@JsonProperty' facet.
-	new make(Field field, |This|? fn := null) {
-		this.jsonProperty	= field.facet(JsonProperty#, true)
+	** Standard it-block ctor.
+	new make(|This| f) { f(this) }
+	
+	** Creates a 'JsonPropertyData' instance from a 'Field' - may have the '@JsonProperty' facet.
+	new fromField(Field field, |This|? fn := null) {
 		this.field			= field
-		this.name			= jsonProperty.name		?: field.name
-		this.type			= jsonProperty.implType	?: field.type
-		this.defVal			= jsonProperty.defVal
-		
+		this.jsonProperty	= field.facet(JsonProperty#, false)
+		this.name			= jsonProperty?.name		?: field.name
+		this.type			= jsonProperty?.implType	?: field.type
+		this.defVal			= jsonProperty?.defVal
+
 		fn?.call(this)
 		
 		if (!ReflectUtils.fits(type, field.type))

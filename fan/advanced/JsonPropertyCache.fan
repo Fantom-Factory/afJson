@@ -8,7 +8,7 @@ const class JsonPropertyCache {
 		cache.getOrAdd(type) { findProperties(type).toImmutable }
 	}
 
-	private JsonPropertyData[] findProperties(Type entityType) {
+	virtual JsonPropertyData[] findProperties(Type entityType) {
 		props := (JsonPropertyData[]) entityType.fields.findAll { it.hasFacet(JsonProperty#) }.map { makeJsonPropertyData(it) }
 		names := props.map { it.name }.unique
 
