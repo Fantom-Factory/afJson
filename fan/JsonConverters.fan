@@ -126,14 +126,14 @@ using afBeanUtils::BeanBuilder
 }
 
 @Js internal const class JsonConvertersImpl : JsonConverters {
-	const CachingTypeLookup	typeLookup
+	const JsonTypeLookup	typeLookup
 	const JsonPropertyCache	propertyCache
 	const Unsafe			optionsRef	// use Unsafe because JS can't handle immutable functions
 
 	new make(|This| f) { f(this) }
 	
 	new makeArgs(Type:JsonConverter converters, [Str:Obj?]? options) {
-		this.typeLookup = CachingTypeLookup(converters)
+		this.typeLookup = JsonTypeLookup(converters)
 		this.optionsRef	= Unsafe(Str:Obj?[
 			"afJson.makeEntity"		: |Type type, Field:Obj? vals->Obj?| { BeanBuilder.build(type, vals) },
 			"afJson.makeJsonObj"	: |-> Str:Obj?| { Str:Obj?[:] { ordered = true } },

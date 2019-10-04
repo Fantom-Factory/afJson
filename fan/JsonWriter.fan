@@ -414,24 +414,3 @@ internal class JsonWriteCtxUgly : JsonWriteCtx {
 
 	override Void finalise()		{ 										}
 }
-
-//** Options to pass to 'JsonWriter'.
-//** 
-//**   syntax: fantom
-//**   writer := JsonWriter(PrettyPrintOptions { it.indent = "\t" })
-//@Js
-//const class PrettyPrintOptions {
-//
-//	** The indent string used to indent the JSON.
-//	const Str 	indent		:= "  "
-//
-//	** The maximum width of a list or map before it is broken up into separate lines.
-//	const Int 	maxWidth	:= 80	
-//
-//	** Default 'it-block' ctor.
-//	new make(|This|? in := null) { in?.call(this) }
-//	
-//	override Str toStr() {
-//		"indent=${indent.toCode}, maxWidth = ${maxWidth}"
-//	}
-//}
