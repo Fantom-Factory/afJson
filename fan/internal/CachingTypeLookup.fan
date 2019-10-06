@@ -11,15 +11,19 @@ using afConcurrent
 	** Cache the lookup results
 	override Obj? findParent(Type type, Bool checked := true) {
 		nonNullable := type.toNonNullable
-		// TODO try get first - avoid creating the func - or bind a method in ctor
-		return parentCache.getOrAdd(nonNullable) { doFindParent(nonNullable, checked) } 
+		// try get() first to avoid creating the func - method.func binding doesn't work in JS
+		return parentCache.containsKey(nonNullable)
+			? parentCache.get(nonNullable)
+			: parentCache.getOrAdd(nonNullable) { doFindParent(nonNullable, checked) } 
 	}
 	
 	** Cache the lookup results
 	override Obj?[] findChildren(Type type, Bool checked := true) {
 		nonNullable := type.toNonNullable
-		// TODO try get first - avoid creating the func - or bind a method in ctor
-		return childrenCache.getOrAdd(nonNullable) { doFindChildren(nonNullable, checked) } 
+		// try get() first to avoid creating the func - method.func binding doesn't work in JS
+		return childrenCache.containsKey(nonNullable)
+			? childrenCache.get(nonNullable)
+			: childrenCache.getOrAdd(nonNullable) { doFindChildren(nonNullable, checked) } 
 	}
 
 	** Clears the lookup cache 

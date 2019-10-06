@@ -5,6 +5,7 @@ Re-written to be simplier, yet even more powerful!
 v2.0.2
 ======
  - Chg: Made 'JsonPropertyData' more extensible.
+ - Chg: Optimised some conversion code.
 
 v2.0.0
 ======

@@ -46,10 +46,6 @@ using afBeanUtils::ReflectUtils
 		jsonObj		:= (Str:Obj?) jsonVal
 		fieldVals	:= [Field:Obj?][:]
 
-		// what is this!? And how is it different to implType? Do I need this?
-//		if (jsonObj.containsKey("_type"))
-//			fantomType = Type.find(jsonObj["_type"])
-
 		tagData := ctx.optJsonPropertyCache.getOrFindTags(fantomType)
 		
 		if (ctx.optStrictMode) {
@@ -60,7 +56,9 @@ using afBeanUtils::ReflectUtils
 				throw Err("Extraneous data in JSON object for ${ctx.type.qname}: " + keyNames.join(", "))
 		}
 
-		tagData.each |field| {
+		// for-loop to cut down on func obj creation
+		for (i := 0; i < tagData.size; ++i) {
+			field	 := tagData[i]
 			propName := field.name
 			implType := field.type
 			propVal  := jsonObj.get(propName, null)

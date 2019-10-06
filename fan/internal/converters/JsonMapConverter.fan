@@ -4,15 +4,20 @@ using afBeanUtils::TypeCoercer
 	private const TypeCoercer	typeCoercer
 	
 	new make() {
-		this.typeCoercer = CachingTypeCoercer()
+		this.typeCoercer = JsonTypeCoercer()
 	}
 
 	override Obj? toJsonVal(Obj? fantomObj, JsonConverterCtx ctx) {
 		if (fantomObj == null) return null
-		fanMap		:= (Map) fantomObj
+		fanMap		:= (Obj:Obj?) fantomObj		// https://fantom.org/forum/topic/2768
 		mapType		:= fanMap.typeof
 		jsonObj		:= ctx.fnMakeJsonObj
-		fanMap.each |fVal, fKey| {
+		// for-loop to cut down on func obj creation
+		fanKeys	:= fanMap.keys
+		for (i := 0; i < fanKeys.size; ++i) {
+			fKey := fanKeys[i]
+			fVal := fanMap[fKey]
+			
 			// Map keys are special and have to be converted <=> Str
 			// As *anything* can be converter toStr(), let's check up front that we can convert it back to Fantom again!
 			if (!typeCoercer.canCoerce(Str#, fKey.typeof))
@@ -21,7 +26,7 @@ using afBeanUtils::TypeCoercer
 			mKey := typeCoercer.coerce(fKey, Str#)
 			mVal := fVal == null ? null : ctx.makeMap(fVal.typeof, fanMap, fKey, fVal).toJsonVal
 			jsonObj[mKey] = mVal
-		}		
+		}
 		return jsonObj
 	}
 	
@@ -33,7 +38,12 @@ using afBeanUtils::TypeCoercer
 
 		jsonObj		:= (Str:Obj?) jsonVal
 		fanMap		:= ctx.fnMakeMap
-		jsonObj.each |jVal, jKey| {
+		// for-loop to cut down on func obj creation
+		jsonKeys	:= jsonObj.keys
+		for (i := 0; i < jsonKeys.size; ++i) {
+			jKey := jsonKeys[i]
+			jVal := jsonObj[jKey]
+			
 			// Map keys are special and have to be converted <=> Str
 			fKey := typeCoercer.coerce(jKey, fanKeyType)
 			fVal := ctx.makeMap(fanValType, jsonObj, jKey, jVal).fromJsonVal

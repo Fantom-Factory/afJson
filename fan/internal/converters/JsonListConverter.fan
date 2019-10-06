@@ -27,9 +27,13 @@
 			return jsonList
 		
 		fanList		:= List(fanValType, jsonList.size)
-		fanList.addAll(jsonList.map |obj, idx| {
-			ctx.makeList(fanValType, jsonList, idx, obj).fromJsonVal
-		})
+
+		// for-loop to cut down on func obj creation
+		for (idx := 0; idx < jsonList.size; ++idx) {
+			obj := jsonList[idx]
+			fan := ctx.makeList(fanValType, jsonList, idx, obj).fromJsonVal
+			fanList.add(fan)
+		}
 
 		return fanList
 	}

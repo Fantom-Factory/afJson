@@ -5,7 +5,8 @@ const class JsonPropertyCache {
 	private const AtomicMap cache := AtomicMap()
 
 	virtual JsonPropertyData[] getOrFindTags(Type type) {
-		cache.getOrAdd(type) { findProperties(type).toImmutable }
+		// try get() first to avoid creating the func - method.func binding doesn't work in JS
+		cache.get(type) ?: cache.getOrAdd(type) { findProperties(type).toImmutable }
 	}
 
 	virtual JsonPropertyData[] findProperties(Type entityType) {
