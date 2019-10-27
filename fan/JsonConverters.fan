@@ -8,8 +8,11 @@ using afBeanUtils::BeanBuilder
 	** 
 	** If 'converters' is 'null' then 'defConvs' is used. Common options are:
 	** 
-	**   afJson.makeEntity : |Type type, Field:Obj? fieldVals->Obj?| { ... }
-	**   afJson.strictMode : true
+	**   afJson.makeEntity     : |Type type, Field:Obj? fieldVals->Obj?| { BeanBuilder.build(type, vals) }
+	**   afJson.strictMode     : false
+	**   afJson.dateFormat     : "YYYY-MM-DD"
+	**   afJson.dateTimeFormat : "YYYY-MM-DD'T'hh:mm:ss.FFFz"
+	**   afJson.propertyCache  : JsonPropertyCache()
 	** 
 	** Override 'makeEntity' to have IoC create entity instances.
 	** Set 'strictMode' to 'true' to Err if the JSON contains unmapped data.
@@ -235,8 +238,8 @@ using afBeanUtils::BeanBuilder
 		config[List#]		= JsonListConverter()
 
 		// Fantom Literals
-		config[Date#]		= JsonSimpleConverter(Date#)
-		config[DateTime#]	= JsonSimpleConverter(DateTime#)
+		config[Date#]		= JsonDateConverter()
+		config[DateTime#]	= JsonDateTimeConverter()
 		config[Depend#]		= JsonSimpleConverter(Depend#)
 		config[Duration#]	= JsonSimpleConverter(Duration#)
 		config[Enum#]		= JsonEnumConverter()

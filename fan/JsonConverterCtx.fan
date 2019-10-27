@@ -120,4 +120,14 @@
 	@NoDoc Bool optStrictMode() {
 		options.get("afJson.strictMode", false)
 	}
+	
+	** Returns the Date format, with an ISO default if unspecified.
+	@NoDoc Str optDateFormat() {
+		options.get("afJson.dateFormat", "YYYY-MM-DD")
+	}
+
+	** Returns the DateTime format, with an ISO default if unspecified.
+	@NoDoc Str optDateTimeFormat() {
+		options.get("afJson.dateTimeFormat", "YYYY-MM-DD'T'hh:mm:ss.FFFz zzzz")
+	}
 }
