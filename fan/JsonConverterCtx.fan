@@ -93,8 +93,7 @@
 
 	** Creates an Entity instance. 
 	@NoDoc Obj? fnMakeEntity(Field:Obj? fieldVals) {
-		echo(this.type)
-		return ((|Type, Field:Obj?, JsonConverterCtx->Obj?|) options["afJson.makeEntity"])(this.type, fieldVals, this)
+		((|Type, Field:Obj?, JsonConverterCtx->Obj?|) options["afJson.makeEntity"])(this.type, fieldVals, this)
 	}
 
 	** Creates an empty map for Fantom.
