@@ -30,7 +30,7 @@
 		this.options	= options
 	}
 
-	This makeField(Type type, Field field, JsonProperty jsonProperty, Obj? obj) {
+	This makeField(Type type, Field field, JsonProperty? jsonProperty, Obj? obj) {
 		// pass type, because the impl type may be different to the defined field.type
 		JsonConverterCtx {
 			it.parent		= this
@@ -93,7 +93,8 @@
 
 	** Creates an Entity instance. 
 	@NoDoc Obj? fnMakeEntity(Field:Obj? fieldVals) {
-		((|Type, Field:Obj?, JsonConverterCtx->Obj?|) options["afJson.makeEntity"])(this.type, fieldVals, this)
+		echo(this.type)
+		return ((|Type, Field:Obj?, JsonConverterCtx->Obj?|) options["afJson.makeEntity"])(this.type, fieldVals, this)
 	}
 
 	** Creates an empty map for Fantom.

@@ -1,5 +1,5 @@
-using afBeanUtils
-using afConcurrent
+using afBeanUtils::TypeLookup
+using afConcurrent::AtomicMap
 
 ** A 'TypeLookup' that caches the lookup results.
 @Js internal const class JsonTypeLookup : TypeLookup {

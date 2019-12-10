@@ -38,6 +38,5 @@ class Build : BuildPod {
 
 		docApi = true
 		docSrc = true
-		
 	}
 }

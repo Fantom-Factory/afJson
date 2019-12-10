@@ -10,6 +10,10 @@
 		this.converters = JsonConverters(converters, options)
 	}
 	
+	private new withConverters(JsonConverters converters) {
+		this.converters = converters
+	}
+	
 	** Converts the given Fantom object to its JSON string representation.
 	** 
 	** 'options' is passed to 'JsonWriter', so may just be 'true' for pretty printing. 
@@ -37,5 +41,13 @@
 		
 		str := JsonWriter(opts).writeJson(fantomObj)
 		return str
+	}
+
+	** Converts this Json object to one with the given 'serializableMode'.
+	** 
+	**   syntac: fantom
+	**   json := Json().withSerializableMode
+	This withSerializableMode(Bool on := true) {
+		Json(converters.withOptions(["afJson.serializableMode":on]))
 	}
 }

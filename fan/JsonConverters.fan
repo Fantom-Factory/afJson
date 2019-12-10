@@ -8,14 +8,17 @@ using afBeanUtils::BeanBuilder
 	** 
 	** If 'converters' is 'null' then 'defConvs' is used. Common options are:
 	** 
-	**   afJson.makeEntity     : |Type type, Field:Obj? fieldVals->Obj?| { BeanBuilder.build(type, vals) }
-	**   afJson.strictMode     : false
-	**   afJson.dateFormat     : "YYYY-MM-DD"
-	**   afJson.dateTimeFormat : "YYYY-MM-DD'T'hh:mm:ss.FFFz"
-	**   afJson.propertyCache  : JsonPropertyCache()
+	**   afJson.makeEntity        : |Type type, Field:Obj? fieldVals->Obj?| { BeanBuilder.build(type, vals) }
+	**   afJson.strictMode        : false
+	**   afJson.dateFormat        : "YYYY-MM-DD"
+	**   afJson.dateTimeFormat    : "YYYY-MM-DD'T'hh:mm:ss.FFFz"
+	**   afJson.propertyCache     : JsonPropertyCache()
+	**   afJson.serializableMode  : true
 	** 
 	** Override 'makeEntity' to have IoC create entity instances.
 	** Set 'strictMode' to 'true' to Err if the JSON contains unmapped data.
+	** 
+	** 'serializableMode' attempts to serialise ALL fields, unless they're marked as '@Transient'.
 	static new make([Type:JsonConverter]? converters := null, [Str:Obj?]? options := null) {
 		JsonConvertersImpl(converters ?: defConvs, options)
 	}
@@ -136,13 +139,14 @@ using afBeanUtils::BeanBuilder
 	new make(|This| f) { f(this) }
 	
 	new makeArgs(Type:JsonConverter converters, [Str:Obj?]? options) {
+		serializableMode := options?.get("afJson.serializableMode", false) == true
 		this.typeLookup = JsonTypeLookup(converters)
 		this.optionsRef	= Unsafe(Str:Obj?[
 			"afJson.makeEntity"		: |Type type, Field:Obj? vals->Obj?| { BeanBuilder.build(type, vals) },
 			"afJson.makeJsonObj"	: |-> Str:Obj?| { Str:Obj?[:] { ordered = true } },
 			"afJson.makeMap"		: |Type t->Map| { Map((t.isGeneric ? Obj:Obj?# : t).toNonNullable) { it.ordered = true } },
 			"afJson.strictMode"		: false,
-			"afJson.propertyCache"	: JsonPropertyCache(),
+			"afJson.propertyCache"	: JsonPropertyCache(serializableMode),
 		])
 		
 		if (options != null)
@@ -158,7 +162,11 @@ using afBeanUtils::BeanBuilder
 	Str:Obj? options() { optionsRef.val }
 	
 	override JsonConverters withOptions(Str:Obj? newOptions) {
-		JsonConvertersImpl {
+		if (newOptions.containsKey("afJson.serializableMode")) {
+			serializableMode := newOptions.get("afJson.serializableMode", false) == true
+			newOptions["afJson.propertyCache"] = JsonPropertyCache(serializableMode)
+		}
+		return JsonConvertersImpl {
 			it.optionsRef		= Unsafe(this.options.rw.setAll(newOptions))
 			it.propertyCache	= it.options["afJson.propertyCache"] ?: this.propertyCache
 			it.typeLookup		= this.typeLookup

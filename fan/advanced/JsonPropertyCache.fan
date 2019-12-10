@@ -3,14 +3,24 @@ using afConcurrent::AtomicMap
 @Js @NoDoc
 const class JsonPropertyCache {
 	private const AtomicMap cache := AtomicMap()
+	private const Bool serializableMode
 
+	new make(Bool serializableMode := false) {
+		this.serializableMode = serializableMode
+	}
+	
 	virtual JsonPropertyData[] getOrFindTags(Type type) {
 		// try get() first to avoid creating the func - method.func binding doesn't work in JS
 		cache.get(type) ?: cache.getOrAdd(type) { findProperties(type).toImmutable }
 	}
 
 	virtual JsonPropertyData[] findProperties(Type entityType) {
-		props := (JsonPropertyData[]) entityType.fields.findAll { it.hasFacet(JsonProperty#) }.map { makeJsonPropertyData(it) }
+		frops := entityType.fields.exclude { it.isStatic }
+		if (serializableMode == false)
+			frops = frops.findAll { it.hasFacet(JsonProperty#) }
+		else
+			frops = frops.exclude { it.hasFacet(Transient#) }
+		props := (JsonPropertyData[]) frops.map { makeJsonPropertyData(it) }
 		names := props.map { it.name }.unique
 
 		if (props.size != names.size) {
