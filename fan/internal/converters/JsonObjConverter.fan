@@ -82,6 +82,8 @@ using afBeanUtils::ReflectUtils
 			if (fieldVal != null && !ReflectUtils.fits(fieldVal.typeof, field.type))
 				throw Err(documentConv_propertyDoesNotFitField(propName, fieldVal.typeof, field.field, logRec(jsonObj)))
 
+			if (field.field.isConst)	// todo I should test this! Needed when we inject Maps into const fields (in a non-const object)
+				fieldVal = fieldVal.toImmutable
 			fieldVals[field.field] = fieldVal
 		}
 		

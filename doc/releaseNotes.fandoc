@@ -2,6 +2,11 @@ v2.0
 ****
 Re-written to be simplier, yet even more powerful!
 
+v2.0.4
+======
+ - New: 'serializableMode' for when you just want to *pickle* your objects - see this [Fantom defect]`https://fantom.org/forum/topic/2758#c3`.
+ - Bug: Maps and Lists could not be de-serialised into const fields (in non-const objects).
+
 v2.0.2
 ======
  - New: Bespoke converters for 'Date' and 'DateTime' with customisable locale formatting.
