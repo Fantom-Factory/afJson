@@ -8,7 +8,7 @@ using afBeanUtils::ReflectUtils
 		if (fantomObj == null) return null
 		jsonObj := ctx.fnMakeJsonObj
 		
-		ctx.optJsonPropertyCache.getOrFindTags(fantomObj.typeof).each |field| {
+		ctx.optJsonPropertyCache.getOrFindTags(fantomObj.typeof, ctx).each |field| {
 			fieldVal := field.val(fantomObj)
 			propName := field.name			
 			defVal	 := field.defVal
@@ -46,7 +46,7 @@ using afBeanUtils::ReflectUtils
 		jsonObj		:= (Str:Obj?) jsonVal
 		fieldVals	:= [Field:Obj?][:]
 
-		tagData := ctx.optJsonPropertyCache.getOrFindTags(fantomType)
+		tagData := ctx.optJsonPropertyCache.getOrFindTags(fantomType, ctx)
 		
 		if (ctx.optStrictMode) {
 			tagNames := tagData.map { it.name }

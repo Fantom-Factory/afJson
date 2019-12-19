@@ -9,7 +9,7 @@ const class JsonPropertyCache {
 		this.serializableMode = serializableMode
 	}
 	
-	virtual JsonPropertyData[] getOrFindTags(Type type) {
+	virtual JsonPropertyData[] getOrFindTags(Type type, JsonConverterCtx ctx) {
 		// try get() first to avoid creating the func - method.func binding doesn't work in JS
 		cache.get(type) ?: cache.getOrAdd(type) { findProperties(type).toImmutable }
 	}
