@@ -8,6 +8,7 @@ v2.0.4
  - Chg: 'JsonConverterCtx' is now passed to 'JsonPropertyCache' to give more context to subclasses.
  - Chg: Allow null 'fantomType' in JsonConverter methods, for convenience.
  - Bug: Maps and Lists could not be de-serialised into const fields (in non-const objects).
+ - Bug: 'to/fromJson()' methods would only convert Maps / JSON Objects.
 
 v2.0.2
 ======

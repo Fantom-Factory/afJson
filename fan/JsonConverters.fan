@@ -210,7 +210,7 @@ using afBeanUtils::BeanBuilder
 	override Str toJson(Obj? fantomObj, Obj? options := null) {
 		// let's not dick about - just convert null to null
 		if (fantomObj == null) return "null"
-		jsonObj := toJsonObj(fantomObj)
+		jsonObj := toJsonVal(fantomObj, fantomObj.typeof)
 		jsonStr := JsonWriter(options).writeJson(jsonObj)
 		return jsonStr
 	}
@@ -219,7 +219,7 @@ using afBeanUtils::BeanBuilder
 		// let's not dick about - just convert null to null
 		if (jsonStr == null || fantomType == null) return null
 		jsonObj := JsonReader().readJson(jsonStr)
-		fantObj := fromJsonObj(jsonObj, fantomType)
+		fantObj := fromJsonVal(jsonObj, fantomType)
 		return fantObj
 	}
 
