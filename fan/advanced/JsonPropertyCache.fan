@@ -16,7 +16,8 @@ const class JsonPropertyCache {
 	}
 
 	virtual JsonPropertyData[] findProperties(Type entityType) {
-		frops := entityType.fields.exclude { it.isStatic }
+		// I dunno wot synthetic fields are but I'm guessing I dun-wan-dem!
+		frops := entityType.fields.exclude { it.isStatic || it.isSynthetic }
 		if (serializableMode == false)
 			frops = frops.findAll { it.hasFacet(JsonProperty#) }
 		else
