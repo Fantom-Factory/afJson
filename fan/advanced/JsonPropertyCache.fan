@@ -8,7 +8,8 @@ const class JsonPropertyCache {
 	new make(Bool serializableMode := false) {
 		this.serializableMode = serializableMode
 	}
-	
+
+	** 'ctx' isn't used, but gives subclasses more context to adjust dynamically.
 	virtual JsonPropertyData[] getOrFindTags(Type type, JsonConverterCtx ctx) {
 		// try get() first to avoid creating the func - method.func binding doesn't work in JS
 		cache.get(type) ?: cache.getOrAdd(type) { findProperties(type).toImmutable }
@@ -33,21 +34,21 @@ const class JsonPropertyCache {
 		}
 		return props
 	}
-	
-	** Clears the tag cache. 
+
+	** Clears the tag cache.
 	virtual Void clear() {
 		cache.clear
 	}
-	
-	** Override hook for creating your own JsonPropertyData. 
+
+	** Override hook for creating your own JsonPropertyData.
 	virtual JsonPropertyData makeJsonPropertyData(Field field) {
 		JsonPropertyData(field)
 	}
-	
+
 	private static Str msgDuplicatePropertyName(Str name, Field field1, Field field2) {
 		stripSys("Property name '${name}' is defined twice at '$field1.qname' and '${field2.qname}'")
 	}
-	
+
 	private static Str stripSys(Str str) {
 		str.replace("sys::", "")
 	}

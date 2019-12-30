@@ -18,7 +18,8 @@ using afBeanUtils::BeanBuilder
 	** Override 'makeEntity' to have IoC create entity instances.
 	** Set 'strictMode' to 'true' to Err if the JSON contains unmapped data.
 	** 
-	** 'serializableMode' attempts to serialise ALL fields, unless they're marked as '@Transient'.
+	** *Serializable Mode* is where all non-transient fields are converted, regardless of any '@JsonProperty' facets. 
+	** Data from '@JsonProperty' facets, however, is still honoured if defined.
 	static new make([Type:JsonConverter]? converters := null, [Str:Obj?]? options := null) {
 		JsonConvertersImpl(converters ?: defConvs, options)
 	}
@@ -68,7 +69,7 @@ using afBeanUtils::BeanBuilder
 	** Converts a JSON object to the given Fantom type.
 	** 
 	** 'jsonObj' is nullable so converters can choose whether or not to create empty lists and maps.
-	abstract Obj? fromJsonObj([Str:Obj?]? jsonObj, Type fantomType)
+	abstract Obj? fromJsonObj([Str:Obj?]? jsonObj, Type? fantomType)
 	
 	
 
@@ -78,7 +79,8 @@ using afBeanUtils::BeanBuilder
 	abstract Str toJson(Obj? fantomObj, Obj? options := null)
 	
 	** Converts a JSON string to the given Fantom type.
-	abstract Obj? fromJson(Str? json, Type fantomType)
+	** If 'fantomType' is 'null', then 'null' is always returned. 
+	abstract Obj? fromJson(Str? json, Type? fantomType)
 
 
 
@@ -201,7 +203,7 @@ using afBeanUtils::BeanBuilder
 		return toJsonVal(fantomObj, fantomObj.typeof)
 	}
 
-	override Obj? fromJsonObj([Str:Obj?]? jsonObj, Type fantomType) {
+	override Obj? fromJsonObj([Str:Obj?]? jsonObj, Type? fantomType) {
 		fromJsonVal(jsonObj, fantomType)
 	}
 
@@ -213,9 +215,9 @@ using afBeanUtils::BeanBuilder
 		return jsonStr
 	}
 	
-	override Obj? fromJson(Str? jsonStr, Type fantomType) {
+	override Obj? fromJson(Str? jsonStr, Type? fantomType) {
 		// let's not dick about - just convert null to null
-		if (jsonStr == null) return null
+		if (jsonStr == null || fantomType == null) return null
 		jsonObj := JsonReader().readJson(jsonStr)
 		fantObj := fromJsonObj(jsonObj, fantomType)
 		return fantObj

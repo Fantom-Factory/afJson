@@ -22,7 +22,8 @@
 	}
 	
 	** Converts a JSON string to the given Fantom type.
-	Obj? fromJson(Str? json, Type fantomType) {
+	** If 'fantomType' is 'null', then 'null' is always returned. 
+	Obj? fromJson(Str? json, Type? fantomType) {
 		converters.fromJson(json, fantomType)
 	}
 	
@@ -45,6 +46,9 @@
 
 	** Converts this Json object to one with the given 'serializableMode'.
 	** 
+	** *Serializable Mode* is where all non-transient fields are converted, regardless of any '@JsonProperty' facets. 
+	** Data from '@JsonProperty' facets, however, is still honoured if defined.
+	**  
 	**   syntac: fantom
 	**   json := Json().withSerializableMode
 	This withSerializableMode(Bool on := true) {

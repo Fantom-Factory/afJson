@@ -4,8 +4,9 @@ Re-written to be simplier, yet even more powerful!
 
 v2.0.4
 ======
- - New: 'serializableMode' for when you just want to *pickle* your objects - see this [Fantom defect]`https://fantom.org/forum/topic/2758#c3`.
+ - New: 'serializableMode' for when you just want to *pickle* your objects - see this [Fantom defect]`https://fantom.org/forum/topic/2758#c3` for details.
  - Chg: 'JsonConverterCtx' is now passed to 'JsonPropertyCache' to give more context to subclasses.
+ - Chg: Allow null 'fantomType' in JsonConverter methods, for convenience.
  - Bug: Maps and Lists could not be de-serialised into const fields (in non-const objects).
 
 v2.0.2
