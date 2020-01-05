@@ -26,7 +26,9 @@
 		if (folValType.fits(fanValType))
 			return jsonList
 		
-		fanList		:= List(fanValType, jsonList.size)
+		// the cast to (Obj?[]) is NEEDED!
+		// see Nullable Generic Lists - https://fantom.org/forum/topic/2777
+		fanList		:= (Obj?[]) List(fanValType, jsonList.size)
 
 		// for-loop to cut down on func obj creation
 		for (idx := 0; idx < jsonList.size; ++idx) {
