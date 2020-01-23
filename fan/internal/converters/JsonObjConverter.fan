@@ -31,7 +31,6 @@ using afBeanUtils::ReflectUtils
 	@NoDoc
 	override Obj? fromJsonVal(Obj? jsonVal, JsonConverterCtx ctx) {
 		if (jsonVal == null) return null
-		fantomType := ctx.type
 
 		// because ObjConverter is a catch-all Obj converter, we sometimes get sent here when a specific converter can't be found
 		// in which case, the sanity check below throws a really good err msg which should be understood by the user
@@ -46,7 +45,11 @@ using afBeanUtils::ReflectUtils
 		jsonObj		:= (Str:Obj?) jsonVal
 		fieldVals	:= [Field:Obj?][:]
 
-		tagData := ctx.optJsonPropertyCache.getOrFindTags(fantomType, ctx)
+		if (jsonObj.containsKey("_type"))
+			// we *should* set _type if we can, it's expected behaviour and there's no reason not to
+			ctx.replaceType(Type.find(jsonObj.get("_type")))	
+			
+		tagData := ctx.optJsonPropertyCache.getOrFindTags(ctx.type, ctx)
 		
 		if (ctx.optStrictMode) {
 			tagNames := tagData.map { it.name }
@@ -56,6 +59,7 @@ using afBeanUtils::ReflectUtils
 				throw Err("Extraneous data in JSON object for ${ctx.type.qname}: " + keyNames.join(", "))
 		}
 
+		
 		// for-loop to cut down on func obj creation
 		for (i := 0; i < tagData.size; ++i) {
 			field	 := tagData[i]

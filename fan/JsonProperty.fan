@@ -10,6 +10,10 @@
 	** The implementation 'Type' to be instantiated should this field reference a mixin or a superclass. 
 	** Used when mapping from JSON objects to Fantom objects. 
 	** 
+	** For dynamic typing evaluated at runtime, use a field named '_type':
+	** 
+	**   @JsonProperty Type _type := this.typeof
+	** 
 	** Defaults to the field type.
 	const Type? implType
 

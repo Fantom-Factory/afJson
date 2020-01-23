@@ -2,7 +2,7 @@
 ** Passed to 'JsonConverters' to give context on what they're converting.
 @Js class JsonConverterCtx {
 	JsonConverterCtx?	parent	{ private set }
-	const Type			type
+		  Type			type	{ private set }
 	
 	const Bool			isField
 	const Field?		field
@@ -82,6 +82,13 @@
 	** Uses *this* context to convert 'this.obj'.
 	Obj? fromJsonVal() {
 		converters._fromJsonCtx(obj, this)
+	}
+	
+	** Replace 'type' with a more specific subclass type.
+	Void replaceType(Type newType) {
+		if (!newType.fits(type))
+			throw Err("Replacement types must be a Subtype: $newType -> $type")
+		this.type = newType
 	}
 	
 	// ---- Option Functions ----
