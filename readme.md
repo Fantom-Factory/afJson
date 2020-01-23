@@ -1,8 +1,8 @@
-# Json v2.0.6
+# Json v2.0.8
 ---
 
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](https://fantom-lang.org/)
-[![pod: v2.0.6](http://img.shields.io/badge/pod-v2.0.6-yellow.svg)](http://eggbox.fantomfactory.org/pods/afJson)
+[![pod: v2.0.8](http://img.shields.io/badge/pod-v2.0.8-yellow.svg)](http://eggbox.fantomfactory.org/pods/afJson)
 [![Licence: ISC](http://img.shields.io/badge/licence-ISC-blue.svg)](https://choosealicense.com/licenses/isc/)
 
 ## Overview
