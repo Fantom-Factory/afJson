@@ -84,17 +84,30 @@ using afBeanUtils::BeanBuilder
 
 
 
-	** Returns a fn that normalises .NET JSON key names into standard Fantom camelCase names. 
+	** Returns a fn that normalises '.NET' and 'snake_case' key names into standard Fantom camelCase names. 
+	** 
+	**   .NET examples
+	**   -------------
+	**   UniqueID        -->  uniqueId
+	**   SWVersion       -->  swVersion
+	**   MegaVERIndex    -->  megaVerIndex
+	**   UtilITEMS.Rec   -->  utilItems.rec
+	** 
+	**   Snake_case examples
+	**   -------------------
+	**   unique_id       -->  uniqueId
+	**   sw_Version      -->  swVersion
+	**   mega_VER_Index  -->  megaVerIndex
 	** 
 	** Use as a hook option:
 	** 
 	** pre>
 	** syntax: fatom
 	** converters := JsonConverters(null, [
-	**     "afJson.fromJsonHook" : JsonConverters.normaliseDotNetKeyNames
+	**     "afJson.fromJsonHook" : JsonConverters.normaliseKeyNamesFn
 	** ])
 	** <pre
-	static |Obj?->Obj?| normaliseDotNetKeyNames() {	
+	static |Obj?->Obj?| normaliseKeyNamesFn() {	
 		|Obj? obj->Obj?| {
 			if (obj is Map) {
 				oldMap := (Str:Obj?) obj
@@ -108,26 +121,36 @@ using afBeanUtils::BeanBuilder
 		}
 	}
 	
+	@NoDoc @Deprecated { msg="Use 'normaliseKeyNamesFn' instead" }
+	static |Obj?->Obj?| normaliseDotNetKeyNames() { normaliseKeyNamesFn }
+	
 	** This seems like a handy little Str method, so we'll keep it hanging around!
 	@NoDoc
 	static Str _noramliseKeyName(Str str) {
-		net := str.any |ch, i| { ch.isUpper && str.getSafe(i+1).isUpper }
-		if (net == false)
-			return str.decapitalize
-
-		return str.containsChar('.')
-			? str.split('.').map { __noramliseKeyName(it) }.join(".")
-			: __noramliseKeyName(str)
+		if (str.containsChar('_') || str.any |ch, i| { ch.isUpper && str.getSafe(i+1).isUpper })
+			return str.containsChar('.')
+				? str.split('.').map { __noramliseKeyName(it) }.join(".")
+				: __noramliseKeyName(str)
+		return str.decapitalize
 	}
 
 	private static Str __noramliseKeyName(Str str) {
-		buf := StrBuf()
+		buf 	:= StrBuf()
+		newWord := false
 		str.each |ch, i| {
+			if (ch == '_') {
+				newWord = i > 0
+				return
+			}
+
 					if (i == 0)
 					buf.addChar(ch.lower)
+			else	if (newWord)
+					{ buf.addChar(ch.upper); newWord = false }
 			else	if (i+1 != str.size)
-					buf.addChar(ch.isUpper && str[i-1].isUpper && str[i+1].isUpper	? ch.lower : ch)
-			else	buf.addChar(ch.isUpper && str[i-1].isUpper						? ch.lower : ch)
+					buf.addChar(ch.isUpper && str[i-1].isUpper && (str[i+1].isUpper || str[i+1] == '_')	? ch.lower : ch)
+			else	buf.addChar(ch.isUpper && str[i-1].isUpper											? ch.lower : ch)
+			
 		}
 		return buf.toStr 
 	}
