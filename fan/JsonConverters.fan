@@ -139,7 +139,7 @@ using afBeanUtils::BeanBuilder
 		newWord := false
 		str.each |ch, i| {
 			if (ch == '_') {
-				newWord = i > 0
+				newWord = buf.size > 0
 				return
 			}
 

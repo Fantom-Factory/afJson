@@ -14,14 +14,14 @@
 		this.converters = converters
 	}
 	
-	** Converts the given Fantom object to its JSON string representation.
+	** Converts the given Fantom entity object to its JSON string representation.
 	** 
 	** 'options' is passed to 'JsonWriter', so may just be 'true' for pretty printing. 
 	Str toJson(Obj? fantomObj, Obj? options := null) {
 		converters.toJson(fantomObj, options)
 	}
 	
-	** Converts a JSON string to the given Fantom type.
+	** Converts a JSON string to the given Fantom entity type.
 	** If 'fantomType' is 'null', then 'null' is always returned. 
 	Obj? fromJson(Str? json, Type? fantomType) {
 		converters.fromJson(json, fantomType)
@@ -32,26 +32,36 @@
 		if (fantomObj is Str)
 			fantomObj = JsonReader().readJson(fantomObj)
 		
-		opts := Str:Obj?[:] { it.ordered = true }
-		if (options is Bool)
-			opts["prettyPrint"] = options
-		else if (options is Map)
-			opts.setAll(options)
-		else if (options != null)
-			throw ArgErr("Options must be a Bool or a Map: $options")
-		
-		str := JsonWriter(opts).writeJson(fantomObj)
+		str := JsonWriter(options).writeJson(fantomObj)
 		return str
 	}
 
 	** Converts this Json object to one with the given 'serializableMode'.
 	** 
 	** *Serializable Mode* is where all non-transient fields are converted, regardless of any '@JsonProperty' facets. 
-	** Data from '@JsonProperty' facets, however, is still honoured if defined.
+	** Data from '@JsonProperty' facets, however, are still honoured if defined.
 	**  
 	**   syntac: fantom
 	**   json := Json().withSerializableMode
 	This withSerializableMode(Bool on := true) {
 		Json(converters.withOptions(["afJson.serializableMode":on]))
 	}
+	
+//	** A convenience method for those more familiar with Javascipt functions.
+//	** 
+//	** See `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/parse`
+//	static Obj? parse(Str? text, |Str? key, Str value|? reviverFn := null) {
+//		// TODO implement Json.parse()
+//		throw UnsupportedErr()
+//	}
+//	
+//	** A convenience method for those more familiar with Javascipt functions.
+//	** 
+//	** See `https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON/stringify`
+//	static Str stringify(Obj? value, |Str key, Obj, value, Obj obj|? replacerFn, Obj? space := null) {
+//		// replacerFn could be a Str array
+//		// replacerFn has strange behaviour - see docs
+//		// TODO implement Json.stringify()
+//		throw UnsupportedErr()
+//	}
 }
