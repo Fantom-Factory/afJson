@@ -1,6 +1,8 @@
 
 ** (Service) - 
 ** Reads Fantom objects from JSON.
+** 
+** Note 'JsonReader' does NOT convert the resultant maps and lists in to Fantom entities. 
 @Js
 const class JsonReader {
 

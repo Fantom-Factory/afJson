@@ -3,6 +3,8 @@
 ** Writes Fantom objects to JSON, optionally performing pretty printing.
 ** 
 ** Pretty printing takes more processing than basic printing, but helps debugging.
+** 
+** Note Fantom entities MUST be converted to standard lists and maps BEFORE being written by 'JsonWriter'. 
 @Js
 const class JsonWriter {
 
@@ -10,8 +12,17 @@ const class JsonWriter {
 	** 
 	** Defaults to:
 	** 
-	**   syntax: fantom
-	**   ["prettyPrint":false, "indent":"\t", "maxWidth":80]
+	** pre>
+	** syntax: fantom
+	** [
+	**     "prettyPrint"   : false,
+	**     "indent"        : "\t",
+	**     "maxWidth"      : 80,
+	**     "escapeUnicode" : true,
+	** ]
+	** <pre
+	** 
+	** If enabled (default) then 'escapeUnicode' will escape all characters over 0x7F using '\uXXXX' notation.
 	const Str:Obj? options
 	
 	** Creates a 'JsonWriter' with the default pretty printing options.
@@ -130,7 +141,10 @@ const class JsonWriter {
 		ctx.valueStart
 		ctx.writeChar(JsonToken.quote)
 		str.each |char| {
-			if (char <= 0x7f) {
+			if (char > 0x7F && ctx.opts["escapeUnicode"] != false)
+				ctx.writeChar('\\').writeChar('u').print(char.toHex(4))
+
+			else {
 				switch (char) {
 					case '\b': ctx.writeChar('\\').writeChar('b')
 					case '\f': ctx.writeChar('\\').writeChar('f')
@@ -145,9 +159,6 @@ const class JsonWriter {
 					//case '/' : ctx.writeChar('\\').writeChar('/')
 					default	 : ctx.writeChar(char)
 				}
-			}
-			else {
-				ctx.writeChar('\\').writeChar('u').print(char.toHex(4))
 			}
 		}
 		ctx.writeChar(JsonToken.quote)
@@ -176,7 +187,7 @@ internal mixin JsonWriteCtx {
 	static new make(OutStream out, Str:Obj? opts) {
 		opts["prettyPrint"] == true
 			? JsonWriteCtxPretty(out, opts)
-			: JsonWriteCtxUgly(out)
+			: JsonWriteCtxUgly(out, opts)
 	}
 	
 	abstract This valueStart()
@@ -194,13 +205,14 @@ internal mixin JsonWriteCtx {
 	abstract Void objectEnd()
 
 	abstract Void finalise()
+	abstract Str:Obj? opts()
 }
 
 @Js
 internal class JsonWriteCtxPretty : JsonWriteCtx {
 	private OutStream	 	out
-	private Str:Obj? 		opts
 	private Int 			indent		:= 0
+	override Str:Obj? 		opts
 	
 	private JsonValWriter?	last
 	private JsonValWriter[]	valWriters	:= JsonValWriter[,]
@@ -385,9 +397,11 @@ internal class JsonValWriterMap : JsonValWriter {
 @Js
 internal class JsonWriteCtxUgly : JsonWriteCtx {
 	private OutStream	out
+	override Str:Obj?	opts
 
-	new make(OutStream out) {
-		this.out = out
+	new make(OutStream out, Str:Obj? opts) {
+		this.out	= out
+		this.opts	= opts
 	}
 	
 	override This print(Obj s) {
@@ -413,4 +427,5 @@ internal class JsonWriteCtxUgly : JsonWriteCtx {
 	override Void objectEnd()		{ out.writeChar(JsonToken.objectEnd)	}
 
 	override Void finalise()		{ 										}
+
 }

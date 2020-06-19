@@ -175,4 +175,14 @@
 		json = jsonWriter.writeJson(["key":JsLiteral("Dude!")])
 		verifyEq(json, "{\"key\":Dude!}")
 	}
+
+	Void testUnicodeEscaping() {
+		json := null as Str
+
+		json = jsonWriter.writeJson("©opyright")
+		verifyEq(json, Str<|"\u00a9opyright"|>)
+
+		json = jsonWriter.writeJson("©opyright", ["escapeUnicode":false])
+		verifyEq(json, Str<|"©opyright"|>)
+	}
 }
