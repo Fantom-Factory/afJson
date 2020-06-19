@@ -18,6 +18,9 @@ class Build : BuildPod {
 			"ext.icon"		: "afJson",
 			"ext.depends"	: "afBeanUtils, afConcurrent",
 			"skyarc.icons"	: "true",
+
+			// FIXME delete for release
+			"afBuild.uberPod"	: "afConcurrent/AtomicMap afConcurrent/ConcurrentUtils afBeanUtils/BeanBuilder afBeanUtils/TypeCoercer afBeanUtils/TypeLookup afBeanUtils/ArgNotFoundErr afBeanUtils/NotFoundErr afBeanUtils/ReflectUtils"
 		]
 
 		index	= [
@@ -38,5 +41,7 @@ class Build : BuildPod {
 
 		docApi = true
 		docSrc = true
+		
+		meta["afBuild.uberPod"]	= "afConcurrent/AtomicMap afConcurrent/ConcurrentUtils afBeanUtils/BeanBuilder afBeanUtils/TypeCoercer afBeanUtils/TypeLookup afBeanUtils/ArgNotFoundErr afBeanUtils/NotFoundErr afBeanUtils/ReflectUtils"
 	}
 }
