@@ -61,7 +61,7 @@ Full API & fandocs are available on the [Eggbox](http://eggbox.fantomfactory.org
                        }"""
     
             // ...and WHAM! A fully inflated domain object!
-            friend := (Friend) json().fromJson(json, Friend#)
+            friend := (Friend) Json().fromJson(json, Friend#)
     
             echo(friend.name)     // --> Emma
             echo(friend.car.name) // --> Golf
