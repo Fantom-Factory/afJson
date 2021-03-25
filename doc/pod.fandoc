@@ -39,7 +39,7 @@ Quick Start
                        }"""
 
             // ...and WHAM! A fully inflated domain object!
-            friend := (Friend) json().fromJson(json, Friend#)
+            friend := (Friend) Json().fromJson(json, Friend#)
 
             echo(friend.name)     // --> Emma
             echo(friend.car.name) // --> Golf
@@ -114,7 +114,7 @@ The [JSON Spec]`http://www.json.org/` only defines types for 'Bool', 'List', 'Nu
 
 pre>
  Fantom                  JSON
-------------------      -------- 
+------------------      --------
  afJson::JsLiteral <-->  *as is*
  sys::Bool         <-->  Bool
  sys::Decimal      <-->  Number
