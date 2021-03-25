@@ -6,7 +6,7 @@ using afConcurrent::AtomicMap
 	private const AtomicMap cache := AtomicMap()
 
 	** Cache the conversion functions
-	override protected |Obj->Obj|? createCoercionFunc(Type fromType, Type toType) {
+	override |Obj->Obj|? createCoercionFunc(Type fromType, Type toType) {
 		key	:= "${fromType.qname}->${toType.qname}"
 		// try get() first to avoid creating the func - method.func binding doesn't work in JS
 		return cache.containsKey(key) ? cache.get(key) : cache.getOrAdd(key) { doCreateCoercionFunc(fromType, toType) }
