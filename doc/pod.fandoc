@@ -24,8 +24,6 @@ Quick Start
 
     class Example {
         Void main() {
-            json := Json()
-
             // write some JSON...
             json := """{
                            "name"  : "Emma",
@@ -48,7 +46,7 @@ Quick Start
             friend.car   = null
 
             // we can even convert the other way!
-            moarJson := json.toJson(friend)
+            moarJson := Json().toJson(friend)
 
             echo(moarJson)
             // --> {"name":"Emma","sex":"female","score":11,"likes":["Cakes","Adventure"]}
