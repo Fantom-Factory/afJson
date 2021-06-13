@@ -1,8 +1,8 @@
-# Json v2.0.10
+# Json v2.0.12
 ---
 
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](https://fantom-lang.org/)
-[![pod: v2.0.10](http://img.shields.io/badge/pod-v2.0.10-yellow.svg)](http://eggbox.fantomfactory.org/pods/afJson)
+[![pod: v2.0.12](http://img.shields.io/badge/pod-v2.0.12-yellow.svg)](http://eggbox.fantomfactory.org/pods/afJson)
 [![Licence: ISC](http://img.shields.io/badge/licence-ISC-blue.svg)](https://choosealicense.com/licenses/isc/)
 
 ## Overview
@@ -46,8 +46,6 @@ Full API & fandocs are available on the [Eggbox](http://eggbox.fantomfactory.org
     
     class Example {
         Void main() {
-            json := Json()
-    
             // write some JSON...
             json := """{
                            "name"  : "Emma",
@@ -70,7 +68,7 @@ Full API & fandocs are available on the [Eggbox](http://eggbox.fantomfactory.org
             friend.car   = null
     
             // we can even convert the other way!
-            moarJson := json.toJson(friend)
+            moarJson := Json().toJson(friend)
     
             echo(moarJson)
             // --> {"name":"Emma","sex":"female","score":11,"likes":["Cakes","Adventure"]}
@@ -134,7 +132,7 @@ Any Fantom object may be converted to and from JSON. Just make sure that all fie
 The [JSON Spec](http://www.json.org/) only defines types for `Bool`, `List`, `Null`, `Number`, `Object`, and `String`. As such, this library provides the following mappings:
 
      Fantom                  JSON
-    ------------------      -------- 
+    ------------------      --------
      afJson::JsLiteral <-->  *as is*
      sys::Bool         <-->  Bool
      sys::Decimal      <-->  Number
