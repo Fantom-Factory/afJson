@@ -47,7 +47,6 @@ using afBeanUtils::BeanBuilder
 	
 
 	** Converts the given Fantom object to its JSON representation.
-	** If 'fantomType' is 'null' then 'null' is always returned. 
 	** 
 	** 'fantomObj' is nullable so converters can create empty / default objects.
 	** 'fantomType' in case 'fantomObj' is null, but defaults to 'fantomObj?.typeof'. 
@@ -57,18 +56,33 @@ using afBeanUtils::BeanBuilder
 	** If 'fantomType' is 'null' then 'null' is always returned. 
 	** 
 	** 'jsonVal' is nullable so converters can choose whether or not to create empty lists and maps.
-	abstract Obj? fromJsonVal(Obj? jsonVal, Type? fantomType)
+	abstract Obj? fromJsonVal(Obj? jsonVal, Type? fantomType)	
+	
+
+	
+	** Deeply converts the given Fantom List to its JSON representation.
+	** 
+	** Convenience for calling 'toJsonVal()' with a cast.
+	abstract Obj?[]? toJsonArray(Obj?[]? fantomList)
+	
+	** Converts a list of JSON values to the given Fantom (non-list) type.
+	** 
+	**   syntax: fantom
+	**   fromJsonList(list, MyEntity#)
+	** 
+	** Convenience for calling 'fromJsonVal()' with a cast.
+	abstract Obj?[]? fromJsonArray(Obj?[]? jsonArray, Type? fantomValType)
 
 
 
 	** Converts the given Fantom object to its JSON object representation.
 	** 
-	** 'fantomObj' is nullable so converters can create empty / default objects.
+	** Convenience for calling 'toJsonVal()' with a cast.
 	abstract [Str:Obj?]? toJsonObj(Obj? fantomObj)
 	
 	** Converts a JSON object to the given Fantom type.
 	** 
-	** 'jsonObj' is nullable so converters can choose whether or not to create empty lists and maps.
+	** Convenience for calling 'fromJsonVal()' with a cast.
 	abstract Obj? fromJsonObj([Str:Obj?]? jsonObj, Type? fantomType)
 	
 	
@@ -220,7 +234,17 @@ using afBeanUtils::BeanBuilder
 		ctx := JsonConverterCtx.makeTop(this, fantomType, jsonVal, options)
 		return _fromJsonCtx(jsonVal, ctx)
 	}
+
+	override Obj?[]? toJsonArray(Obj?[]? fantomList) {
+		// let's not dick about - just convert null to null
+		if (fantomList == null) return null
+		return toJsonVal(fantomList, fantomList.typeof)
+	}
 	
+	override Obj?[]? fromJsonArray(Obj?[]? jsonArray, Type? fantomValType) {
+		fromJsonVal(jsonArray, fantomValType?.toListOf)
+	}
+
 	override [Str:Obj?]? toJsonObj(Obj? fantomObj) {
 		// let's not dick about - just convert null to null
 		if (fantomObj == null) return null

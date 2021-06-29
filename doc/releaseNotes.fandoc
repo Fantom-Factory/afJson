@@ -4,6 +4,7 @@ Re-written to be simplier, yet even more powerful!
 
 v2.0.12
 =======
+ - New: 'toJsonArray()' and 'fromJsonArray()' in 'JsonConverters'.
  - New: Added 'escapeUnicode' option to 'JsonWriter' to disable Unicode escaping.
  - Chg: 'JsonConverters.toJsonVal()' now has a default 'fantomType' param.
 
