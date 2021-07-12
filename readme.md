@@ -7,7 +7,7 @@
 
 ## Overview
 
-Json is a customisable Fantom to Javascript Object Notation (JSON) mapping library.
+Json is a customizable Fantom to Javascript Object Notation (JSON) mapping library.
 
 It goes far beyond the usual `JsonInStream` and `JsonOutStream` classes by mapping and instantiating fully fledged Fantom domain objects.
 
@@ -42,7 +42,10 @@ Full API & fandocs are available on the [Eggbox](http://eggbox.fantomfactory.org
 
 ## Quick Start
 
-1. Create a text file called `Example.fan`    using afJson
+1. Create a text file called `Example.fan`
+    
+    ```fantom
+    using afJson
     
     class Example {
         Void main() {
@@ -96,6 +99,7 @@ Full API & fandocs are available on the [Eggbox](http://eggbox.fantomfactory.org
     enum class Sex {
         male, female;
     }
+    ```
 
 
 2. Run `Example.fan` as a Fantom script from the command line:    C:\> fan Example.fan
@@ -234,7 +238,7 @@ Sometimes you want the JSON name to be different to the field names. To facilita
 
 ## JSON and Dates
 
-JSON does *not* define a Date object. As such, when writing Dates, they are serialised as ISO strings. At the other end, presumably in Javascript land, something must walk your object and de-serialise all your date strings back into Date objects.
+JSON does *not* define a Date object. As such, when writing Dates, they are serialized as ISO strings. At the other end, presumably in Javascript land, something must walk your object and de-serialize all your date strings back into Date objects.
 
 But sometimes you want a quick hack and some people advocate inserting Javascript statements directly into the JSON. It may not be the best idea, but it's a good example of custom inspectors and converters...
 
