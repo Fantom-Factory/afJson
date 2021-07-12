@@ -32,7 +32,7 @@
 		if (fantomObj is Str)
 			fantomObj = JsonReader().readJson(fantomObj)
 		
-		str := JsonWriter(options).writeJson(fantomObj)
+		str := JsonWriter(options ?: true).writeJson(fantomObj)
 		return str
 	}
 

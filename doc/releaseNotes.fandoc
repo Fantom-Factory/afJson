@@ -7,6 +7,7 @@ v2.0.12
  - New: 'toJsonArray()' and 'fromJsonArray()' in 'JsonConverters'.
  - New: Added 'escapeUnicode' option to 'JsonWriter' to disable Unicode escaping.
  - Chg: 'JsonConverters.toJsonVal()' now has a default 'fantomType' param.
+ - Bug: 'Json.prettyPrint()' didn't do *pretty* unless 'true' was passed as an option.
 
 v2.0.10
 =======
