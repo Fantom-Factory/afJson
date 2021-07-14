@@ -2,10 +2,11 @@
 @Js internal class TestObjConversion : Test {
 	
 	Void testConversion() {
-		ent := JsonConverters().fromJson("""{ "obj1":68, "obj2":"judge", "obj3":68.9 }""", T_Entity04#) as T_Entity04
+		ent := JsonConverters().fromJson("""{ "obj1":68, "obj2":"judge", "obj3":68.9, "obj4":{"foo":"bar"} }""", T_Entity04#) as T_Entity04
 		verifyEq(ent.obj1, 68)
 		verifyEq(ent.obj2, "judge")
 		verifyEq(ent.obj3, 68.9f)
+		verifyEq(ent.obj4, Str:Obj?["foo":"bar"])
 	}
 
 	Void testNoConversion() {
@@ -20,6 +21,7 @@ internal class T_Entity04 {
 	@JsonProperty	Obj? obj1
 	@JsonProperty	Obj? obj2
 	@JsonProperty	Obj? obj3
+	@JsonProperty	Obj? obj4
 
 	// T_Entity04 also tests that entities can be created *without* an it-block ctor - which requires afBeanUtils::BeanBuilder
 }

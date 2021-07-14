@@ -59,6 +59,11 @@ using afBeanUtils::ReflectUtils
 				throw Err("Extraneous data in JSON object for ${ctx.type.qname}: " + keyNames.join(", "))
 		}
 
+		// we can't instantiate 'Obj' so just return wot we got
+		// this is important to LspRpc testing - and just makes sense
+		// I mean, why should we throw an error when we already have an obj?
+		if (ctx.type.toNonNullable == Obj#)
+			return jsonVal
 		
 		// for-loop to cut down on func obj creation
 		for (i := 0; i < tagData.size; ++i) {
