@@ -5,7 +5,7 @@
 [![pod: v2.0.12](http://img.shields.io/badge/pod-v2.0.12-yellow.svg)](http://eggbox.fantomfactory.org/pods/afJson)
 [![Licence: ISC](http://img.shields.io/badge/licence-ISC-blue.svg)](https://choosealicense.com/licenses/isc/)
 
-## Overview
+## <a name="overview"></a>Overview
 
 Json is a customisable Fantom to Javascript Object Notation (JSON) mapping library.
 
@@ -40,7 +40,7 @@ To use in a [Fantom](https://fantom-lang.org/) project, add a dependency to `bui
 
 Full API & fandocs are available on the [Eggbox](http://eggbox.fantomfactory.org/pods/afJson/) - the Fantom Pod Repository.
 
-## Quick Start
+## <a name="quickStart"></a>Quick Start
 
 1. Create a text file called `Example.fan`    using afJson
     
@@ -107,7 +107,7 @@ Full API & fandocs are available on the [Eggbox](http://eggbox.fantomfactory.org
 
 
 
-## Terminology
+## <a name="terminology"></a>Terminology
 
 **JSON** is the **string** representation of a Javascript object.
 
@@ -123,11 +123,11 @@ All conversion of Entities to and from JSON goes through an intermediary `JsonOb
 
 `JsonConverters` has methods to convert between all.
 
-## Usage
+## <a name="usage"></a>Usage
 
 Any Fantom object may be converted to and from JSON. Just make sure that all fields to be converted are annotated with the `@JsonProperty` facet.
 
-### Supported Types
+### <a name="supportedTypes"></a>Supported Types
 
 The [JSON Spec](http://www.json.org/) only defines types for `Bool`, `List`, `Null`, `Number`, `Object`, and `String`. As such, this library provides the following mappings:
 
@@ -167,7 +167,7 @@ The [JSON Spec](http://www.json.org/) only defines types for `Bool`, `List`, `Nu
 
 Plus any `Type` annotated with `@Serializable { simple = true }` is converted to and from a `Str`. Combined that accounts for all Fantom literals and core types.
 
-### Const vs Non-Const
+### <a name="constAndNonConst"></a>Const vs Non-Const
 
 This library can instantiate any Fantom object, both `const` and `non-const`. But if the type is `const`, or if it has `non-null` fields, then it *must* have an it-block ctor like the one below. That is the only way fields can be set during construction.
 
@@ -183,7 +183,7 @@ This library can instantiate any Fantom object, both `const` and `non-const`. Bu
     }
     
 
-### Null vs Non-Null
+### <a name="nullAndNonNull"></a>Null vs Non-Null
 
 Nullable fields are optional, that is, they do not require a JSON value.
 
@@ -215,7 +215,7 @@ Similarly, when converting an entity to JSON, `null` values are not written out:
     echo(json)  // --> {}
     
 
-### Property Names
+### <a name="propertyNames"></a>Property Names
 
 Sometimes you want the JSON name to be different to the field names. To facilitate this, set the `@JsonProperty.name` attribute:
 
@@ -232,7 +232,7 @@ Sometimes you want the JSON name to be different to the field names. To facilita
     echo(json)  // --> {"judge":"Dredd"}
     
 
-## JSON and Dates
+## <a name="jsonAndDates"></a>JSON and Dates
 
 JSON does *not* define a Date object. As such, when writing Dates, they are serialised as ISO strings. At the other end, presumably in Javascript land, something must walk your object and de-serialise all your date strings back into Date objects.
 
@@ -261,7 +261,7 @@ But sometimes you want a quick hack and some people advocate inserting Javascrip
     const class JsDateConverter : JsonConverter {
         override Obj? fromJsonVal(Obj? jsonVal, JsonConverterCtx ctx)  { throw UnsupportedErr() }
     
-    	override Obj? toJsonVal(Obj? fantomObj, JsonConverterCtx ctx) {
+        override Obj? toJsonVal(Obj? fantomObj, JsonConverterCtx ctx) {
             fantomObj == null ? null : JsLiteral("new Date(${((DateTime) fantomObj).toJava})")
         }
     }

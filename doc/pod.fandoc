@@ -1,4 +1,4 @@
-Overview
+Overview [#overview]
 ********
 Json is a customisable Fantom to Javascript Object Notation (JSON) mapping library.
 
@@ -15,7 +15,7 @@ Just annotate fields with '@JsonProperty' then call 'fromJson(...)' and 'toJson(
 
 
 
-Quick Start
+Quick Start [#quickStart]
 ***********
 1. Create a text file called 'Example.fan'
 
@@ -84,7 +84,7 @@ Quick Start
 
 
 
-Terminology
+Terminology [#terminology]
 ***********
 **JSON** is the **string** representation of a Javascript object.
 
@@ -102,11 +102,11 @@ All conversion of Entities to and from JSON goes through an intermediary 'JsonOb
 
 
 
-Usage
+Usage [#usage]
 *****
 Any Fantom object may be converted to and from JSON. Just make sure that all fields to be converted are annotated with the '@JsonProperty' facet.
 
-Supported Types
+Supported Types [#supportedTypes]
 ===============
 The [JSON Spec]`http://www.json.org/` only defines types for 'Bool', 'List', 'Null', 'Number', 'Object', and 'String'. As such, this library provides the following mappings:
 
@@ -149,7 +149,7 @@ Plus any 'Type' annotated with '@Serializable { simple = true }' is converted to
 
 
 
-Const vs Non-Const
+Const vs Non-Const [#constAndNonConst]
 ==================
 This library can instantiate any Fantom object, both 'const' and 'non-const'. But if the type is 'const', or if it has 'non-null' fields, then it *must* have an it-block ctor like the one below. That is the only way fields can be set during construction.
 
@@ -169,7 +169,7 @@ const class User {
 
 
 
-Null vs Non-Null
+Null vs Non-Null [#nullAndNonNull]
 ================
 Nullable fields are optional, that is, they do not require a JSON value.
 
@@ -207,7 +207,7 @@ echo(json)  // --> {}
 
 
 
-Property Names
+Property Names [#propertyNames]
 ==============
 Sometimes you want the JSON name to be different to the field names. To facilitate this, set the '@JsonProperty.name' attribute:
 
@@ -228,7 +228,7 @@ echo(json)  // --> {"judge":"Dredd"}
 
 
 
-JSON and Dates
+JSON and Dates [#jsonAndDates]
 **************
 JSON does *not* define a Date object. As such, when writing Dates, they are serialised as ISO strings. At the other end, presumably in Javascript land, something must walk your object and de-serialise all your date strings back into Date objects.
 
@@ -259,7 +259,7 @@ class Example {
 const class JsDateConverter : JsonConverter {
     override Obj? fromJsonVal(Obj? jsonVal, JsonConverterCtx ctx)  { throw UnsupportedErr() }
 
-	override Obj? toJsonVal(Obj? fantomObj, JsonConverterCtx ctx) {
+    override Obj? toJsonVal(Obj? fantomObj, JsonConverterCtx ctx) {
         fantomObj == null ? null : JsLiteral("new Date(${((DateTime) fantomObj).toJava})")
     }
 }

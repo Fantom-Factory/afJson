@@ -1,8 +1,8 @@
-v2.0
+v2.0 [#v2.0]
 ****
 Re-written to be simplier, yet even more powerful!
 
-v2.0.12
+v2.0.12 [#v2.0.12]
 =======
  - New: 'toJsonArray()' and 'fromJsonArray()' in 'JsonConverters'.
  - New: Added 'escapeUnicode' option to 'JsonWriter' to disable Unicode escaping.
@@ -10,20 +10,20 @@ v2.0.12
  - Chg: Converting from JSON to Obj now allows objs (e.g. Maps) to pass though.
  - Bug: 'Json.prettyPrint()' didn't do *pretty* unless 'true' was passed as an option.
 
-v2.0.10
+v2.0.10 [#v2.0.10]
 =======
  - New: 'JsonConverters.normaliseKeyNamesFn()' now also normalises 'snake_case' names.
  - Chg: Deprecated 'JsonConverters.normaliseDotNetKeyNames' in favour of the more generic 'normaliseKeyNamesFn'.
 
-v2.0.8
+v2.0.8 [#v2.0.8]
 ======
  - New: Support for dynamic typing via '_type' fields.
 
-v2.0.6
+v2.0.6 [#v2.0.6]
 ======
  - Bug: Could not convert Lists with 'null' values - added workaround to the [Nullable Generic Lists]`https://fantom.org/forum/topic/2777` Fantom bug.
 
-v2.0.4
+v2.0.4 [#v2.0.4]
 ======
  - New: 'serializableMode' for when you just want to *pickle* your objects - see this [Fantom defect]`https://fantom.org/forum/topic/2758#c3` for details.
  - Chg: 'JsonConverterCtx' is now passed to 'JsonPropertyCache' to give more context to subclasses.
@@ -31,33 +31,33 @@ v2.0.4
  - Bug: Maps and Lists could not be de-serialised into const fields (in non-const objects).
  - Bug: 'to/fromJson()' methods would only convert Maps / JSON Objects.
 
-v2.0.2
+v2.0.2 [#v2.0.2]
 ======
  - New: Bespoke converters for 'Date' and 'DateTime' with customisable locale formatting.
  - Chg: Made 'JsonPropertyData' more extensible.
  - Chg: Optimised some conversion code.
 
-v2.0.0
+v2.0.0 [#v2.0.0]
 ======
  - New: Re-written.
  - New: Now a SkySpark extension.
 
 
 
-v1.0
+v1.0 [#v1.0]
 ****
 
-v1.0.2
+v1.0.2 [#v1.0.2]
 ======
  - Chg: Simplified List / Map -> toFantom conversion.
  - Chg: Converted lists and maps are always duplicated, even if they require no conversion
  - Bug: 'PrettyPrintOptions.toStr()' printed wrong 'maxWidth'.
 
-v1.0.0
+v1.0.0 [#v1.0.0]
 ======
  - Chg: Added 'fieldVals' parameter to 'ObjConverter.surplusJson(...)'
 
-v0.0.4
+v0.0.4 [#v0.0.4]
 ======
  - New: Methods may also be annotated with '@JsonProperty'.
  - New: 'JsonWriter' now pretty prints!
@@ -67,6 +67,6 @@ v0.0.4
  - Chg: Fields declared as 'Obj' may capture any obj.
  - Bug: Numbers weren't converted to their correct sub-type.
 
-v0.0.2
+v0.0.2 [#v0.0.2]
 ======
  - New: Initial release.
