@@ -2,6 +2,11 @@ v2.0 [#v2.0]
 ****
 Re-written to be simplier, yet even more powerful!
 
+v2.0.14 [#v2.0.14]
+=======
+ - Chg: Lists may pass through converters (to JSON) if they don't need to be converted.
+ - Chg: Docs no longer cause warnings in SkySpark and FinStack.
+
 v2.0.12 [#v2.0.12]
 =======
  - New: 'toJsonArray()' and 'fromJsonArray()' in 'JsonConverters'.

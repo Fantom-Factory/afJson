@@ -1,12 +1,18 @@
 
 @Js internal const class JsonListConverter : JsonConverter {
 	
+	private const Type[] jsonTypes	:= Type[Str#, Float#, Bool#]
+	
 	override Obj? toJsonVal(Obj? fantomObj, JsonConverterCtx ctx) {
 		if (fantomObj == null) return null
 
 		fanList	 := (List) fantomObj
 		listType := fanList.typeof
 		
+		// if the whole list is of the same JSON type, return it as is
+		if (jsonTypes.contains(fanList.of))
+			return fanList
+
 		return fanList.map |obj, idx| {
 			obj == null
 				? null
