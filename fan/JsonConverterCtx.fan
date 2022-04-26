@@ -1,25 +1,25 @@
 
 ** Passed to 'JsonConverters' to give context on what they're converting.
 @Js class JsonConverterCtx {
-	JsonConverterCtx?	parent	{ private set }
-		  Type			type	{ private set }
+	JsonConverterCtx?	parent		{ private set }
+		  Type			type		{ private set }
 	
 	const Bool			isField
 	const Field?		field
 	const JsonProperty?	jsonProperty
-		  Obj?			obj		{ private set }
+		  Obj?			obj			{ private set }
 	
 	const Bool			isMap
 	const Obj?			mapKey
-		  Map?			map		{ private set }
+		  Map?			map			{ private set }
 	
 	const Bool			isList
 	const Int?			listIdx
-		  List?			list	{ private set }
+		  List?			list		{ private set }
 
 		  Str:Obj?		options
 	
-	private JsonConverters converters
+		 JsonConverters converters	{ private set }
 
 	private new make(|This| f) { f(this) }
 
