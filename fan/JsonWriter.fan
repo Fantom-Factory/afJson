@@ -71,12 +71,13 @@ const class JsonWriter {
 	**   jsonWriter.writeJsonToStream(jsonObj, out, true)
 	**   jsonWriter.writeJsonToStream(jsonObj, out, ["prettyPrint":true, "indent":"  "])
 	** 
-	This writeJsonToStream(Obj? obj, OutStream out, Obj? options := null) {
+	** The 'OutStream' is NOT closed, but is returned.
+	OutStream writeJsonToStream(Obj? obj, OutStream out, Obj? options := null) {
 		opts := _consolidateOpts(this.options, options)
 		ctx  := JsonWriteCtx(out, opts)
 		_writeJsonToStream(ctx, obj)
 		ctx.finalise
-		return this
+		return out
 	}
 
 	** A simple override hook to alter values *before* they are written.
