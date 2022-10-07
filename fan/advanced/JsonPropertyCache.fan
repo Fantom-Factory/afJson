@@ -3,26 +3,25 @@ using afConcurrent::AtomicMap
 @Js @NoDoc
 const class JsonPropertyCache {
 	private const AtomicMap cache := AtomicMap()
-	private const Bool pickleMode
-
-	new make(Bool pickleMode := false) {
-		this.pickleMode = pickleMode
-	}
 
 	** 'ctx' isn't used, but gives subclasses more context to adjust dynamically.
-	virtual JsonPropertyData[] getOrFindTags(Type type, JsonConverterCtx ctx) {
+	virtual JsonPropertyData[] getOrFindTags(Type type, JsonConverterCtx? ctx := null) {
 		// try get() first to avoid creating the func - method.func binding doesn't work in JS
-		cache.get(type) ?: cache.getOrAdd(type) { findProperties(type).toImmutable }
+		cache.get(type) ?: cache.getOrAdd(type) { findProperties(type, ctx).toImmutable }
 	}
 
 	** An internal method that does the *actual* property finding.
-	virtual JsonPropertyData[] findProperties(Type entityType) {
+	virtual JsonPropertyData[] findProperties(Type entityType, JsonConverterCtx? ctx := null) {
 		// I dunno wot synthetic fields are but I'm guessing I dun-wan-dem!
 		frops := entityType.fields.exclude { it.isStatic || it.isSynthetic }
-		if (pickleMode == false)
-			frops = frops.findAll { it.hasFacet(JsonProperty#) }
-		else
+		
+		// todo should we be caching fields from pickled objs?
+		// hmm... I can't think of a reason not to!?
+		if (ctx?.optPickleMode == true)
 			frops = frops.exclude { it.hasFacet(Transient#) }
+		else
+			frops = frops.findAll { it.hasFacet(JsonProperty#) }
+
 		props := (JsonPropertyData[]) frops.map { makeJsonPropertyData(it) }
 		names := props.map { it.name }.unique
 

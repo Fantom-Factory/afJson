@@ -95,46 +95,57 @@
 	
 	** Creates an empty *ordered* JSON object. 
 	@NoDoc Str:Obj? makeJsonObjFn() {
-		((|JsonConverterCtx->Str:Obj?|) options["afJson.makeJsonObjFn"])(this)
+		((|JsonConverterCtx->Str:Obj?|) options["makeJsonObjFn"])(this)
 	}
 
 	** Creates an Entity instance. 
 	@NoDoc Obj? makeEntityFn(Field:Obj? fieldVals) {
-		((|Type, Field:Obj?, JsonConverterCtx->Obj?|) options["afJson.makeEntityFn"])(this.type, fieldVals, this)
+		((|Type, Field:Obj?, JsonConverterCtx->Obj?|) options["makeEntityFn"])(this.type, fieldVals, this)
 	}
 
 	** Creates an empty map for Fantom.
 	@NoDoc Obj:Obj? makeMapFn() {
-		((|Type,JsonConverterCtx->Obj:Obj?|) options["afJson.makeMapFn"])(this.type, this)
+		((|Type,JsonConverterCtx->Obj:Obj?|) options["makeMapFn"])(this.type, this)
 	}
 	
 	** This is called *before* any 'jsonVal' is converted. 
 	@NoDoc Obj? fromJsonHookFn(Obj? jsonVal) {
-		((|Obj?, JsonConverterCtx->Obj?|?) options["afJson.fromJsonHookFn"])?.call(jsonVal, this) ?: jsonVal
+		((|Obj?, JsonConverterCtx->Obj?|?) options["fromJsonHookFn"])?.call(jsonVal, this) ?: jsonVal
 	}
 	
 	** This is called *before* any 'fantomObj' is converted. 
 	@NoDoc Obj? toJsonHookFn(Obj? fantomObj) {
-		((|Obj?, JsonConverterCtx->Obj?|?) options["afJson.toJsonHookFn"])?.call(fantomObj, this) ?: fantomObj
+		((|Obj?, JsonConverterCtx->Obj?|?) options["toJsonHookFn"])?.call(fantomObj, this) ?: fantomObj
 	}
 	
 	** Returns the 'JsonPropertyCache'.
 	@NoDoc JsonPropertyCache optJsonPropertyCache() {
-		options["afJson.propertyCache"]
+		options["propertyCache"]
 	}
 	
 	** Returns strict mode.
 	@NoDoc Bool optStrictMode() {
-		options.get("afJson.strictMode", false)
+		options.get("strictMode", false)
+	}
+	
+	** Returns pickle mode.
+	@NoDoc Bool optPickleMode() {
+		if (options.get("pickleMode", false) == true)
+			return true
+		if (jsonProperty?.pickleMode == true)
+			return true
+		if (parent != null)
+			return parent.optPickleMode
+		return false
 	}
 	
 	** Returns the Date format, with an ISO default if unspecified.
 	@NoDoc Str optDateFormat() {
-		options.get("afJson.dateFormat", "YYYY-MM-DD")
+		options.get("dateFormat", "YYYY-MM-DD")
 	}
 
 	** Returns the DateTime format, with an ISO default if unspecified.
 	@NoDoc Str optDateTimeFormat() {
-		options.get("afJson.dateTimeFormat", "YYYY-MM-DD'T'hh:mm:ss.FFFz zzzz")
+		options.get("dateTimeFormat", "YYYY-MM-DD'T'hh:mm:ss.FFFz zzzz")
 	}
 }

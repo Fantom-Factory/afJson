@@ -36,7 +36,7 @@
 		return str
 	}
 
-	** Converts a new Json object (based on this one) but with the given 'pickleMode'.
+	** Creates a new Json instance (based on this one) but with the given 'pickleMode'.
 	** 
 	** *Pickle Mode* is where all non-transient fields are converted, regardless of any '@JsonProperty' facets. 
 	** Data from '@JsonProperty' facets, however, are still honoured if defined.
@@ -44,7 +44,7 @@
 	**   syntac: fantom
 	**   json := Json().withPickleMode
 	This withPickleMode(Bool on := true) {
-		Json(converters.withOptions(["afJson.pickleMode":on]))
+		Json(converters.withOptions(["pickleMode":on]))
 	}
 	
 	@NoDoc @Deprecated { msg="Use withPickleMode() instead" }

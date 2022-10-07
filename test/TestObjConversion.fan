@@ -14,6 +14,40 @@
 			JsonConverters().fromJson("""{ "obj1":68, "obj2":"judge" }""", T_Entity02#)
 		}
 	}
+	
+	Void testKnownTypeConverstion() {
+		convs := JsonConverters()
+		obj	  := [
+			"name"	: "Jeff",
+			"_type"	: T_Entity06_Impl1#.qname,
+		]
+
+		// test null is null
+		verifyEq(convs.fromJsonVal(null), null)
+
+		// test Json literals pass through
+		verifyEq(convs.fromJsonVal( 69 ),  69 )
+		verifyEq(convs.fromJsonVal( 69f),  69f)
+		verifyEq(convs.fromJsonVal("69"), "69")
+		verifyEq(convs.fromJsonVal([69]), [69])
+		verifyEq(convs.fromJsonVal(["num":69]), Str:Obj?["num":69])
+
+		// look Mum, no type arg!
+		verifyEq(convs.fromJsonVal(obj)?.typeof, T_Entity06_Impl1#)
+
+		// meh - MimeType is not BSON
+		verifyErrMsg(ArgErr#, "Do not know how to convert JSON val, please supply a fantomType arg - sys::MimeType") {
+			convs.fromJsonVal(MimeType("wot/ever"))
+		}
+		
+		// DANGER - now let's try nested Objs!
+		verifyEq(convs.fromJsonVal([ 69,  obj])->get(  -1 )->typeof, T_Entity06_Impl1#)
+		verifyEq(convs.fromJsonVal(["obj":obj])->get("obj")->typeof, T_Entity06_Impl1#)
+		
+		// this should work, even if we stipulate objects
+		verifyEq(convs.fromJsonVal([ 69,  obj], Obj[]#    )->get(  -1 )->typeof, T_Entity06_Impl1#)
+		verifyEq(convs.fromJsonVal(["obj":obj], [Str:Obj]#)->get("obj")->typeof, T_Entity06_Impl1#)
+	}
 }
 
 @Js

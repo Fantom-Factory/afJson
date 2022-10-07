@@ -24,16 +24,17 @@
 		if (jsonVal == null) return null
 
 		fanValType	:= ctx.type.params["V"]
-		jsonList	:= (List) jsonVal
-		folListType	:= jsonList.typeof
+		folListType	:= jsonVal.typeof
 		folValType	:= folListType.params["V"]
 		
 		// if the whole list is of the same type, return it as is
-		if (folValType.fits(fanValType))
-			return jsonList
+		// but make sure we still convert Objs
+		if (folValType.toNonNullable != Obj# && folValType.fits(fanValType))
+			return jsonVal
 		
 		// the cast to (Obj?[]) is NEEDED!
 		// see Nullable Generic Lists - https://fantom.org/forum/topic/2777
+		jsonList	:= (List) jsonVal
 		fanList		:= (Obj?[]) List(fanValType, jsonList.size)
 
 		// for-loop to cut down on func obj creation

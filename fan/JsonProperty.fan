@@ -10,11 +10,9 @@
 	** The implementation 'Type' to be instantiated should this field reference a mixin or a superclass. 
 	** Used when mapping from JSON objects to Fantom objects. 
 	** 
-	** For dynamic typing evaluated at runtime, use a field named '_type':
-	** 
-	**   @JsonProperty Type _type := this.typeof
-	** 
 	** Defaults to the field type.
+	** 
+	** Note that a property named '_type' in the field's value overrides this 'implType'.
 	const Type? implType
 
 	** When converting to JSON, any Fantom value that equals this 'defVal' will be treated as if 
@@ -24,4 +22,10 @@
 	** 
 	** This is most useful for saving marker booleans and to avoid saving empty lists and maps.
 	const Obj? defVal
+	
+	** Turns on *Pickle Mode* whereby all non '@Transient' fields are converted, 
+	** regardless of any '@JsonProperty' facets.
+	** 
+	** Data from '@JsonProperty' facets, however, will still honoured if defined.
+	const Bool pickleMode	:= false
 }

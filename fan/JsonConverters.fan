@@ -8,15 +8,15 @@ using afBeanUtils::BeanBuilder
 	** 
 	** If 'converters' is 'null' then 'defConvs' is used. Some defaults are:
 	** 
-	**   afJson.makeEntityFn      : |Type type, Field:Obj? fieldVals->Obj?| { BeanBuilder.build(type, vals) }
-	**   afJson.makeJsonObjFn     : |-> Str:Obj?| { Str:Obj?[:] { ordered = true } }
-	**   afJson.fromJsonHookFn    : |Obj? obj, JsonConverterCtx->Obj?| { obj }
-	**   afJson.toJsonHookFn      : |Obj? obj, JsonConverterCtx->Obj?| { obj } 
-	**   afJson.dateFormat        : "YYYY-MM-DD"
-	**   afJson.dateTimeFormat    : "YYYY-MM-DD'T'hh:mm:ss.FFFz"
-	**   afJson.strictMode        : false
-	**   afJson.propertyCache     : JsonPropertyCache()
-	**   afJson.pickleMode        : false
+	**   makeEntityFn      : |Type type, Field:Obj? fieldVals->Obj?| { BeanBuilder.build(type, vals) }
+	**   makeJsonObjFn     : |-> Str:Obj?| { Str:Obj?[:] { ordered = true } }
+	**   fromJsonHookFn    : |Obj? obj, JsonConverterCtx->Obj?| { obj }
+	**   toJsonHookFn      : |Obj? obj, JsonConverterCtx->Obj?| { obj } 
+	**   dateFormat        : "YYYY-MM-DD"
+	**   dateTimeFormat    : "YYYY-MM-DD'T'hh:mm:ss.FFFz"
+	**   strictMode        : false
+	**   propertyCache     : JsonPropertyCache()
+	**   pickleMode        : false
 	** 
 	** Override 'makeEntityFn' to have IoC create entity instances.
 	** 
@@ -130,7 +130,7 @@ using afBeanUtils::BeanBuilder
 	** pre>
 	** syntax: fatom
 	** converters := JsonConverters(null, [
-	**     "afJson.fromJsonHook" : JsonConverters.normaliseKeyNamesFn
+	**     "fromJsonHook" : JsonConverters.normaliseKeyNamesFn
 	** ])
 	** <pre
 	static |Obj?->Obj?| normaliseKeyNamesFn() {	
@@ -193,28 +193,36 @@ using afBeanUtils::BeanBuilder
 		
 		if (options != null) {
 			options = options.rw
+			
+			// remove legacy "afJson." key prefix
+			options.keys.each |key| {
+				if (key.startsWith("afJson.")) {
+					val := options.remove(key)
+						   options.set(key["afJson.".size..-1], val)
+				}
+			}
+
 				// rename legacy keys from < v2.0.14
 				val := null
-				val = 			options.remove("afJson.makeEntity")
-			if (val != null)	options.set   ("afJson.makeEntityFn",	val)
-				val = 			options.remove("afJson.makeJsonObj")
-			if (val != null)	options.set   ("afJson.makeJsonObjFn",	val)
-				val = 			options.remove("afJson.makeMap")
-			if (val != null)	options.set   ("afJson.makeMapFn",		val)
-				val = 			options.remove("afJson.fromJsonHook")
-			if (val != null)	options.set   ("afJson.fromJsonHookFn", val)
-				val = 			options.remove("afJson.toJsonHook")
-			if (val != null)	options.set   ("afJson.toJsonHookFn",	val)
+				val = 			options.remove("makeEntity")
+			if (val != null)	options.set   ("makeEntityFn",	val)
+				val = 			options.remove("makeJsonObj")
+			if (val != null)	options.set   ("makeJsonObjFn",	val)
+				val = 			options.remove("makeMap")
+			if (val != null)	options.set   ("makeMapFn",		val)
+				val = 			options.remove("fromJsonHook")
+			if (val != null)	options.set   ("fromJsonHookFn",val)
+				val = 			options.remove("toJsonHook")
+			if (val != null)	options.set   ("toJsonHookFn",	val)
 		}
 		
-		pickleMode := options?.get("afJson.pickleMode", false) == true
 		this.typeLookup = JsonTypeLookup(converters)
 		this.optionsRef	= Unsafe(Str:Obj?[
-			"afJson.makeEntityFn"	: |Type type, Field:Obj? vals->Obj?| { BeanBuilder.build(type, vals) },
-			"afJson.makeJsonObjFn"	: |-> Str:Obj?| { Str:Obj?[:] { ordered = true } },
-			"afJson.makeMapFn"		: |Type t->Map| { Map((t.isGeneric ? Obj:Obj?# : t).toNonNullable) { it.ordered = true } },
-			"afJson.strictMode"		: false,
-			"afJson.propertyCache"	: JsonPropertyCache(pickleMode),
+			"makeEntityFn"	: |Type type, Field:Obj? vals->Obj?| { BeanBuilder.build(type, vals) },
+			"makeJsonObjFn"	: |-> Str:Obj?| { Str:Obj?[:] { ordered = true } },
+			"makeMapFn"		: |Type t->Map| { Map((t.isGeneric ? Obj:Obj?# : t).toNonNullable) { it.ordered = true } },
+			"strictMode"	: false,
+			"propertyCache"	: JsonPropertyCache(),
 		])
 		
 		if (options != null)
@@ -224,19 +232,15 @@ using afBeanUtils::BeanBuilder
 			// JS can't handle immutable functions, but I'd still like them to be thread safe in Java
 			optionsRef = Unsafe(optionsRef.val.toImmutable)
 		
-		this.propertyCache	= this.options["afJson.propertyCache"]
+		this.propertyCache	= this.options["propertyCache"]
 	}
 
 	Str:Obj? options() { optionsRef.val }
 	
 	override JsonConverters withOptions(Str:Obj? newOptions) {
-		if (newOptions.containsKey("afJson.pickleMode")) {
-			pickleMode := newOptions.get("afJson.pickleMode", false) == true
-			newOptions["afJson.propertyCache"] = JsonPropertyCache(pickleMode)
-		}
-		return JsonConvertersImpl {
+		JsonConvertersImpl {
 			it.optionsRef		= Unsafe(this.options.rw.setAll(newOptions))
-			it.propertyCache	= it.options["afJson.propertyCache"] ?: this.propertyCache
+			it.propertyCache	= it.options["propertyCache"] ?: this.propertyCache
 			it.typeLookup		= this.typeLookup
 		}
 	}
@@ -258,8 +262,47 @@ using afBeanUtils::BeanBuilder
 		return _toJsonCtx(fantomObj, ctx)
 	}
 
+	private static const Type[]	jsonLiteralTypes	:= [Bool#, Float#, Decimal#, Int#, JsLiteral#, Num#, Str#]
 	override Obj? fromJsonVal(Obj? jsonVal, Type? fantomType := null) {
-		if (fantomType == null) return null	// this null is just convenience to allow [args].map { it?.typeof }
+		
+		// if type is not supplied, take our best guess!
+		if (fantomType == null) {
+			// convenience to allow [args].map { it?.typeof }
+			if (jsonVal == null)
+				return null
+
+			if (fantomType == null)
+				// convert JSON literals, don't just return them
+				// that way users can override conversions if need be
+				if (jsonLiteralTypes.contains(jsonVal.typeof))
+					fantomType = jsonVal.typeof
+
+			if (fantomType == null)
+				// convert lists so we may infer what the inner objects are
+				if (jsonVal is List)
+					fantomType = Obj?[]#
+
+			if (fantomType == null)
+				if (jsonVal is Map) {
+					_type := ((Obj:Obj?) jsonVal).get("_type")
+					if (_type is Str)
+						_type = Type.find(_type, false)	// "false" because _type may not exist in the calling application 
+					if (_type is Type)
+						fantomType = _type
+
+					if (fantomType == null) {
+						fn := options["docToTypeFn"] as |Str:Obj? -> Type|
+						fantomType = fn?.call(jsonVal)	
+					}
+
+					if (fantomType == null)
+						fantomType = [Str:Obj?]#
+				}
+
+			if (fantomType == null)
+				throw ArgErr("Do not know how to convert JSON val, please supply a fantomType arg - ${jsonVal.typeof}")
+		}
+
 		ctx := JsonConverterCtx.makeTop(this, fantomType, jsonVal, options)
 		return _fromJsonCtx(jsonVal, ctx)
 	}

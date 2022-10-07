@@ -228,6 +228,40 @@ echo(json)  // --> {"judge":"Dredd"}
 
 
 
+Pickle Mode [#pickleMode]
+***********
+Sometimes you wish to read / write objects to JSON that are outside of your control, meaning their fields won't be annotated with '@JsonProperty' facets. To facilitate this, you can turn on *Pickle Mode* whereby all non '@Transient' fields are converted, regardless of any '@JsonProperty' facets. Data from '@JsonProperty' facets, however, will still honoured if defined.
+
+Pickle mode works by automatically writing out '_type' properties, which are them used when re-inflating objects back.
+
+*Pickle Mode* may be turned on globally as an option in 'JsonConverters', or locally as an argument on the '@JsonProperty' facets.
+
+pre>
+syntax: fantom
+
+// turn on pickleMode for everything
+jsonConvs := JsonConverters(null, [
+    "pickleMode" : true
+])
+
+// ... or ...
+
+@Entity
+class User {
+    @JsonProperty Str  name
+    @JsonProperty Int  age
+
+    ** Turn on pickleMode just for this field
+    ** meta values may be *any* object
+    @JsonProperty { pickleMode=true }
+              Str:Obj? meta
+
+    new make(|This|in) { in(this) }
+}
+<pre
+
+
+
 JSON and Dates [#jsonAndDates]
 **************
 JSON does *not* define a Date object. As such, when writing Dates, they are serialised as ISO strings. At the other end, presumably in Javascript land, something must walk your object and de-serialise all your date strings back into Date objects.

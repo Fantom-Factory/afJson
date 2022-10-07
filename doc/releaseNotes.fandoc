@@ -4,9 +4,10 @@ Re-written to be simplier, yet even more powerful!
 
 v2.0.14 [#v2.0.14]
 =======
- - Chg: Lists may pass through converters (to JSON) if they don't need to be converted.
+ - New: **PickleMode** to serialise all fields of an class, except for '@Transient' fields.
  - Chg: Docs no longer cause warnings in SkySpark and FinStack.
  - Chg: Exposed 'JsonConvertersCtx.converters'.
+ - Chg: Removed the 'afJson.' prefix for converter option keys.
  - Chg: 'JsonWriter.writeJsonToStream()' now returns the given 'OutStream'.
 
 v2.0.12 [#v2.0.12]

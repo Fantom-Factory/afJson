@@ -24,6 +24,10 @@ using afBeanUtils::ReflectUtils
 			// same name twice (from using the Property@name facet)
 			jsonObj.add(propName, propVal)
 		}
+		
+		// make sure we store the _type in pickle mode, so we can re-inflate the obj
+		if (jsonObj.containsKey("_type") == false && ctx.optPickleMode == true)
+			jsonObj["_type"] = fantomObj.typeof.qname
 
 		return jsonObj
 	}
