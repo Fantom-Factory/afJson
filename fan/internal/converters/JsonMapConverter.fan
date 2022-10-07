@@ -11,7 +11,7 @@ using afBeanUtils::TypeCoercer
 		if (fantomObj == null) return null
 		fanMap		:= (Obj:Obj?) fantomObj		// https://fantom.org/forum/topic/2768
 		mapType		:= fanMap.typeof
-		jsonObj		:= ctx.fnMakeJsonObj
+		jsonObj		:= ctx.makeJsonObjFn
 		// for-loop to cut down on func obj creation
 		fanKeys	:= fanMap.keys
 		for (i := 0; i < fanKeys.size; ++i) {
@@ -37,7 +37,7 @@ using afBeanUtils::TypeCoercer
 		fanValType 	:= ctx.type.params["V"]
 
 		jsonObj		:= (Str:Obj?) jsonVal
-		fanMap		:= ctx.fnMakeMap
+		fanMap		:= ctx.makeMapFn
 		// for-loop to cut down on func obj creation
 		jsonKeys	:= jsonObj.keys
 		for (i := 0; i < jsonKeys.size; ++i) {

@@ -6,19 +6,27 @@ using afBeanUtils::BeanBuilder
 
 	** Returns a new 'JsonConverters' instance.
 	** 
-	** If 'converters' is 'null' then 'defConvs' is used. Common options are:
+	** If 'converters' is 'null' then 'defConvs' is used. Some defaults are:
 	** 
-	**   afJson.makeEntity        : |Type type, Field:Obj? fieldVals->Obj?| { BeanBuilder.build(type, vals) }
-	**   afJson.strictMode        : false
+	**   afJson.makeEntityFn      : |Type type, Field:Obj? fieldVals->Obj?| { BeanBuilder.build(type, vals) }
+	**   afJson.makeJsonObjFn     : |-> Str:Obj?| { Str:Obj?[:] { ordered = true } }
+	**   afJson.fromJsonHookFn    : |Obj? obj, JsonConverterCtx->Obj?| { obj }
+	**   afJson.toJsonHookFn      : |Obj? obj, JsonConverterCtx->Obj?| { obj } 
 	**   afJson.dateFormat        : "YYYY-MM-DD"
 	**   afJson.dateTimeFormat    : "YYYY-MM-DD'T'hh:mm:ss.FFFz"
+	**   afJson.strictMode        : false
 	**   afJson.propertyCache     : JsonPropertyCache()
-	**   afJson.pickleMode        : true
+	**   afJson.pickleMode        : false
 	** 
-	** Override 'makeEntity' to have IoC create entity instances.
+	** Override 'makeEntityFn' to have IoC create entity instances.
+	** 
+	** Hook fns are called *before* conversion takes place.
+	** 
+	** Date formats are used to serialise Date and Time objects.
+	** 
 	** Set 'strictMode' to 'true' to Err if the JSON contains unmapped data.
 	** 
-	** *Pickle Mode* is where all non-transient fields are converted, regardless of any '@JsonProperty' facets. 
+	** *Pickle Mode* is where all non '@Transient' fields are converted, regardless of any '@JsonProperty' facets. 
 	** Data from '@JsonProperty' facets, however, is still honoured if defined.
 	static new make([Type:JsonConverter]? converters := null, [Str:Obj?]? options := null) {
 		JsonConvertersImpl(converters ?: defConvs, options)
@@ -53,10 +61,12 @@ using afBeanUtils::BeanBuilder
 	abstract Obj? toJsonVal(Obj? fantomObj, Type? fantomType := null)
 	
 	** Converts a JSON value to the given Fantom type.
-	** If 'fantomType' is 'null' then 'null' is always returned. 
+	** 
+	** If 'fantomType' is 'null' then the obj is inspected for a '_type' property,
+	** else a reasonable *guess* is made (and the option 'docToTypeFn' is then called as a last resort.)
 	** 
 	** 'jsonVal' is nullable so converters can choose whether or not to create empty lists and maps.
-	abstract Obj? fromJsonVal(Obj? jsonVal, Type? fantomType)	
+	abstract Obj? fromJsonVal(Obj? jsonVal, Type? fantomType := null)	
 	
 
 	
@@ -71,7 +81,7 @@ using afBeanUtils::BeanBuilder
 	**   fromJsonList(list, MyEntity#)
 	** 
 	** Convenience for calling 'fromJsonVal()' with a cast.
-	abstract Obj?[]? fromJsonArray(Obj?[]? jsonArray, Type? fantomValType)
+	abstract Obj?[]? fromJsonArray(Obj?[]? jsonArray, Type? fantomValType := null)
 
 
 
@@ -83,7 +93,9 @@ using afBeanUtils::BeanBuilder
 	** Converts a JSON object to the given Fantom type.
 	** 
 	** Convenience for calling 'fromJsonVal()' with a cast.
-	abstract Obj? fromJsonObj([Str:Obj?]? jsonObj, Type? fantomType)
+	** 
+	** If 'fantomType' is 'null' then the obj is inspected for a '_type' property.
+	abstract Obj? fromJsonObj([Str:Obj?]? jsonObj, Type? fantomType := null)
 	
 	
 
@@ -175,15 +187,32 @@ using afBeanUtils::BeanBuilder
 	const JsonPropertyCache	propertyCache
 	const Unsafe			optionsRef	// use Unsafe because JS can't handle immutable functions
 
-	new make(|This| f) { f(this) }
+	private new make(|This| f) { f(this) }
 	
 	new makeArgs(Type:JsonConverter converters, [Str:Obj?]? options) {
+		
+		if (options != null) {
+			options = options.rw
+				// rename legacy keys from < v2.0.14
+				val := null
+				val = 			options.remove("afJson.makeEntity")
+			if (val != null)	options.set   ("afJson.makeEntityFn",	val)
+				val = 			options.remove("afJson.makeJsonObj")
+			if (val != null)	options.set   ("afJson.makeJsonObjFn",	val)
+				val = 			options.remove("afJson.makeMap")
+			if (val != null)	options.set   ("afJson.makeMapFn",		val)
+				val = 			options.remove("afJson.fromJsonHook")
+			if (val != null)	options.set   ("afJson.fromJsonHookFn", val)
+				val = 			options.remove("afJson.toJsonHook")
+			if (val != null)	options.set   ("afJson.toJsonHookFn",	val)
+		}
+		
 		pickleMode := options?.get("afJson.pickleMode", false) == true
 		this.typeLookup = JsonTypeLookup(converters)
 		this.optionsRef	= Unsafe(Str:Obj?[
-			"afJson.makeEntity"		: |Type type, Field:Obj? vals->Obj?| { BeanBuilder.build(type, vals) },
-			"afJson.makeJsonObj"	: |-> Str:Obj?| { Str:Obj?[:] { ordered = true } },
-			"afJson.makeMap"		: |Type t->Map| { Map((t.isGeneric ? Obj:Obj?# : t).toNonNullable) { it.ordered = true } },
+			"afJson.makeEntityFn"	: |Type type, Field:Obj? vals->Obj?| { BeanBuilder.build(type, vals) },
+			"afJson.makeJsonObjFn"	: |-> Str:Obj?| { Str:Obj?[:] { ordered = true } },
+			"afJson.makeMapFn"		: |Type t->Map| { Map((t.isGeneric ? Obj:Obj?# : t).toNonNullable) { it.ordered = true } },
 			"afJson.strictMode"		: false,
 			"afJson.propertyCache"	: JsonPropertyCache(pickleMode),
 		])
@@ -213,12 +242,12 @@ using afBeanUtils::BeanBuilder
 	}
 	
 	override Obj? _toJsonCtx(Obj? fantomObj, JsonConverterCtx ctx) {
-		hookVal := ctx.fnToJsonHook(fantomObj)		
+		hookVal := ctx.toJsonHookFn(fantomObj)		
 		return get(ctx.type).toJsonVal(fantomObj, ctx)
 	}
 
 	override Obj? _fromJsonCtx(Obj? jsonVal, JsonConverterCtx ctx) {
-		hookVal := ctx.fnFromJsonHook(jsonVal)
+		hookVal := ctx.fromJsonHookFn(jsonVal)
 		return get(ctx.type).fromJsonVal(hookVal, ctx)
 	}
 
@@ -229,7 +258,7 @@ using afBeanUtils::BeanBuilder
 		return _toJsonCtx(fantomObj, ctx)
 	}
 
-	override Obj? fromJsonVal(Obj? jsonVal, Type? fantomType) {
+	override Obj? fromJsonVal(Obj? jsonVal, Type? fantomType := null) {
 		if (fantomType == null) return null	// this null is just convenience to allow [args].map { it?.typeof }
 		ctx := JsonConverterCtx.makeTop(this, fantomType, jsonVal, options)
 		return _fromJsonCtx(jsonVal, ctx)
@@ -241,7 +270,7 @@ using afBeanUtils::BeanBuilder
 		return toJsonVal(fantomList, fantomList.typeof)
 	}
 	
-	override Obj?[]? fromJsonArray(Obj?[]? jsonArray, Type? fantomValType) {
+	override Obj?[]? fromJsonArray(Obj?[]? jsonArray, Type? fantomValType := null) {
 		fromJsonVal(jsonArray, fantomValType?.toListOf)
 	}
 
@@ -251,7 +280,7 @@ using afBeanUtils::BeanBuilder
 		return toJsonVal(fantomObj, fantomObj.typeof)
 	}
 
-	override Obj? fromJsonObj([Str:Obj?]? jsonObj, Type? fantomType) {
+	override Obj? fromJsonObj([Str:Obj?]? jsonObj, Type? fantomType := null) {
 		fromJsonVal(jsonObj, fantomType)
 	}
 

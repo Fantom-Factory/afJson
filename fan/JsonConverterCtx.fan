@@ -94,28 +94,28 @@
 	// ---- Option Functions ----
 	
 	** Creates an empty *ordered* JSON object. 
-	@NoDoc Str:Obj? fnMakeJsonObj() {
-		((|JsonConverterCtx->Str:Obj?|) options["afJson.makeJsonObj"])(this)
+	@NoDoc Str:Obj? makeJsonObjFn() {
+		((|JsonConverterCtx->Str:Obj?|) options["afJson.makeJsonObjFn"])(this)
 	}
 
 	** Creates an Entity instance. 
-	@NoDoc Obj? fnMakeEntity(Field:Obj? fieldVals) {
-		((|Type, Field:Obj?, JsonConverterCtx->Obj?|) options["afJson.makeEntity"])(this.type, fieldVals, this)
+	@NoDoc Obj? makeEntityFn(Field:Obj? fieldVals) {
+		((|Type, Field:Obj?, JsonConverterCtx->Obj?|) options["afJson.makeEntityFn"])(this.type, fieldVals, this)
 	}
 
 	** Creates an empty map for Fantom.
-	@NoDoc Obj:Obj? fnMakeMap() {
-		((|Type,JsonConverterCtx->Obj:Obj?|) options["afJson.makeMap"])(this.type, this)
+	@NoDoc Obj:Obj? makeMapFn() {
+		((|Type,JsonConverterCtx->Obj:Obj?|) options["afJson.makeMapFn"])(this.type, this)
 	}
 	
 	** This is called *before* any 'jsonVal' is converted. 
-	@NoDoc Obj? fnFromJsonHook(Obj? jsonVal) {
-		((|Obj?, JsonConverterCtx->Obj?|?) options["afJson.fromJsonHook"])?.call(jsonVal, this) ?: jsonVal
+	@NoDoc Obj? fromJsonHookFn(Obj? jsonVal) {
+		((|Obj?, JsonConverterCtx->Obj?|?) options["afJson.fromJsonHookFn"])?.call(jsonVal, this) ?: jsonVal
 	}
 	
 	** This is called *before* any 'fantomObj' is converted. 
-	@NoDoc Obj? fnToJsonHook(Obj? fantomObj) {
-		((|Obj?, JsonConverterCtx->Obj?|?) options["afJson.toJsonHook"])?.call(fantomObj, this) ?: fantomObj
+	@NoDoc Obj? toJsonHookFn(Obj? fantomObj) {
+		((|Obj?, JsonConverterCtx->Obj?|?) options["afJson.toJsonHookFn"])?.call(fantomObj, this) ?: fantomObj
 	}
 	
 	** Returns the 'JsonPropertyCache'.

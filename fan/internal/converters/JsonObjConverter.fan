@@ -6,7 +6,7 @@ using afBeanUtils::ReflectUtils
 	@NoDoc
 	override Obj? toJsonVal(Obj? fantomObj, JsonConverterCtx ctx) {
 		if (fantomObj == null) return null
-		jsonObj := ctx.fnMakeJsonObj
+		jsonObj := ctx.makeJsonObjFn
 		
 		ctx.optJsonPropertyCache.getOrFindTags(fantomObj.typeof, ctx).each |field| {
 			fieldVal := field.val(fantomObj)
@@ -96,7 +96,7 @@ using afBeanUtils::ReflectUtils
 			fieldVals[field.field] = fieldVal
 		}
 		
-		return ctx.fnMakeEntity(fieldVals)
+		return ctx.makeEntityFn(fieldVals)
 	}
 
 	private static const Type[] literals	:= [Bool#, Date#, DateTime#, Str#, Time#, Uri#, Depend#, Decimal#, Duration#, Enum#, Float#, Int#, Locale#, MimeType#, Range#, Regex#, Slot#, TimeZone#, Type#, Unit#, Version#]
