@@ -3,10 +3,10 @@ using afConcurrent::AtomicMap
 @Js @NoDoc
 const class JsonPropertyCache {
 	private const AtomicMap cache := AtomicMap()
-	private const Bool serializableMode
+	private const Bool pickleMode
 
-	new make(Bool serializableMode := false) {
-		this.serializableMode = serializableMode
+	new make(Bool pickleMode := false) {
+		this.pickleMode = pickleMode
 	}
 
 	** 'ctx' isn't used, but gives subclasses more context to adjust dynamically.
@@ -18,7 +18,7 @@ const class JsonPropertyCache {
 	virtual JsonPropertyData[] findProperties(Type entityType) {
 		// I dunno wot synthetic fields are but I'm guessing I dun-wan-dem!
 		frops := entityType.fields.exclude { it.isStatic || it.isSynthetic }
-		if (serializableMode == false)
+		if (pickleMode == false)
 			frops = frops.findAll { it.hasFacet(JsonProperty#) }
 		else
 			frops = frops.exclude { it.hasFacet(Transient#) }

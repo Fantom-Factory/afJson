@@ -36,15 +36,20 @@
 		return str
 	}
 
-	** Converts this Json object to one with the given 'serializableMode'.
+	** Converts a new Json object (based on this one) but with the given 'pickleMode'.
 	** 
-	** *Serializable Mode* is where all non-transient fields are converted, regardless of any '@JsonProperty' facets. 
+	** *Pickle Mode* is where all non-transient fields are converted, regardless of any '@JsonProperty' facets. 
 	** Data from '@JsonProperty' facets, however, are still honoured if defined.
 	**  
 	**   syntac: fantom
-	**   json := Json().withSerializableMode
+	**   json := Json().withPickleMode
+	This withPickleMode(Bool on := true) {
+		Json(converters.withOptions(["afJson.pickleMode":on]))
+	}
+	
+	@NoDoc @Deprecated { msg="Use withPickleMode() instead" }
 	This withSerializableMode(Bool on := true) {
-		Json(converters.withOptions(["afJson.serializableMode":on]))
+		withPickleMode(on)
 	}
 	
 //	** A convenience method for those more familiar with Javascipt functions.

@@ -13,12 +13,12 @@ using afBeanUtils::BeanBuilder
 	**   afJson.dateFormat        : "YYYY-MM-DD"
 	**   afJson.dateTimeFormat    : "YYYY-MM-DD'T'hh:mm:ss.FFFz"
 	**   afJson.propertyCache     : JsonPropertyCache()
-	**   afJson.serializableMode  : true
+	**   afJson.pickleMode        : true
 	** 
 	** Override 'makeEntity' to have IoC create entity instances.
 	** Set 'strictMode' to 'true' to Err if the JSON contains unmapped data.
 	** 
-	** *Serializable Mode* is where all non-transient fields are converted, regardless of any '@JsonProperty' facets. 
+	** *Pickle Mode* is where all non-transient fields are converted, regardless of any '@JsonProperty' facets. 
 	** Data from '@JsonProperty' facets, however, is still honoured if defined.
 	static new make([Type:JsonConverter]? converters := null, [Str:Obj?]? options := null) {
 		JsonConvertersImpl(converters ?: defConvs, options)
@@ -178,14 +178,14 @@ using afBeanUtils::BeanBuilder
 	new make(|This| f) { f(this) }
 	
 	new makeArgs(Type:JsonConverter converters, [Str:Obj?]? options) {
-		serializableMode := options?.get("afJson.serializableMode", false) == true
+		pickleMode := options?.get("afJson.pickleMode", false) == true
 		this.typeLookup = JsonTypeLookup(converters)
 		this.optionsRef	= Unsafe(Str:Obj?[
 			"afJson.makeEntity"		: |Type type, Field:Obj? vals->Obj?| { BeanBuilder.build(type, vals) },
 			"afJson.makeJsonObj"	: |-> Str:Obj?| { Str:Obj?[:] { ordered = true } },
 			"afJson.makeMap"		: |Type t->Map| { Map((t.isGeneric ? Obj:Obj?# : t).toNonNullable) { it.ordered = true } },
 			"afJson.strictMode"		: false,
-			"afJson.propertyCache"	: JsonPropertyCache(serializableMode),
+			"afJson.propertyCache"	: JsonPropertyCache(pickleMode),
 		])
 		
 		if (options != null)
@@ -201,9 +201,9 @@ using afBeanUtils::BeanBuilder
 	Str:Obj? options() { optionsRef.val }
 	
 	override JsonConverters withOptions(Str:Obj? newOptions) {
-		if (newOptions.containsKey("afJson.serializableMode")) {
-			serializableMode := newOptions.get("afJson.serializableMode", false) == true
-			newOptions["afJson.propertyCache"] = JsonPropertyCache(serializableMode)
+		if (newOptions.containsKey("afJson.pickleMode")) {
+			pickleMode := newOptions.get("afJson.pickleMode", false) == true
+			newOptions["afJson.propertyCache"] = JsonPropertyCache(pickleMode)
 		}
 		return JsonConvertersImpl {
 			it.optionsRef		= Unsafe(this.options.rw.setAll(newOptions))
