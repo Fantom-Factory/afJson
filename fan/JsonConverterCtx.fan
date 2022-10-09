@@ -139,6 +139,10 @@
 		return false
 	}
 	
+	@NoDoc Bool optDoNotWriteNulls() {
+		options.get("doNotWriteNulls", false)
+	}
+	
 	** Returns the Date format, with an ISO default if unspecified.
 	@NoDoc Str optDateFormat() {
 		options.get("dateFormat", "YYYY-MM-DD")

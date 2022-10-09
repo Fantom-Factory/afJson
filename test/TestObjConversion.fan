@@ -48,6 +48,18 @@
 		verifyEq(convs.fromJsonVal([ 69,  obj], Obj[]#    )->get(  -1 )->typeof, T_Entity06_Impl1#)
 		verifyEq(convs.fromJsonVal(["obj":obj], [Str:Obj]#)->get("obj")->typeof, T_Entity06_Impl1#)
 	}
+	
+	Void testDoNotWriteNulls() {
+		convs	:= JsonConverters(null, ["doNotWriteNulls":true])
+		obj		:= convs.toJson(T_Entity04 {
+			obj1 = "me"
+			obj2 = null
+			obj3 = 69
+			obj4 = null
+		})
+		
+		verifyEq(obj, """{"obj1":"me","obj3":69}""")
+	}
 }
 
 @Js

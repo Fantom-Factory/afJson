@@ -17,6 +17,7 @@ using afBeanUtils::BeanBuilder
 	**   strictMode        : false
 	**   propertyCache     : JsonPropertyCache()
 	**   pickleMode        : false
+	**   doNotWriteNulls   : false
 	** 
 	** Override 'makeEntityFn' to have IoC create entity instances.
 	** 

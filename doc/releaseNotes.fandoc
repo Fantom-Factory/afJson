@@ -5,6 +5,7 @@ Re-written to be simplier, yet even more powerful!
 v2.0.14 [#v2.0.14]
 =======
  - New: **PickleMode** to serialise all fields of an class, except for '@Transient' fields.
+ - New: Conversion option 'doNotWriteNulls' for omitting null values when writing object properties.
  - Chg: Docs no longer cause warnings in SkySpark and FinStack.
  - Chg: Exposed 'JsonConvertersCtx.converters'.
  - Chg: Removed the 'afJson.' prefix for converter option keys.

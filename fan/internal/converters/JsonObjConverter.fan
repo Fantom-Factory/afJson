@@ -20,9 +20,10 @@ using afBeanUtils::ReflectUtils
 
 			propVal	 := ctx.makeField(implType, field.field, field.jsonProperty, fieldVal).toJsonVal
 
-			// use add, rather than set, so an Err is thrown should we accidently try to add the 
-			// same name twice (from using the Property@name facet)
-			jsonObj.add(propName, propVal)
+			if (propVal != null || ctx.optDoNotWriteNulls == false)
+				// use add, rather than set, so an Err is thrown should we accidently try to add the 
+				// same name twice (from using the Property@name facet)
+				jsonObj.add(propName, propVal)
 		}
 		
 		// make sure we store the _type in pickle mode, so we can re-inflate the obj
