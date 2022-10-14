@@ -1,8 +1,8 @@
-# Json v2.0.12
+# Json v2.0.14
 ---
 
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](https://fantom-lang.org/)
-[![pod: v2.0.12](http://img.shields.io/badge/pod-v2.0.12-yellow.svg)](http://eggbox.fantomfactory.org/pods/afJson)
+[![pod: v2.0.14](http://img.shields.io/badge/pod-v2.0.14-yellow.svg)](http://eggbox.fantomfactory.org/pods/afJson)
 [![Licence: ISC](http://img.shields.io/badge/licence-ISC-blue.svg)](https://choosealicense.com/licenses/isc/)
 
 ## <a name="overview"></a>Overview
@@ -230,6 +230,35 @@ Sometimes you want the JSON name to be different to the field names. To facilita
     json := Json().toJson(user, User#)
     
     echo(json)  // --> {"judge":"Dredd"}
+    
+
+## <a name="pickleMode"></a>Pickle Mode
+
+Sometimes you wish to read / write objects to JSON that are outside of your control, meaning their fields won't be annotated with `@JsonProperty` facets. To facilitate this, you can turn on *Pickle Mode* whereby all non `@Transient` fields are converted, regardless of any `@JsonProperty` facets. Data from `@JsonProperty` facets, however, will still honoured if defined.
+
+Pickle mode works by automatically writing out `_type` properties, which are them used when re-inflating objects back.
+
+*Pickle Mode* may be turned on globally as an option in `JsonConverters`, or locally as an argument on the `@JsonProperty` facets.
+
+    // turn on pickleMode for everything
+    jsonConvs := JsonConverters(null, [
+        "pickleMode" : true
+    ])
+    
+    // ... or ...
+    
+    @Entity
+    class User {
+        @JsonProperty Str  name
+        @JsonProperty Int  age
+    
+        ** Turn on pickleMode just for this field
+        ** meta values may be *any* object
+        @JsonProperty { pickleMode=true }
+                  Str:Obj? meta
+    
+        new make(|This|in) { in(this) }
+    }
     
 
 ## <a name="jsonAndDates"></a>JSON and Dates

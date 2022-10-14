@@ -106,7 +106,8 @@ using afBeanUtils::BeanBuilder
 	abstract Str toJson(Obj? fantomObj, Obj? options := null)
 	
 	** Converts a JSON string to the given Fantom type.
-	** If 'fantomType' is 'null', then 'null' is always returned. 
+	** 
+	** Returns 'null' if 'json' is 'null'.
 	abstract Obj? fromJson(Str? json, Type? fantomType)
 
 
@@ -337,8 +338,8 @@ using afBeanUtils::BeanBuilder
 	}
 	
 	override Obj? fromJson(Str? jsonStr, Type? fantomType) {
-		// let's not dick about - just convert null to null
-		if (jsonStr == null || fantomType == null) return null
+		// let's not dick about - just convert null to null!
+		if (jsonStr == null) return null
 		jsonObj := JsonReader().readJson(jsonStr)
 		fantObj := fromJsonVal(jsonObj, fantomType)
 		return fantObj
