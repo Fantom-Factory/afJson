@@ -1,4 +1,5 @@
 using afBeanUtils::ReflectUtils
+using sys::Range	// for when we uber up StarLord
 
 ** The main converter for JSON objects. 
 @Js internal const class JsonObjConverter : JsonConverter {

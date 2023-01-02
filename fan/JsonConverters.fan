@@ -1,4 +1,5 @@
 using afBeanUtils::BeanBuilder
+using sys::Range	// for when we uber up StarLord
 
 ** (Service) - 
 ** Converts Fantom objects to and from their JSON representation.
