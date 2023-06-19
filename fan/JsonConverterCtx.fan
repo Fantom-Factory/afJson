@@ -152,4 +152,33 @@
 	@NoDoc Str optDateTimeFormat() {
 		options.get("dateTimeFormat", "YYYY-MM-DD'T'hh:mm:ss.FFFz zzzz")
 	}
+	
+	@NoDoc override Str toStr() {
+		toStr_(toStrPad(0))
+	}
+	
+	private Int toStrPad(Int max) {
+		max = toStrWot.size.max(max)
+		return parent?.toStrPad(max) ?: max
+	}
+
+	private Str toStrWot() {
+		str := ""
+		if (isField)	str += field.qname
+		if (isMap)		str += "[${mapKey}]"
+		if (isList)		str += "[${listIdx}]"
+		return str
+	}
+	
+	private Str toStr_(Int pad) {
+		str := ""
+		sig := type.signature.replace("sys::", "")
+		
+		if (isField)	str += "  Converting Obj field: " +  field.qname.justl(pad)   + " (${sig})\n"
+		if (isMap)		str += "  Converting Map value: " + "[${mapKey}]".justl(pad)  + " (${sig})\n"
+		if (isList)		str += "  Converting List item: " + "[${listIdx}]".justl(pad) + " (${sig})\n"
+		
+		str += parent?.toStr_(pad) ?: ""
+		return str
+	}
 }

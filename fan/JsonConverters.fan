@@ -249,13 +249,21 @@ using sys::Range	// for when we uber up StarLord
 	}
 	
 	override Obj? _toJsonCtx(Obj? fantomObj, JsonConverterCtx ctx) {
-		hookVal := ctx.toJsonHookFn(fantomObj)		
-		return get(ctx.type).toJsonVal(fantomObj, ctx)
+		try {
+			hookVal := ctx.toJsonHookFn(fantomObj)		
+			return get(ctx.type).toJsonVal(fantomObj, ctx)
+
+		} catch (Err err)
+			throw err.msg.startsWith("Could not convert:") ? err : Err("Could not convert: ${ctx.type}\n${ctx.toStr}\n  ${err.msg}\n", err)
 	}
 
 	override Obj? _fromJsonCtx(Obj? jsonVal, JsonConverterCtx ctx) {
-		hookVal := ctx.fromJsonHookFn(jsonVal)
-		return get(ctx.type).fromJsonVal(hookVal, ctx)
+		try {
+			hookVal := ctx.fromJsonHookFn(jsonVal)
+			return get(ctx.type).fromJsonVal(hookVal, ctx)
+
+		} catch (Err err)
+			throw err.msg.startsWith("Could not convert:") ? err : Err("Could not convert: ${ctx.type}\n${ctx.toStr}\n  ${err.msg}\n", err)
 	}
 
 	override Obj? toJsonVal(Obj? fantomObj, Type? fantomType := null) {

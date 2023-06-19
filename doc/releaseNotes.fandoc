@@ -2,6 +2,10 @@ v2.0 [#v2.0]
 ****
 Re-written to be simplier, yet even more powerful!
 
+v2.0.16 [#v2.0.16]
+=======
+ - New: Errs thrown during conversion are re-thrown with a stack of conversion context.
+
 v2.0.14 [#v2.0.14]
 =======
  - New: **PickleMode** to serialise all fields of an class, except for '@Transient' fields.
