@@ -32,7 +32,7 @@
 			timeZone	= TimeZone.rel
 			type		= Test[]?#
 			unit		= Unit("°C")
-			uri			= `http://wotever/`
+			uri			= `http://wot ever/`
 			uuid		= Uuid("088e6a43-3cd0-b300-62f7-c85b768bcc22")
 			version		= Version("1.2.3.4")
 		}
@@ -64,7 +64,7 @@
 		verifyEq(jsonObj["timeZone"],	entity.timeZone.toStr)
 		verifyEq(jsonObj["type"],		entity.type.toStr)
 		verifyEq(jsonObj["unit"],		entity.unit.toStr)
-		verifyEq(jsonObj["uri"],		entity.uri.toStr)
+		verifyEq(jsonObj["uri"],		"http://wot%20ever/")	// NOTE the percent encoding - done via Uri.encode()
 		verifyEq(jsonObj["uuid"],		entity.uuid.toStr)
 		verifyEq(jsonObj["version"],	entity.version.toStr)
 	}
@@ -98,7 +98,7 @@
 			"timeZone"		: "Etc/Rel",
 			"type"			: "sys::Test[]?",
 			"unit"			: "°C",
-			"uri"			: "http://wotever/",
+			"uri"			: "http://wot%20ever/",
 			"uuid"			: "088e6a43-3cd0-b300-62f7-c85b768bcc22",
 			"version"		: "1.2.3.4",
 		]
@@ -130,7 +130,7 @@
 		verifyEq(entity.timeZone,	TimeZone.rel)
 		verifyEq(entity.type,		Test[]?#)
 		verifyEq(entity.unit,		Unit("°C"))
-		verifyEq(entity.uri,		`http://wotever/`)
+		verifyEq(entity.uri,		`http://wot ever/`)		// NOTE the space has been decoded
 		verifyEq(entity.uuid,		Uuid("088e6a43-3cd0-b300-62f7-c85b768bcc22"))
 		verifyEq(entity.version,	Version("1.2.3.4"))
 	}

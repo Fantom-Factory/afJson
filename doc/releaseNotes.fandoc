@@ -4,6 +4,8 @@ Re-written to be simplier, yet even more powerful!
 
 v2.0.16 [#v2.0.16]
 =======
+ - New: URIs are converted via 'Uri.encode()' and 'Uri.decode()'.
+ - New: 'JsonConverters' option 'encodeDecodeUris' to turn off the new URI behaviour.
  - New: Errs thrown during conversion are re-thrown with a stack of conversion context.
 
 v2.0.14 [#v2.0.14]

@@ -153,6 +153,10 @@
 		options.get("dateTimeFormat", "YYYY-MM-DD'T'hh:mm:ss.FFFz zzzz")
 	}
 	
+	@NoDoc Bool optEncodeDecodeUris() {
+		options.get("encodeDecodeUris", true)
+	}
+	
 	@NoDoc override Str toStr() {
 		toStr_(toStrPad(0))
 	}

@@ -19,6 +19,7 @@ using sys::Range	// for when we uber up StarLord
 	**   propertyCache     : JsonPropertyCache()
 	**   pickleMode        : false
 	**   doNotWriteNulls   : false
+	**   encodeDecodeUris  : true - set to false to use Uri.toStr / Str.toUri
 	** 
 	** Override 'makeEntityFn' to have IoC create entity instances.
 	** 
@@ -393,7 +394,7 @@ using sys::Range	// for when we uber up StarLord
 		config[TimeZone#]	= JsonSimpleConverter(TimeZone#)
 		config[Type#]		= JsonTypeConverter()
 		config[Unit#]		= JsonSimpleConverter(Unit#)
-		config[Uri#]		= JsonSimpleConverter(Uri#)
+		config[Uri#]		= JsonUriConverter()
 		config[Uuid#]		= JsonSimpleConverter(Uuid#)
 		config[Version#]	= JsonSimpleConverter(Version#)
 		
