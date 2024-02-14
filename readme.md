@@ -1,8 +1,8 @@
-# Json v2.0.14
+# Json v2.0.16
 ---
 
 [![Written in: Fantom](http://img.shields.io/badge/written%20in-Fantom-lightgray.svg)](https://fantom-lang.org/)
-[![pod: v2.0.14](http://img.shields.io/badge/pod-v2.0.14-yellow.svg)](http://eggbox.fantomfactory.org/pods/afJson)
+[![pod: v2.0.16](http://img.shields.io/badge/pod-v2.0.16-yellow.svg)](http://eggbox.fantomfactory.org/pods/afJson)
 [![Licence: ISC](http://img.shields.io/badge/licence-ISC-blue.svg)](https://choosealicense.com/licenses/isc/)
 
 ## <a name="overview"></a>Overview

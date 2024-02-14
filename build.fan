@@ -5,7 +5,7 @@ class Build : BuildPod {
 	new make() {
 		podName = "afJson"
 		summary = "A JSON to Fantom object mapping library"
-		version = Version("2.0.15")
+		version = Version("2.0.16")
 
 		meta = [
 			"pod.dis"		: "Json",
