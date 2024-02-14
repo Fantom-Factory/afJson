@@ -29,7 +29,7 @@
 
 	Void testKeyConvertErr() {
 		badMap	:= [Err():"wotever"]
-		verifyErrMsg(Err#, "Unsupported Map key type 'sys::Err', cannot coerce from Str#") {
+		verifyErrMsg(Err#, "Could not convert: sys::Map\n\n  Unsupported Map key type 'sys::Err', cannot coerce from Str#\n") {
 			JsonConverters().toJsonVal(badMap, Map#) 
 		}
 	}

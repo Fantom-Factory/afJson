@@ -10,7 +10,7 @@
 	}
 
 	Void testNoConversion() {
-		verifyErrMsg(Err#, "JSON property obj2 of type Str does not fit field afJson::T_Entity02.obj2 of type Buf? : [obj1:68, obj2:judge]") {
+		verifyErrMsg(Err#, "Could not convert: afJson::T_Entity02\n\n  JSON property obj2 of type Str does not fit field afJson::T_Entity02.obj2 of type Buf? : [obj1:68, obj2:judge]\n") {
 			JsonConverters().fromJson("""{ "obj1":68, "obj2":"judge" }""", T_Entity02#)
 		}
 	}

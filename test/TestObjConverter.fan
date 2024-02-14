@@ -20,7 +20,12 @@
 
 	Void testStrictMode() {
 		obj := ["name":["name":"Dredd", "badge":69, "ammo":"hi-ex"]]
-		verifyErrMsg(Err#, "Extraneous data in JSON object for afJson::T_Entity11_Name: ammo") {
+		verifyErrMsg(Err#,
+			"Could not convert: afJson::T_Entity11_Name
+			   Converting Obj field: afJson::T_Entity11.name (afJson::T_Entity11_Name)
+			 
+			   Extraneous data in JSON object for afJson::T_Entity11_Name: ammo
+			 ") {
 			JsonConverters(null, ["strictMode":true]).fromJsonObj(obj, T_Entity11#)
 		}
 	}
